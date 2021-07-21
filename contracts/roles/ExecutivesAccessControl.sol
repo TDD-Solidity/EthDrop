@@ -59,7 +59,7 @@ contract ExecutivesAccessControl {
         _;
     }
 
-    function isCEO() external returns (bool) {
+    function isCEO() external view returns (bool) {
         return msg.sender == ceoAddress;
     }
 
@@ -71,7 +71,7 @@ contract ExecutivesAccessControl {
         ceoAddress = _newCEO;
     }
 
-    function isCFO() external returns (bool) {
+    function isCFO() external view returns (bool) {
         return msg.sender == cfoAddress;
     }
 
@@ -83,7 +83,7 @@ contract ExecutivesAccessControl {
         cfoAddress = _newCFO;
     }
 
-    function isCOO() external returns (bool) {
+    function isCOO() external view returns (bool) {
         return msg.sender == cooAddress;
     }
 

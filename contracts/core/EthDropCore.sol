@@ -15,9 +15,6 @@ contract EthDropCore is AdminsManager {
         // the creator of the contract is the initial CEO
         ceoAddress = msg.sender;
 
-        // the creator of the contract is also the initial COO
-        cooAddress = msg.sender;
-
     }
 
     /// @dev Used to mark the smart contract as upgraded, in case there is a serious

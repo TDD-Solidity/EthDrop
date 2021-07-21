@@ -70,7 +70,7 @@ contract AdminsManager is ContributorManager {
         return currentEvents[groupId];
     }
 
-    function createNewGroup(string groupName) external onlyCOO whenNotPaused {
+    function createNewGroup(string memory groupName) external onlyCOO whenNotPaused {
         uint256 newGroupId = uint256(blockhash(block.number));
 
         EthDropEvent memory newGroup = EthDropEvent(

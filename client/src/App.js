@@ -7,7 +7,19 @@ import env from "react-dotenv";
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { 
+    storageValue: 0, 
+    web3: null, 
+    accounts: null, 
+    contract: null, 
+    simpleStorageInstance: null,
+    ethDropCoreInstance: null,
+    isCEO: null,
+    isCFO: null,
+    isCOO: null,
+    groupNames: [],
+    groupIds: []
+  };
 
   componentDidMount = async () => {
     try {
@@ -73,48 +85,47 @@ class App extends Component {
     // Get the value from the simpleStorageInstance to prove it worked.
     const fooResponse = await ethDropCoreInstance.methods.foobar().call();
     
-    const fooResponse = await ethDropCoreInstance.methods.foobar().call();
+    // const fooResponse = await ethDropCoreInstance.methods.foobar().call();
 
     const isCEO = await ethDropCoreInstance.methods.isCEO().call();
     console.log('isCEO ', isCEO)
-    this.setState(isCEO);
+    this.setState({ isCEO });
 
     const isCOO = await ethDropCoreInstance.methods.isCOO().call();
     console.log('isCOO ', isCOO)
-    this.setState(isCOO);
+    this.setState({ isCOO });
 
     const isCFO = await ethDropCoreInstance.methods.isCFO().call();
     console.log('isCFO ', isCFO)
-    this.setState(isCFO);
+    this.setState({ isCFO });
 
-    const groupIds = await ethDropCoreInstance.methods.getGoupIds().call();
+    const groupIds = await ethDropCoreInstance.methods.getGroupIds().call();
     console.log('groupIds: ', groupIds)
-    this.setState(groupIds);
+    this.setState({ groupIds });
 
-    const groupNames = await ethDropCoreInstance.methods.groupNames().call();
+    const groupNames = await ethDropCoreInstance.methods.getGroupNames().call();
     console.log('groupNames: ', groupNames)
-    this.setState(groupNames);
-
-
-    // On group page
-    const amIAdminOfGroup = await ethDropCoreInstance.methods.amIAdminOfGroup('groupId').call();
-    console.log('amIAdminOfGroup: ', amIAdminOfGroup)
-    this.setState(amIAdminOfGroup);
+    this.setState({ groupNames });
 
     // On group page
-    const amIEligiblRecipientForGroup = await ethDropCoreInstance.methods.amIEligiblRecipientForGroup('groupId').call();
-    console.log('amIEligiblRecipientForGroup: ', amIEligiblRecipientForGroup)
-    this.setState(amIEligiblRecipientForGroup);
+    // const amIAdminOfGroup = await ethDropCoreInstance.methods.amIAdminOfGroup('groupId').call();
+    // console.log('amIAdminOfGroup: ', amIAdminOfGroup)
+    // this.setState(amIAdminOfGroup);
 
     // On group page
-    const amIRegisteredRecipientForGroupEvent = await ethDropCoreInstance.methods.amIRegisteredRecipientForGroupEvent('groupId').call();
-    console.log('amIRegisteredRecipientForGroupEvent: ', amIRegisteredRecipientForGroupEvent)
-    this.setState(amIRegisteredRecipientForGroupEvent);
+    // const amIEligiblRecipientForGroup = await ethDropCoreInstance.methods.amIEligiblRecipientForGroup('groupId').call();
+    // console.log('amIEligiblRecipientForGroup: ', amIEligiblRecipientForGroup)
+    // this.setState(amIEligiblRecipientForGroup);
 
     // On group page
-    const myUnclaimedEthBalance = await ethDropCoreInstance.methods.myUnclaimedEthBalance('groupId').call();
-    console.log('myUnclaimedEthBalance: ', myUnclaimedEthBalance)
-    this.setState(myUnclaimedEthBalance);
+    // const amIRegisteredRecipientForGroupEvent = await ethDropCoreInstance.methods.amIRegisteredRecipientForGroupEvent('groupId').call();
+    // console.log('amIRegisteredRecipientForGroupEvent: ', amIRegisteredRecipientForGroupEvent)
+    // this.setState(amIRegisteredRecipientForGroupEvent);
+
+    // On group page
+    // const myUnclaimedEthBalance = await ethDropCoreInstance.methods.myUnclaimedEthBalance('groupId').call();
+    // console.log('myUnclaimedEthBalance: ', myUnclaimedEthBalance)
+    // this.setState(myUnclaimedEthBalance);
 
     console.log('fooResponse: ', fooResponse);
 
@@ -137,6 +148,39 @@ class App extends Component {
           Try changing the value stored on <strong>line 42</strong> of App.js.
         </p>
         <div>The stored value is: {this.state.storageValue}</div>
+      
+        {console.log(this.state)}
+
+        <p>
+      string: 
+        {JSON.stringify(this.state.isCEO)}
+        </p>
+
+        {this.state.isCEO && <div>You are the CEO!</div>}
+        {!this.state.isCEO && <div>You are NOT the CEO.</div>}
+      
+        <br/>
+        {this.state.isCFO && <div>You are the CFO!</div>}
+        {!this.state.isCFO && <div>You are NOT the CFO.</div>}
+        
+        <br/>
+      
+        {this.state.isCOO && <div>You are the COO!</div>}
+        {!this.state.isCOO && <div>You are NOT the COO.</div>}
+        
+        <br/>
+
+        {!this.state.groupNames && <div>Loading groups...</div>}
+        {this.state.groupNames && <div>
+
+          <h1>
+          Groups
+          </h1>
+          <p>
+          {JSON.stringify(this.state.groupNames)}
+          </p>
+          </div>}
+      
       </div>
     );
   }

@@ -103,11 +103,11 @@ contract EthDropBase is ExecutivesAccessControl {
     // Keeping track of winnings for all groups
     mapping(uint => PaymentSplitter) pot;
 
-    function getGroupIds() external view returns (uint[]) {
+    function getGroupIds() external view returns (uint[] memory) {
         return listOfGroupIds;
     }
     
-    function getGroupNames() external view returns (uint[]) {
+    function getGroupNames() external view returns (string[] memory) {
         return listOfGroupNames;
     }
 
