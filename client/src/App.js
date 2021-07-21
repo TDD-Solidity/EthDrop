@@ -72,6 +72,49 @@ class App extends Component {
     
     // Get the value from the simpleStorageInstance to prove it worked.
     const fooResponse = await ethDropCoreInstance.methods.foobar().call();
+    
+    const fooResponse = await ethDropCoreInstance.methods.foobar().call();
+
+    const isCEO = await ethDropCoreInstance.methods.isCEO().call();
+    console.log('isCEO ', isCEO)
+    this.setState(isCEO);
+
+    const isCOO = await ethDropCoreInstance.methods.isCOO().call();
+    console.log('isCOO ', isCOO)
+    this.setState(isCOO);
+
+    const isCFO = await ethDropCoreInstance.methods.isCFO().call();
+    console.log('isCFO ', isCFO)
+    this.setState(isCFO);
+
+    const groupIds = await ethDropCoreInstance.methods.getGoupIds().call();
+    console.log('groupIds: ', groupIds)
+    this.setState(groupIds);
+
+    const groupNames = await ethDropCoreInstance.methods.groupNames().call();
+    console.log('groupNames: ', groupNames)
+    this.setState(groupNames);
+
+
+    // On group page
+    const amIAdminOfGroup = await ethDropCoreInstance.methods.amIAdminOfGroup('groupId').call();
+    console.log('amIAdminOfGroup: ', amIAdminOfGroup)
+    this.setState(amIAdminOfGroup);
+
+    // On group page
+    const amIEligiblRecipientForGroup = await ethDropCoreInstance.methods.amIEligiblRecipientForGroup('groupId').call();
+    console.log('amIEligiblRecipientForGroup: ', amIEligiblRecipientForGroup)
+    this.setState(amIEligiblRecipientForGroup);
+
+    // On group page
+    const amIRegisteredRecipientForGroupEvent = await ethDropCoreInstance.methods.amIRegisteredRecipientForGroupEvent('groupId').call();
+    console.log('amIRegisteredRecipientForGroupEvent: ', amIRegisteredRecipientForGroupEvent)
+    this.setState(amIRegisteredRecipientForGroupEvent);
+
+    // On group page
+    const myUnclaimedEthBalance = await ethDropCoreInstance.methods.myUnclaimedEthBalance('groupId').call();
+    console.log('myUnclaimedEthBalance: ', myUnclaimedEthBalance)
+    this.setState(myUnclaimedEthBalance);
 
     console.log('fooResponse: ', fooResponse);
 

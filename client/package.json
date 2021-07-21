@@ -31,6 +31,10 @@
     ]
   },
   "react-dotenv": {
-    "whitelist": ["CONTRACT_ADDRESS", "ETHDROP_CORE_CONTRACT_ADDRESS", "SIMPLE_STORAGE_CONTRACT_ADDRESS"]
+    "whitelist": [
+      "CONTRACT_ADDRESS",
+      "ETHDROP_CORE_CONTRACT_ADDRESS",
+      "SIMPLE_STORAGE_CONTRACT_ADDRESS"
+    ]
   }
 }

@@ -21,7 +21,6 @@
   "homepage": "https://github.com/JimLynchCodes/EthDrop#readme",
   "dependencies": {
     "@openzeppelin/contracts": "^4.2.0",
-    "g": "^2.0.1",
-    "truffle": "^5.4.1"
+    "truffle": "^0.8.0"
   }
 }

@@ -70,11 +70,12 @@ contract AdminsManager is ContributorManager {
         return currentEvents[groupId];
     }
 
-    function createNewGroup() external onlyCOO whenNotPaused {
+    function createNewGroup(string groupName) external onlyCOO whenNotPaused {
         uint256 newGroupId = uint256(blockhash(block.number));
 
         EthDropEvent memory newGroup = EthDropEvent(
             newGroupId,
+            groupName,
             EventState.CREATED,
             block.timestamp,
             block.timestamp,
@@ -87,6 +88,9 @@ contract AdminsManager is ContributorManager {
         );
 
         currentEvents[newGroupId] = newGroup;
+
+        listOfGroupIds.push(newGroupId);
+        listOfGroupNames.push(groupName);
 
         emit GroupCreated(msg.sender, newGroupId);
     }

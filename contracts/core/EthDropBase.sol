@@ -49,6 +49,8 @@ contract EthDropBase is ExecutivesAccessControl {
         // Each group can only be running 1 event at a time.
         uint groupId;
         // Event goes through a linear flow of states, finite state machine.
+        string groupName;
+        // Event goes through a linear flow of states, finite state machine.
         EventState currentState;
         // The timestamp from the block when this event started.
         uint startTime;
@@ -64,6 +66,11 @@ contract EthDropBase is ExecutivesAccessControl {
         string sponsorLinkToUrl;
         address currentContributor;
     }
+
+    // ALL events happening now or in the future.
+    // Key is the groupId
+    uint[] listOfGroupIds;
+    string[] listOfGroupNames;
 
     // ALL events happening now or in the future.
     // Key is the groupId
@@ -95,5 +102,13 @@ contract EthDropBase is ExecutivesAccessControl {
 
     // Keeping track of winnings for all groups
     mapping(uint => PaymentSplitter) pot;
+
+    function getGroupIds() external view returns (uint[]) {
+        return listOfGroupIds;
+    }
+    
+    function getGroupNames() external view returns (uint[]) {
+        return listOfGroupNames;
+    }
 
 }

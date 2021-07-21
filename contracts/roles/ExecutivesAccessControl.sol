@@ -59,6 +59,10 @@ contract ExecutivesAccessControl {
         _;
     }
 
+    function isCEO() external returns (bool) {
+        return msg.sender == ceoAddress;
+    }
+
     /// @dev Assigns a new address to act as the CEO. Only available to the current CEO.
     /// @param _newCEO The address of the new CEO
     function setCEO(address _newCEO) external onlyCEO {
@@ -67,12 +71,20 @@ contract ExecutivesAccessControl {
         ceoAddress = _newCEO;
     }
 
+    function isCFO() external returns (bool) {
+        return msg.sender == cfoAddress;
+    }
+
     /// @dev Assigns a new address to act as the CFO. Only available to the current CEO.
     /// @param _newCFO The address of the new CFO
     function setCFO(address _newCFO) external onlyCEO {
         require(_newCFO != address(0));
 
         cfoAddress = _newCFO;
+    }
+
+    function isCOO() external returns (bool) {
+        return msg.sender == cooAddress;
     }
 
     /// @dev Assigns a new address to act as the COO. Only available to the current CEO.
