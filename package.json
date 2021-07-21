@@ -1,0 +1,27 @@
+{
+  "name": "ethdrop",
+  "version": "1.0.0",
+  "description": "An webapp &amp; smart contracts for airdropping ether",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JimLynchCodes/EthDrop.git"
+  },
+  "author": "JimLynchCodes <jim.lynch@evaluates2.com> (https://evaluates2.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JimLynchCodes/EthDrop/issues"
+  },
+  "homepage": "https://github.com/JimLynchCodes/EthDrop#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.2.0",
+    "g": "^2.0.1",
+    "truffle": "^5.4.1"
+  }
+}

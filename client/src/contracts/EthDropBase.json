@@ -1,0 +1,3437 @@
+{
+  "contractName": "EthDropBase",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newContract",
+          "type": "address"
+        }
+      ],
+      "name": "ContractUpgrade",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [],
+      "name": "EventClose",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [],
+      "name": "RegistrationOpen",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [],
+      "name": "WinningsClaimingOpen",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "ceoAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "cfoAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "cooAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "paused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newCEO",
+          "type": "address"
+        }
+      ],
+      "name": "setCEO",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newCFO",
+          "type": "address"
+        }
+      ],
+      "name": "setCFO",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newCOO",
+          "type": "address"
+        }
+      ],
+      "name": "setCOO",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newContract\",\"type\":\"address\"}],\"name\":\"ContractUpgrade\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"EventClose\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"RegistrationOpen\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"WinningsClaimingOpen\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ceoAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cfoAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cooAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newCEO\",\"type\":\"address\"}],\"name\":\"setCEO\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newCFO\",\"type\":\"address\"}],\"name\":\"setCFO\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newCOO\",\"type\":\"address\"}],\"name\":\"setCOO\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"EventClose()\":{\"details\":\"The EventClose event is fired whenever an event closes. After this event is fired users can no\"},\"RegistrationOpen()\":{\"details\":\"The RegistrationOpen event is fired whenever a new event starts and users can begin restering.\"},\"Transfer(address,address)\":{\"details\":\"Transfer event as defined in current draft of ERC721. Emitted every some Eth is transferred\"},\"WinningsClaimingOpen()\":{\"details\":\"The RegistrationOpen event is fired whenever a new event starts and users can begin restering.\"}},\"kind\":\"dev\",\"methods\":{\"pause()\":{\"details\":\"Called by any \\\"C-level\\\" role to pause the contract. Used only when  a bug or exploit is detected and we need to limit damage.\"},\"setCEO(address)\":{\"details\":\"Assigns a new address to act as the CEO. Only available to the current CEO.\",\"params\":{\"_newCEO\":\"The address of the new CEO\"}},\"setCFO(address)\":{\"details\":\"Assigns a new address to act as the CFO. Only available to the current CEO.\",\"params\":{\"_newCFO\":\"The address of the new CFO\"}},\"setCOO(address)\":{\"details\":\"Assigns a new address to act as the COO. Only available to the current CEO.\",\"params\":{\"_newCOO\":\"The address of the new COO\"}},\"unpause()\":{\"details\":\"Unpauses the smart contract. Can only be called by the CEO, since  one reason we may pause the contract is when CFO or COO accounts are  compromised.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"unpause()\":{\"notice\":\"This is public rather than external so it can be called by  derived contracts.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/jim/Git-Projects/EthDrop/contracts/core/EthDropBase.sol\":\"EthDropBase\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/jim/Git-Projects/EthDrop/contracts/core/EthDropBase.sol\":{\"keccak256\":\"0x4b26940ae1e1979063a733340121d57383b6e190a22ebd7cfed6640a60a1b33f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://81bdbd31442c5eb0ffd60cd037ee7f694abccfd5a7dcc386c45ca31c3a555226\",\"dweb:/ipfs/QmRNK5Do1RGkkFDP7ksRCEQLqUXhtRF2RS6RWbeHXQA5F1\"]},\"/Users/jim/Git-Projects/EthDrop/contracts/roles/ExecutivesAccessControl.sol\":{\"keccak256\":\"0x982599bf3f29237811b4a482b3c8e8f6b5b2b09f4dbb11ae846cb620c6e96d9f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f54a62418ec0e948e85bd31dfbd25e42e58e1febc34a1112b997d52afe5a57b8\",\"dweb:/ipfs/QmTs7pGFV63DoNwwerpVe1FURj5fn6NqeReYLzBRhMhwfW\"]},\"@openzeppelin/contracts/finance/PaymentSplitter.sol\":{\"keccak256\":\"0x5b5c64239a7980f0c2c5baa584a3350912c7260db32f6d6544a2755f59a0c488\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7ce18d9dd07538250504704e46450f4dbfe80808e677f9a0849cdd07bbaac225\",\"dweb:/ipfs/QmSCWBWkVbgJHLiyAUZex6iqJcYPy5GL4coa2ysewyxF8Q\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x3b4820cac4f127869f6eb496c1d74fa6ac86ed24071e0f94742e6aef20e7252c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://23e1c7303c30a2ef9c9b3f861cda15c78e4c9697b4a7988f2bf7b21c392a02fb\",\"dweb:/ipfs/QmWQJh5MsXJZjSTzAs9n5gtrqWYgXwkBa6xfwD5KKGQgSC\"]},\"@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x95098bd1d9c8dec4d80d3dedb88a0d949fa0d740ee99f2aa466bc308216ca6d5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7fec968dcd68e13961521fa3c7dd87baecad91a2653b19240e81f21cc4f3ba85\",\"dweb:/ipfs/QmaXtsYt4Mphm8XHNUfk2me1cF3ssS2SqDBNFpYAzMjomC\"]},\"@openzeppelin/contracts/utils/math/SafeMath.sol\":{\"keccak256\":\"0x8666f020bd8fc9dc14f07e2ebc52b5f236ab4cdde7c77679b08cb2f94730043b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://163776cbf565c722232393aa2d62cbe8a2ffb5805986abf4906c00e1e07450a6\",\"dweb:/ipfs/QmPZoN9T3cb6o8bGhjBPZcz7im8T8DWhpr3tjLwhJJHx9N\"]}},\"version\":1}",
+  "bytecode": "0x60806040526000600260146101000a81548160ff021916908315150217905550600560035534801561003057600080fd5b5061076f806100406000396000f3fe608060405234801561001057600080fd5b50600436106100935760003560e01c80633f4ba83a116100665780633f4ba83a1461010c5780634e0a3379146101165780635c975abb146101325780638456cb5914610150578063b047fb501461015a57610093565b80630519ce79146100985780630a0f8168146100b657806327d7874c146100d45780632ba73c15146100f0575b600080fd5b6100a0610178565b6040516100ad91906106a9565b60405180910390f35b6100be61019e565b6040516100cb91906106a9565b60405180910390f35b6100ee60048036038101906100e9919061065e565b6101c2565b005b61010a6004803603810190610105919061065e565b610297565b005b61011461036d565b005b610130600480360381019061012b919061065e565b6103fb565b005b61013a6104d1565b60405161014791906106c4565b60405180910390f35b6101586104e4565b005b610162610623565b60405161016f91906106a9565b60405180910390f35b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461021a57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561025457600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146102ef57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561032957600080fd5b80600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146103c557600080fd5b600260149054906101000a900460ff166103de57600080fd5b6000600260146101000a81548160ff021916908315150217905550565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461045357600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561048d57600080fd5b80600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b600260149054906101000a900460ff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16148061058b575060008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b806105e35750600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b6105ec57600080fd5b600260149054906101000a900460ff161561060657600080fd5b6001600260146101000a81548160ff021916908315150217905550565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008135905061065881610722565b92915050565b6000602082840312156106745761067361071d565b5b600061068284828501610649565b91505092915050565b610694816106df565b82525050565b6106a3816106f1565b82525050565b60006020820190506106be600083018461068b565b92915050565b60006020820190506106d9600083018461069a565b92915050565b60006106ea826106fd565b9050919050565b60008115159050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600080fd5b61072b816106df565b811461073657600080fd5b5056fea2646970667358221220729aad192c7c632bd4847fb6e95aeb4285aa9fd60bba860d07d69679e143870e64736f6c63430008060033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100935760003560e01c80633f4ba83a116100665780633f4ba83a1461010c5780634e0a3379146101165780635c975abb146101325780638456cb5914610150578063b047fb501461015a57610093565b80630519ce79146100985780630a0f8168146100b657806327d7874c146100d45780632ba73c15146100f0575b600080fd5b6100a0610178565b6040516100ad91906106a9565b60405180910390f35b6100be61019e565b6040516100cb91906106a9565b60405180910390f35b6100ee60048036038101906100e9919061065e565b6101c2565b005b61010a6004803603810190610105919061065e565b610297565b005b61011461036d565b005b610130600480360381019061012b919061065e565b6103fb565b005b61013a6104d1565b60405161014791906106c4565b60405180910390f35b6101586104e4565b005b610162610623565b60405161016f91906106a9565b60405180910390f35b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461021a57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561025457600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146102ef57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561032957600080fd5b80600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146103c557600080fd5b600260149054906101000a900460ff166103de57600080fd5b6000600260146101000a81548160ff021916908315150217905550565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461045357600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561048d57600080fd5b80600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b600260149054906101000a900460ff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16148061058b575060008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b806105e35750600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b6105ec57600080fd5b600260149054906101000a900460ff161561060657600080fd5b6001600260146101000a81548160ff021916908315150217905550565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008135905061065881610722565b92915050565b6000602082840312156106745761067361071d565b5b600061068284828501610649565b91505092915050565b610694816106df565b82525050565b6106a3816106f1565b82525050565b60006020820190506106be600083018461068b565b92915050565b60006020820190506106d9600083018461069a565b92915050565b60006106ea826106fd565b9050919050565b60008115159050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600080fd5b61072b816106df565b811461073657600080fd5b5056fea2646970667358221220729aad192c7c632bd4847fb6e95aeb4285aa9fd60bba860d07d69679e143870e64736f6c63430008060033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [
+    {
+      "ast": {
+        "nodeType": "YulBlock",
+        "src": "0:1952:12",
+        "statements": [
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "59:87:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "69:29:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "offset",
+                        "nodeType": "YulIdentifier",
+                        "src": "91:6:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "calldataload",
+                      "nodeType": "YulIdentifier",
+                      "src": "78:12:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "78:20:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "value",
+                      "nodeType": "YulIdentifier",
+                      "src": "69:5:12"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "value",
+                        "nodeType": "YulIdentifier",
+                        "src": "134:5:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "validator_revert_t_address",
+                      "nodeType": "YulIdentifier",
+                      "src": "107:26:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "107:33:12"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "107:33:12"
+                }
+              ]
+            },
+            "name": "abi_decode_t_address",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "offset",
+                "nodeType": "YulTypedName",
+                "src": "37:6:12",
+                "type": ""
+              },
+              {
+                "name": "end",
+                "nodeType": "YulTypedName",
+                "src": "45:3:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "53:5:12",
+                "type": ""
+              }
+            ],
+            "src": "7:139:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "218:263:12",
+              "statements": [
+                {
+                  "body": {
+                    "nodeType": "YulBlock",
+                    "src": "264:83:12",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [],
+                          "functionName": {
+                            "name": "revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b",
+                            "nodeType": "YulIdentifier",
+                            "src": "266:77:12"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "266:79:12"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "266:79:12"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "dataEnd",
+                            "nodeType": "YulIdentifier",
+                            "src": "239:7:12"
+                          },
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "248:9:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "sub",
+                          "nodeType": "YulIdentifier",
+                          "src": "235:3:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "235:23:12"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "260:2:12",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "slt",
+                      "nodeType": "YulIdentifier",
+                      "src": "231:3:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "231:32:12"
+                  },
+                  "nodeType": "YulIf",
+                  "src": "228:2:12"
+                },
+                {
+                  "nodeType": "YulBlock",
+                  "src": "357:117:12",
+                  "statements": [
+                    {
+                      "nodeType": "YulVariableDeclaration",
+                      "src": "372:15:12",
+                      "value": {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "386:1:12",
+                        "type": "",
+                        "value": "0"
+                      },
+                      "variables": [
+                        {
+                          "name": "offset",
+                          "nodeType": "YulTypedName",
+                          "src": "376:6:12",
+                          "type": ""
+                        }
+                      ]
+                    },
+                    {
+                      "nodeType": "YulAssignment",
+                      "src": "401:63:12",
+                      "value": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "name": "headStart",
+                                "nodeType": "YulIdentifier",
+                                "src": "436:9:12"
+                              },
+                              {
+                                "name": "offset",
+                                "nodeType": "YulIdentifier",
+                                "src": "447:6:12"
+                              }
+                            ],
+                            "functionName": {
+                              "name": "add",
+                              "nodeType": "YulIdentifier",
+                              "src": "432:3:12"
+                            },
+                            "nodeType": "YulFunctionCall",
+                            "src": "432:22:12"
+                          },
+                          {
+                            "name": "dataEnd",
+                            "nodeType": "YulIdentifier",
+                            "src": "456:7:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "abi_decode_t_address",
+                          "nodeType": "YulIdentifier",
+                          "src": "411:20:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "411:53:12"
+                      },
+                      "variableNames": [
+                        {
+                          "name": "value0",
+                          "nodeType": "YulIdentifier",
+                          "src": "401:6:12"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_decode_tuple_t_address",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "188:9:12",
+                "type": ""
+              },
+              {
+                "name": "dataEnd",
+                "nodeType": "YulTypedName",
+                "src": "199:7:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "211:6:12",
+                "type": ""
+              }
+            ],
+            "src": "152:329:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "552:53:12",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "569:3:12"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "592:5:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "cleanup_t_address",
+                          "nodeType": "YulIdentifier",
+                          "src": "574:17:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "574:24:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "562:6:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "562:37:12"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "562:37:12"
+                }
+              ]
+            },
+            "name": "abi_encode_t_address_to_t_address_fromStack",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "540:5:12",
+                "type": ""
+              },
+              {
+                "name": "pos",
+                "nodeType": "YulTypedName",
+                "src": "547:3:12",
+                "type": ""
+              }
+            ],
+            "src": "487:118:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "670:50:12",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "687:3:12"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "707:5:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "cleanup_t_bool",
+                          "nodeType": "YulIdentifier",
+                          "src": "692:14:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "692:21:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "680:6:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "680:34:12"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "680:34:12"
+                }
+              ]
+            },
+            "name": "abi_encode_t_bool_to_t_bool_fromStack",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "658:5:12",
+                "type": ""
+              },
+              {
+                "name": "pos",
+                "nodeType": "YulTypedName",
+                "src": "665:3:12",
+                "type": ""
+              }
+            ],
+            "src": "611:109:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "824:124:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "834:26:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "846:9:12"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "857:2:12",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "842:3:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "842:18:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "834:4:12"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "value0",
+                        "nodeType": "YulIdentifier",
+                        "src": "914:6:12"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "927:9:12"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "938:1:12",
+                            "type": "",
+                            "value": "0"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "923:3:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "923:17:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_encode_t_address_to_t_address_fromStack",
+                      "nodeType": "YulIdentifier",
+                      "src": "870:43:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "870:71:12"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "870:71:12"
+                }
+              ]
+            },
+            "name": "abi_encode_tuple_t_address__to_t_address__fromStack_reversed",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "796:9:12",
+                "type": ""
+              },
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "808:6:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "tail",
+                "nodeType": "YulTypedName",
+                "src": "819:4:12",
+                "type": ""
+              }
+            ],
+            "src": "726:222:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1046:118:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1056:26:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "1068:9:12"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1079:2:12",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "1064:3:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1064:18:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "1056:4:12"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "value0",
+                        "nodeType": "YulIdentifier",
+                        "src": "1130:6:12"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "1143:9:12"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "1154:1:12",
+                            "type": "",
+                            "value": "0"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "1139:3:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "1139:17:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_encode_t_bool_to_t_bool_fromStack",
+                      "nodeType": "YulIdentifier",
+                      "src": "1092:37:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1092:65:12"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "1092:65:12"
+                }
+              ]
+            },
+            "name": "abi_encode_tuple_t_bool__to_t_bool__fromStack_reversed",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "1018:9:12",
+                "type": ""
+              },
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "1030:6:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "tail",
+                "nodeType": "YulTypedName",
+                "src": "1041:4:12",
+                "type": ""
+              }
+            ],
+            "src": "954:210:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1210:35:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1220:19:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1236:2:12",
+                        "type": "",
+                        "value": "64"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mload",
+                      "nodeType": "YulIdentifier",
+                      "src": "1230:5:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1230:9:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "memPtr",
+                      "nodeType": "YulIdentifier",
+                      "src": "1220:6:12"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "allocate_unbounded",
+            "nodeType": "YulFunctionDefinition",
+            "returnVariables": [
+              {
+                "name": "memPtr",
+                "nodeType": "YulTypedName",
+                "src": "1203:6:12",
+                "type": ""
+              }
+            ],
+            "src": "1170:75:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1296:51:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1306:35:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "value",
+                        "nodeType": "YulIdentifier",
+                        "src": "1335:5:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "cleanup_t_uint160",
+                      "nodeType": "YulIdentifier",
+                      "src": "1317:17:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1317:24:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "cleaned",
+                      "nodeType": "YulIdentifier",
+                      "src": "1306:7:12"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "cleanup_t_address",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "1278:5:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "cleaned",
+                "nodeType": "YulTypedName",
+                "src": "1288:7:12",
+                "type": ""
+              }
+            ],
+            "src": "1251:96:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1395:48:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1405:32:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "1430:5:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "iszero",
+                          "nodeType": "YulIdentifier",
+                          "src": "1423:6:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "1423:13:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "iszero",
+                      "nodeType": "YulIdentifier",
+                      "src": "1416:6:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1416:21:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "cleaned",
+                      "nodeType": "YulIdentifier",
+                      "src": "1405:7:12"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "cleanup_t_bool",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "1377:5:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "cleaned",
+                "nodeType": "YulTypedName",
+                "src": "1387:7:12",
+                "type": ""
+              }
+            ],
+            "src": "1353:90:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1494:81:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1504:65:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "value",
+                        "nodeType": "YulIdentifier",
+                        "src": "1519:5:12"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1526:42:12",
+                        "type": "",
+                        "value": "0xffffffffffffffffffffffffffffffffffffffff"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "and",
+                      "nodeType": "YulIdentifier",
+                      "src": "1515:3:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1515:54:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "cleaned",
+                      "nodeType": "YulIdentifier",
+                      "src": "1504:7:12"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "cleanup_t_uint160",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "1476:5:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "cleaned",
+                "nodeType": "YulTypedName",
+                "src": "1486:7:12",
+                "type": ""
+              }
+            ],
+            "src": "1449:126:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1670:28:12",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1687:1:12",
+                        "type": "",
+                        "value": "0"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1690:1:12",
+                        "type": "",
+                        "value": "0"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "revert",
+                      "nodeType": "YulIdentifier",
+                      "src": "1680:6:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1680:12:12"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "1680:12:12"
+                }
+              ]
+            },
+            "name": "revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db",
+            "nodeType": "YulFunctionDefinition",
+            "src": "1581:117:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1793:28:12",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1810:1:12",
+                        "type": "",
+                        "value": "0"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1813:1:12",
+                        "type": "",
+                        "value": "0"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "revert",
+                      "nodeType": "YulIdentifier",
+                      "src": "1803:6:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1803:12:12"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "1803:12:12"
+                }
+              ]
+            },
+            "name": "revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b",
+            "nodeType": "YulFunctionDefinition",
+            "src": "1704:117:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1870:79:12",
+              "statements": [
+                {
+                  "body": {
+                    "nodeType": "YulBlock",
+                    "src": "1927:16:12",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "1936:1:12",
+                              "type": "",
+                              "value": "0"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "1939:1:12",
+                              "type": "",
+                              "value": "0"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "revert",
+                            "nodeType": "YulIdentifier",
+                            "src": "1929:6:12"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "1929:12:12"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "1929:12:12"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "1893:5:12"
+                          },
+                          {
+                            "arguments": [
+                              {
+                                "name": "value",
+                                "nodeType": "YulIdentifier",
+                                "src": "1918:5:12"
+                              }
+                            ],
+                            "functionName": {
+                              "name": "cleanup_t_address",
+                              "nodeType": "YulIdentifier",
+                              "src": "1900:17:12"
+                            },
+                            "nodeType": "YulFunctionCall",
+                            "src": "1900:24:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "eq",
+                          "nodeType": "YulIdentifier",
+                          "src": "1890:2:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "1890:35:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "iszero",
+                      "nodeType": "YulIdentifier",
+                      "src": "1883:6:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1883:43:12"
+                  },
+                  "nodeType": "YulIf",
+                  "src": "1880:2:12"
+                }
+              ]
+            },
+            "name": "validator_revert_t_address",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "1863:5:12",
+                "type": ""
+              }
+            ],
+            "src": "1827:122:12"
+          }
+        ]
+      },
+      "contents": "{\n\n    function abi_decode_t_address(offset, end) -> value {\n        value := calldataload(offset)\n        validator_revert_t_address(value)\n    }\n\n    function abi_decode_tuple_t_address(headStart, dataEnd) -> value0 {\n        if slt(sub(dataEnd, headStart), 32) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := 0\n\n            value0 := abi_decode_t_address(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function abi_encode_t_address_to_t_address_fromStack(value, pos) {\n        mstore(pos, cleanup_t_address(value))\n    }\n\n    function abi_encode_t_bool_to_t_bool_fromStack(value, pos) {\n        mstore(pos, cleanup_t_bool(value))\n    }\n\n    function abi_encode_tuple_t_address__to_t_address__fromStack_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_address_to_t_address_fromStack(value0,  add(headStart, 0))\n\n    }\n\n    function abi_encode_tuple_t_bool__to_t_bool__fromStack_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_bool_to_t_bool_fromStack(value0,  add(headStart, 0))\n\n    }\n\n    function allocate_unbounded() -> memPtr {\n        memPtr := mload(64)\n    }\n\n    function cleanup_t_address(value) -> cleaned {\n        cleaned := cleanup_t_uint160(value)\n    }\n\n    function cleanup_t_bool(value) -> cleaned {\n        cleaned := iszero(iszero(value))\n    }\n\n    function cleanup_t_uint160(value) -> cleaned {\n        cleaned := and(value, 0xffffffffffffffffffffffffffffffffffffffff)\n    }\n\n    function revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() {\n        revert(0, 0)\n    }\n\n    function revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() {\n        revert(0, 0)\n    }\n\n    function validator_revert_t_address(value) {\n        if iszero(eq(value, cleanup_t_address(value))) { revert(0, 0) }\n    }\n\n}\n",
+      "id": 12,
+      "language": "Yul",
+      "name": "#utility.yul"
+    }
+  ],
+  "sourceMap": "167:3496:2:-:0;;;1708:5:6;1687:26;;;;;;;;;;;;;;;;;;;;1747:1:2;1723:25;;167:3496;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "167:3496:2:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1524:25:6;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;1493;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;2484:128;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;3030;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;4036:126;;;:::i;:::-;;2757:128;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;1687:26;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;3667:81;;;:::i;:::-;;1555:25;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;1524;;;;;;;;;;;;;:::o;1493:::-;;;;;;;;;;;;:::o;2484:128::-;1827:10;;;;;;;;;;1813:24;;:10;:24;;;1805:33;;;;;;2571:1:::1;2552:21;;:7;:21;;;;2544:30;;;::::0;::::1;;2598:7;2585:10;::::0;:20:::1;;;;;;;;;;;;;;;;;;2484:128:::0;:::o;3030:::-;1827:10;;;;;;;;;;1813:24;;:10;:24;;;1805:33;;;;;;3117:1:::1;3098:21;;:7;:21;;;;3090:30;;;::::0;::::1;;3144:7;3131:10;;:20;;;;;;;;;;;;;;;;;;3030:128:::0;:::o;4036:126::-;1827:10;;;;;;;;;;1813:24;;:10;:24;;;1805:33;;;;;;3489:6:::1;;;;;;;;;;;3481:15;;;::::0;::::1;;4150:5:::2;4141:6;;:14;;;;;;;;;;;;;;;;;;4036:126::o:0;2757:128::-;1827:10;;;;;;;;;;1813:24;;:10;:24;;;1805:33;;;;;;2844:1:::1;2825:21;;:7;:21;;;;2817:30;;;::::0;::::1;;2871:7;2858:10;;:20;;;;;;;;;;;;;;;;;;2757:128:::0;:::o;1687:26::-;;;;;;;;;;;;;:::o;3667:81::-;2213:10;;;;;;;;;;;2199:24;;:10;:24;;;:68;;;;2257:10;;;;;;;;;;2243:24;;:10;:24;;;2199:68;:112;;;;2301:10;;;;;;;;;;;2287:24;;:10;:24;;;2199:112;2178:143;;;;;;3348:6:::1;;;;;;;;;;;3347:7;3339:16;;;::::0;::::1;;3737:4:::2;3728:6;;:13;;;;;;;;;;;;;;;;;;3667:81::o:0;1555:25::-;;;;;;;;;;;;;:::o;7:139:12:-;53:5;91:6;78:20;69:29;;107:33;134:5;107:33;:::i;:::-;59:87;;;;:::o;152:329::-;211:6;260:2;248:9;239:7;235:23;231:32;228:2;;;266:79;;:::i;:::-;228:2;386:1;411:53;456:7;447:6;436:9;432:22;411:53;:::i;:::-;401:63;;357:117;218:263;;;;:::o;487:118::-;574:24;592:5;574:24;:::i;:::-;569:3;562:37;552:53;;:::o;611:109::-;692:21;707:5;692:21;:::i;:::-;687:3;680:34;670:50;;:::o;726:222::-;819:4;857:2;846:9;842:18;834:26;;870:71;938:1;927:9;923:17;914:6;870:71;:::i;:::-;824:124;;;;:::o;954:210::-;1041:4;1079:2;1068:9;1064:18;1056:26;;1092:65;1154:1;1143:9;1139:17;1130:6;1092:65;:::i;:::-;1046:118;;;;:::o;1251:96::-;1288:7;1317:24;1335:5;1317:24;:::i;:::-;1306:35;;1296:51;;;:::o;1353:90::-;1387:7;1430:5;1423:13;1416:21;1405:32;;1395:48;;;:::o;1449:126::-;1486:7;1526:42;1519:5;1515:54;1504:65;;1494:81;;;:::o;1704:117::-;1813:1;1810;1803:12;1827:122;1900:24;1918:5;1900:24;:::i;:::-;1893:5;1890:35;1880:2;;1939:1;1936;1929:12;1880:2;1870:79;:::o",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\nimport \"../roles/ExecutivesAccessControl.sol\";\nimport \"@openzeppelin/contracts/finance/PaymentSplitter.sol\";\n\ncontract EthDropBase is ExecutivesAccessControl {\n    /*** EVENTS ***/\n\n    /// @dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering.\n    event RegistrationOpen();\n\n    /// @dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering.\n    //    After this event fires users can no longer register, and users who have registered can claim winnings.\n    event WinningsClaimingOpen();\n\n    /// @dev The EventClose event is fired whenever an event closes. After this event is fired users can no\n    //    longer claim winnings\n    event EventClose();\n\n    /// @dev Transfer event as defined in current draft of ERC721. Emitted every some Eth is transferred\n\n    event Transfer(address from, address to); // Assumed Eth\n\n    // TODO - (in later, more than just eth contracts as pass tokenId)\n    // event Transfer(address from, address to, uint tokenId);\n\n    /*** DATA TYPES ***/\n\n    /// @dev The main Kitty struct. Every cat in CryptoKitties is represented by a copy\n    ///  of this structure, so great care was taken to ensure that it fits neatly into\n    ///  exactly two 256-bit words. Note that the order of the members in this structure\n    ///  is important because of the byte-packing rules used by Ethereum.\n    ///  Ref: http://solidity.readthedocs.io/en/develop/miscellaneous.html\n\n    // TODO - ^ think harder about all that byte-packing junk... 😅\n\n    enum EventState {\n        CREATED,\n        REGISTRATION,\n        CLAIM_WINNINGS,\n        ENDED\n    }\n\n    uint devCutPercentage = 5;\n\n    struct EthDropEvent {\n        // The IRL organization that controls their own airdrops.\n        // Each group can only be running 1 event at a time.\n        uint groupId;\n        // Event goes through a linear flow of states, finite state machine.\n        EventState currentState;\n        // The timestamp from the block when this event started.\n        uint startTime;\n        // The timestamp from the block when registration for this event ended.\n        uint registrationEndTime;\n        // The timestamp from the block when this event ended.\n        uint endTime;\n        // The number of eligibleRecipients who have registered.\n        uint registeredRecipientsCount;\n        // Data about the sponsor info (address is stored in Roles)\n        string sponsorName;\n        string sponsorImageUrl;\n        string sponsorLinkToUrl;\n        address currentContributor;\n    }\n\n    // ALL events happening now or in the future.\n    // Key is the groupId\n    mapping(uint => EthDropEvent) currentEvents;\n\n    // ALL events that have already happened.\n    // Key is the groupId\n    mapping(uint => EthDropEvent[]) pastEvents;\n\n    // Holds ALL admins for all groups\n    // groupId => Role\n    mapping(uint => mapping(address => bool)) admins;\n\n    // Holds ALL contributors for all groups\n    // groupId => Role\n    mapping(uint => mapping(address => bool)) contributors;\n\n    // Holds ALL eligibleRecipients for all groups\n    // groupId => Role\n    mapping(uint => mapping(address => bool)) eligibleRecipients;\n\n    // Holds ALL registeredRecipients for all groups\n    // groupId => Role\n    mapping(uint => mapping(address => bool)) registeredRecipients;\n\n    // Holds ALL registeredRecipients in an array (for PaymentSplitter)\n    // groupId => address[]\n    mapping(uint => address[]) registeredRecipientsArray;\n\n    // Keeping track of winnings for all groups\n    mapping(uint => PaymentSplitter) pot;\n\n}",
+  "sourcePath": "/Users/jim/Git-Projects/EthDrop/contracts/core/EthDropBase.sol",
+  "ast": {
+    "absolutePath": "/Users/jim/Git-Projects/EthDrop/contracts/core/EthDropBase.sol",
+    "exportedSymbols": {
+      "Address": [
+        1840
+      ],
+      "Context": [
+        1861
+      ],
+      "EthDropBase": [
+        157
+      ],
+      "ExecutivesAccessControl": [
+        1079
+      ],
+      "PaymentSplitter": [
+        1544
+      ],
+      "SafeMath": [
+        2173
+      ]
+    },
+    "id": 158,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 61,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:2"
+      },
+      {
+        "absolutePath": "/Users/jim/Git-Projects/EthDrop/contracts/roles/ExecutivesAccessControl.sol",
+        "file": "../roles/ExecutivesAccessControl.sol",
+        "id": 62,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 158,
+        "sourceUnit": 1080,
+        "src": "57:46:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/finance/PaymentSplitter.sol",
+        "file": "@openzeppelin/contracts/finance/PaymentSplitter.sol",
+        "id": 63,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 158,
+        "sourceUnit": 1545,
+        "src": "104:61:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 64,
+              "name": "ExecutivesAccessControl",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 1079,
+              "src": "191:23:2"
+            },
+            "id": 65,
+            "nodeType": "InheritanceSpecifier",
+            "src": "191:23:2"
+          }
+        ],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 157,
+        "linearizedBaseContracts": [
+          157,
+          1079
+        ],
+        "name": "EthDropBase",
+        "nameLocation": "176:11:2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 66,
+              "nodeType": "StructuredDocumentation",
+              "src": "243:103:2",
+              "text": "@dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering."
+            },
+            "id": 68,
+            "name": "RegistrationOpen",
+            "nameLocation": "357:16:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 67,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "373:2:2"
+            },
+            "src": "351:25:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 69,
+              "nodeType": "StructuredDocumentation",
+              "src": "382:103:2",
+              "text": "@dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering."
+            },
+            "id": 71,
+            "name": "WinningsClaimingOpen",
+            "nameLocation": "609:20:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 70,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "629:2:2"
+            },
+            "src": "603:29:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 72,
+              "nodeType": "StructuredDocumentation",
+              "src": "638:103:2",
+              "text": "@dev The EventClose event is fired whenever an event closes. After this event is fired users can no"
+            },
+            "id": 74,
+            "name": "EventClose",
+            "nameLocation": "784:10:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 73,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "794:2:2"
+            },
+            "src": "778:19:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 75,
+              "nodeType": "StructuredDocumentation",
+              "src": "803:101:2",
+              "text": "@dev Transfer event as defined in current draft of ERC721. Emitted every some Eth is transferred"
+            },
+            "id": 81,
+            "name": "Transfer",
+            "nameLocation": "915:8:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 80,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 77,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "from",
+                  "nameLocation": "932:4:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 81,
+                  "src": "924:12:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 76,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "924:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 79,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "to",
+                  "nameLocation": "946:2:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 81,
+                  "src": "938:10:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 78,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "938:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "923:26:2"
+            },
+            "src": "909:41:2"
+          },
+          {
+            "canonicalName": "EthDropBase.EventState",
+            "id": 86,
+            "members": [
+              {
+                "id": 82,
+                "name": "CREATED",
+                "nameLocation": "1643:7:2",
+                "nodeType": "EnumValue",
+                "src": "1643:7:2"
+              },
+              {
+                "id": 83,
+                "name": "REGISTRATION",
+                "nameLocation": "1660:12:2",
+                "nodeType": "EnumValue",
+                "src": "1660:12:2"
+              },
+              {
+                "id": 84,
+                "name": "CLAIM_WINNINGS",
+                "nameLocation": "1682:14:2",
+                "nodeType": "EnumValue",
+                "src": "1682:14:2"
+              },
+              {
+                "id": 85,
+                "name": "ENDED",
+                "nameLocation": "1706:5:2",
+                "nodeType": "EnumValue",
+                "src": "1706:5:2"
+              }
+            ],
+            "name": "EventState",
+            "nameLocation": "1622:10:2",
+            "nodeType": "EnumDefinition",
+            "src": "1617:100:2"
+          },
+          {
+            "constant": false,
+            "id": 89,
+            "mutability": "mutable",
+            "name": "devCutPercentage",
+            "nameLocation": "1728:16:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "1723:25:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 87,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "1723:4:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "hexValue": "35",
+              "id": 88,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1747:1:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_5_by_1",
+                "typeString": "int_const 5"
+              },
+              "value": "5"
+            },
+            "visibility": "internal"
+          },
+          {
+            "canonicalName": "EthDropBase.EthDropEvent",
+            "id": 111,
+            "members": [
+              {
+                "constant": false,
+                "id": 91,
+                "mutability": "mutable",
+                "name": "groupId",
+                "nameLocation": "1917:7:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "1912:12:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 90,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1912:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 94,
+                "mutability": "mutable",
+                "name": "currentState",
+                "nameLocation": "2022:12:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2011:23:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_EventState_$86",
+                  "typeString": "enum EthDropBase.EventState"
+                },
+                "typeName": {
+                  "id": 93,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 92,
+                    "name": "EventState",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 86,
+                    "src": "2011:10:2"
+                  },
+                  "referencedDeclaration": 86,
+                  "src": "2011:10:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_EventState_$86",
+                    "typeString": "enum EthDropBase.EventState"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 96,
+                "mutability": "mutable",
+                "name": "startTime",
+                "nameLocation": "2114:9:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2109:14:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 95,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2109:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 98,
+                "mutability": "mutable",
+                "name": "registrationEndTime",
+                "nameLocation": "2218:19:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2213:24:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 97,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2213:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 100,
+                "mutability": "mutable",
+                "name": "endTime",
+                "nameLocation": "2315:7:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2310:12:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 99,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2310:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 102,
+                "mutability": "mutable",
+                "name": "registeredRecipientsCount",
+                "nameLocation": "2402:25:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2397:30:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 101,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2397:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 104,
+                "mutability": "mutable",
+                "name": "sponsorName",
+                "nameLocation": "2512:11:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2505:18:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 103,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2505:6:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 106,
+                "mutability": "mutable",
+                "name": "sponsorImageUrl",
+                "nameLocation": "2540:15:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2533:22:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 105,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2533:6:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 108,
+                "mutability": "mutable",
+                "name": "sponsorLinkToUrl",
+                "nameLocation": "2572:16:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2565:23:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 107,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2565:6:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 110,
+                "mutability": "mutable",
+                "name": "currentContributor",
+                "nameLocation": "2606:18:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2598:26:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 109,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2598:7:2",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "EthDropEvent",
+            "nameLocation": "1762:12:2",
+            "nodeType": "StructDefinition",
+            "scope": 157,
+            "src": "1755:876:2",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 116,
+            "mutability": "mutable",
+            "name": "currentEvents",
+            "nameLocation": "2743:13:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "2713:43:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_EthDropEvent_$111_storage_$",
+              "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent)"
+            },
+            "typeName": {
+              "id": 115,
+              "keyType": {
+                "id": 112,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "2721:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "2713:29:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_EthDropEvent_$111_storage_$",
+                "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent)"
+              },
+              "valueType": {
+                "id": 114,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 113,
+                  "name": "EthDropEvent",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 111,
+                  "src": "2729:12:2"
+                },
+                "referencedDeclaration": 111,
+                "src": "2729:12:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_EthDropEvent_$111_storage_ptr",
+                  "typeString": "struct EthDropBase.EthDropEvent"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 122,
+            "mutability": "mutable",
+            "name": "pastEvents",
+            "nameLocation": "2867:10:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "2835:42:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_EthDropEvent_$111_storage_$dyn_storage_$",
+              "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent[])"
+            },
+            "typeName": {
+              "id": 121,
+              "keyType": {
+                "id": 117,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "2843:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "2835:31:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_EthDropEvent_$111_storage_$dyn_storage_$",
+                "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 119,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 118,
+                    "name": "EthDropEvent",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 111,
+                    "src": "2851:12:2"
+                  },
+                  "referencedDeclaration": 111,
+                  "src": "2851:12:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_EthDropEvent_$111_storage_ptr",
+                    "typeString": "struct EthDropBase.EthDropEvent"
+                  }
+                },
+                "id": 120,
+                "nodeType": "ArrayTypeName",
+                "src": "2851:14:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_EthDropEvent_$111_storage_$dyn_storage_ptr",
+                  "typeString": "struct EthDropBase.EthDropEvent[]"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 128,
+            "mutability": "mutable",
+            "name": "admins",
+            "nameLocation": "2988:6:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "2946:48:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 127,
+              "keyType": {
+                "id": 123,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "2954:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "2946:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 126,
+                "keyType": {
+                  "id": 124,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2970:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "2962:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 125,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2981:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 134,
+            "mutability": "mutable",
+            "name": "contributors",
+            "nameLocation": "3111:12:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3069:54:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 133,
+              "keyType": {
+                "id": 129,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3077:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3069:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 132,
+                "keyType": {
+                  "id": 130,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3093:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "3085:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 131,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3104:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 140,
+            "mutability": "mutable",
+            "name": "eligibleRecipients",
+            "nameLocation": "3246:18:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3204:60:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 139,
+              "keyType": {
+                "id": 135,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3212:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3204:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 138,
+                "keyType": {
+                  "id": 136,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3228:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "3220:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 137,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3239:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 146,
+            "mutability": "mutable",
+            "name": "registeredRecipients",
+            "nameLocation": "3389:20:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3347:62:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 145,
+              "keyType": {
+                "id": 141,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3355:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3347:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 144,
+                "keyType": {
+                  "id": 142,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3371:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "3363:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 143,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3382:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 151,
+            "mutability": "mutable",
+            "name": "registeredRecipientsArray",
+            "nameLocation": "3543:25:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3516:52:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_address_$dyn_storage_$",
+              "typeString": "mapping(uint256 => address[])"
+            },
+            "typeName": {
+              "id": 150,
+              "keyType": {
+                "id": 147,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3524:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3516:26:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_address_$dyn_storage_$",
+                "typeString": "mapping(uint256 => address[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 148,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3532:7:2",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "id": 149,
+                "nodeType": "ArrayTypeName",
+                "src": "3532:9:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                  "typeString": "address[]"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 156,
+            "mutability": "mutable",
+            "name": "pot",
+            "nameLocation": "3656:3:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3623:36:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_contract$_PaymentSplitter_$1544_$",
+              "typeString": "mapping(uint256 => contract PaymentSplitter)"
+            },
+            "typeName": {
+              "id": 155,
+              "keyType": {
+                "id": 152,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3631:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3623:32:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_contract$_PaymentSplitter_$1544_$",
+                "typeString": "mapping(uint256 => contract PaymentSplitter)"
+              },
+              "valueType": {
+                "id": 154,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 153,
+                  "name": "PaymentSplitter",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1544,
+                  "src": "3639:15:2"
+                },
+                "referencedDeclaration": 1544,
+                "src": "3639:15:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_PaymentSplitter_$1544",
+                  "typeString": "contract PaymentSplitter"
+                }
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "scope": 158,
+        "src": "167:3496:2",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:3631:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/jim/Git-Projects/EthDrop/contracts/core/EthDropBase.sol",
+    "exportedSymbols": {
+      "Address": [
+        1840
+      ],
+      "Context": [
+        1861
+      ],
+      "EthDropBase": [
+        157
+      ],
+      "ExecutivesAccessControl": [
+        1079
+      ],
+      "PaymentSplitter": [
+        1544
+      ],
+      "SafeMath": [
+        2173
+      ]
+    },
+    "id": 158,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 61,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:2"
+      },
+      {
+        "absolutePath": "/Users/jim/Git-Projects/EthDrop/contracts/roles/ExecutivesAccessControl.sol",
+        "file": "../roles/ExecutivesAccessControl.sol",
+        "id": 62,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 158,
+        "sourceUnit": 1080,
+        "src": "57:46:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/finance/PaymentSplitter.sol",
+        "file": "@openzeppelin/contracts/finance/PaymentSplitter.sol",
+        "id": 63,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 158,
+        "sourceUnit": 1545,
+        "src": "104:61:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 64,
+              "name": "ExecutivesAccessControl",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 1079,
+              "src": "191:23:2"
+            },
+            "id": 65,
+            "nodeType": "InheritanceSpecifier",
+            "src": "191:23:2"
+          }
+        ],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 157,
+        "linearizedBaseContracts": [
+          157,
+          1079
+        ],
+        "name": "EthDropBase",
+        "nameLocation": "176:11:2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 66,
+              "nodeType": "StructuredDocumentation",
+              "src": "243:103:2",
+              "text": "@dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering."
+            },
+            "id": 68,
+            "name": "RegistrationOpen",
+            "nameLocation": "357:16:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 67,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "373:2:2"
+            },
+            "src": "351:25:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 69,
+              "nodeType": "StructuredDocumentation",
+              "src": "382:103:2",
+              "text": "@dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering."
+            },
+            "id": 71,
+            "name": "WinningsClaimingOpen",
+            "nameLocation": "609:20:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 70,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "629:2:2"
+            },
+            "src": "603:29:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 72,
+              "nodeType": "StructuredDocumentation",
+              "src": "638:103:2",
+              "text": "@dev The EventClose event is fired whenever an event closes. After this event is fired users can no"
+            },
+            "id": 74,
+            "name": "EventClose",
+            "nameLocation": "784:10:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 73,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "794:2:2"
+            },
+            "src": "778:19:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 75,
+              "nodeType": "StructuredDocumentation",
+              "src": "803:101:2",
+              "text": "@dev Transfer event as defined in current draft of ERC721. Emitted every some Eth is transferred"
+            },
+            "id": 81,
+            "name": "Transfer",
+            "nameLocation": "915:8:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 80,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 77,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "from",
+                  "nameLocation": "932:4:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 81,
+                  "src": "924:12:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 76,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "924:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 79,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "to",
+                  "nameLocation": "946:2:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 81,
+                  "src": "938:10:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 78,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "938:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "923:26:2"
+            },
+            "src": "909:41:2"
+          },
+          {
+            "canonicalName": "EthDropBase.EventState",
+            "id": 86,
+            "members": [
+              {
+                "id": 82,
+                "name": "CREATED",
+                "nameLocation": "1643:7:2",
+                "nodeType": "EnumValue",
+                "src": "1643:7:2"
+              },
+              {
+                "id": 83,
+                "name": "REGISTRATION",
+                "nameLocation": "1660:12:2",
+                "nodeType": "EnumValue",
+                "src": "1660:12:2"
+              },
+              {
+                "id": 84,
+                "name": "CLAIM_WINNINGS",
+                "nameLocation": "1682:14:2",
+                "nodeType": "EnumValue",
+                "src": "1682:14:2"
+              },
+              {
+                "id": 85,
+                "name": "ENDED",
+                "nameLocation": "1706:5:2",
+                "nodeType": "EnumValue",
+                "src": "1706:5:2"
+              }
+            ],
+            "name": "EventState",
+            "nameLocation": "1622:10:2",
+            "nodeType": "EnumDefinition",
+            "src": "1617:100:2"
+          },
+          {
+            "constant": false,
+            "id": 89,
+            "mutability": "mutable",
+            "name": "devCutPercentage",
+            "nameLocation": "1728:16:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "1723:25:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 87,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "1723:4:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "hexValue": "35",
+              "id": 88,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1747:1:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_5_by_1",
+                "typeString": "int_const 5"
+              },
+              "value": "5"
+            },
+            "visibility": "internal"
+          },
+          {
+            "canonicalName": "EthDropBase.EthDropEvent",
+            "id": 111,
+            "members": [
+              {
+                "constant": false,
+                "id": 91,
+                "mutability": "mutable",
+                "name": "groupId",
+                "nameLocation": "1917:7:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "1912:12:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 90,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1912:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 94,
+                "mutability": "mutable",
+                "name": "currentState",
+                "nameLocation": "2022:12:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2011:23:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_EventState_$86",
+                  "typeString": "enum EthDropBase.EventState"
+                },
+                "typeName": {
+                  "id": 93,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 92,
+                    "name": "EventState",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 86,
+                    "src": "2011:10:2"
+                  },
+                  "referencedDeclaration": 86,
+                  "src": "2011:10:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_EventState_$86",
+                    "typeString": "enum EthDropBase.EventState"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 96,
+                "mutability": "mutable",
+                "name": "startTime",
+                "nameLocation": "2114:9:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2109:14:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 95,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2109:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 98,
+                "mutability": "mutable",
+                "name": "registrationEndTime",
+                "nameLocation": "2218:19:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2213:24:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 97,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2213:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 100,
+                "mutability": "mutable",
+                "name": "endTime",
+                "nameLocation": "2315:7:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2310:12:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 99,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2310:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 102,
+                "mutability": "mutable",
+                "name": "registeredRecipientsCount",
+                "nameLocation": "2402:25:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2397:30:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 101,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2397:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 104,
+                "mutability": "mutable",
+                "name": "sponsorName",
+                "nameLocation": "2512:11:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2505:18:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 103,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2505:6:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 106,
+                "mutability": "mutable",
+                "name": "sponsorImageUrl",
+                "nameLocation": "2540:15:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2533:22:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 105,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2533:6:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 108,
+                "mutability": "mutable",
+                "name": "sponsorLinkToUrl",
+                "nameLocation": "2572:16:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2565:23:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 107,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2565:6:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 110,
+                "mutability": "mutable",
+                "name": "currentContributor",
+                "nameLocation": "2606:18:2",
+                "nodeType": "VariableDeclaration",
+                "scope": 111,
+                "src": "2598:26:2",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 109,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2598:7:2",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "EthDropEvent",
+            "nameLocation": "1762:12:2",
+            "nodeType": "StructDefinition",
+            "scope": 157,
+            "src": "1755:876:2",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 116,
+            "mutability": "mutable",
+            "name": "currentEvents",
+            "nameLocation": "2743:13:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "2713:43:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_EthDropEvent_$111_storage_$",
+              "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent)"
+            },
+            "typeName": {
+              "id": 115,
+              "keyType": {
+                "id": 112,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "2721:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "2713:29:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_EthDropEvent_$111_storage_$",
+                "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent)"
+              },
+              "valueType": {
+                "id": 114,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 113,
+                  "name": "EthDropEvent",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 111,
+                  "src": "2729:12:2"
+                },
+                "referencedDeclaration": 111,
+                "src": "2729:12:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_EthDropEvent_$111_storage_ptr",
+                  "typeString": "struct EthDropBase.EthDropEvent"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 122,
+            "mutability": "mutable",
+            "name": "pastEvents",
+            "nameLocation": "2867:10:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "2835:42:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_EthDropEvent_$111_storage_$dyn_storage_$",
+              "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent[])"
+            },
+            "typeName": {
+              "id": 121,
+              "keyType": {
+                "id": 117,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "2843:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "2835:31:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_EthDropEvent_$111_storage_$dyn_storage_$",
+                "typeString": "mapping(uint256 => struct EthDropBase.EthDropEvent[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 119,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 118,
+                    "name": "EthDropEvent",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 111,
+                    "src": "2851:12:2"
+                  },
+                  "referencedDeclaration": 111,
+                  "src": "2851:12:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_EthDropEvent_$111_storage_ptr",
+                    "typeString": "struct EthDropBase.EthDropEvent"
+                  }
+                },
+                "id": 120,
+                "nodeType": "ArrayTypeName",
+                "src": "2851:14:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_EthDropEvent_$111_storage_$dyn_storage_ptr",
+                  "typeString": "struct EthDropBase.EthDropEvent[]"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 128,
+            "mutability": "mutable",
+            "name": "admins",
+            "nameLocation": "2988:6:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "2946:48:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 127,
+              "keyType": {
+                "id": 123,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "2954:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "2946:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 126,
+                "keyType": {
+                  "id": 124,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2970:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "2962:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 125,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2981:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 134,
+            "mutability": "mutable",
+            "name": "contributors",
+            "nameLocation": "3111:12:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3069:54:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 133,
+              "keyType": {
+                "id": 129,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3077:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3069:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 132,
+                "keyType": {
+                  "id": 130,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3093:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "3085:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 131,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3104:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 140,
+            "mutability": "mutable",
+            "name": "eligibleRecipients",
+            "nameLocation": "3246:18:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3204:60:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 139,
+              "keyType": {
+                "id": 135,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3212:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3204:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 138,
+                "keyType": {
+                  "id": 136,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3228:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "3220:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 137,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3239:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 146,
+            "mutability": "mutable",
+            "name": "registeredRecipients",
+            "nameLocation": "3389:20:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3347:62:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+              "typeString": "mapping(uint256 => mapping(address => bool))"
+            },
+            "typeName": {
+              "id": 145,
+              "keyType": {
+                "id": 141,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3355:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3347:41:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_address_$_t_bool_$_$",
+                "typeString": "mapping(uint256 => mapping(address => bool))"
+              },
+              "valueType": {
+                "id": 144,
+                "keyType": {
+                  "id": 142,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3371:7:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "3363:24:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                  "typeString": "mapping(address => bool)"
+                },
+                "valueType": {
+                  "id": 143,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3382:4:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 151,
+            "mutability": "mutable",
+            "name": "registeredRecipientsArray",
+            "nameLocation": "3543:25:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3516:52:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_address_$dyn_storage_$",
+              "typeString": "mapping(uint256 => address[])"
+            },
+            "typeName": {
+              "id": 150,
+              "keyType": {
+                "id": 147,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3524:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3516:26:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_address_$dyn_storage_$",
+                "typeString": "mapping(uint256 => address[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 148,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3532:7:2",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "id": 149,
+                "nodeType": "ArrayTypeName",
+                "src": "3532:9:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                  "typeString": "address[]"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 156,
+            "mutability": "mutable",
+            "name": "pot",
+            "nameLocation": "3656:3:2",
+            "nodeType": "VariableDeclaration",
+            "scope": 157,
+            "src": "3623:36:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_contract$_PaymentSplitter_$1544_$",
+              "typeString": "mapping(uint256 => contract PaymentSplitter)"
+            },
+            "typeName": {
+              "id": 155,
+              "keyType": {
+                "id": 152,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "3631:4:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "3623:32:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_contract$_PaymentSplitter_$1544_$",
+                "typeString": "mapping(uint256 => contract PaymentSplitter)"
+              },
+              "valueType": {
+                "id": 154,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 153,
+                  "name": "PaymentSplitter",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1544,
+                  "src": "3639:15:2"
+                },
+                "referencedDeclaration": 1544,
+                "src": "3639:15:2",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_PaymentSplitter_$1544",
+                  "typeString": "contract PaymentSplitter"
+                }
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "scope": 158,
+        "src": "167:3496:2",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:3631:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.6+commit.11564f7e.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x075Ce23dA19dFE848E94A96f69F549cE6D481Ba4",
+      "transactionHash": "0x324db62e873e24ee1eac8c1eb0410254d37a96b29e64b1100b2cc5a709c176d0"
+    }
+  },
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-07-21T01:24:52.823Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "events": {
+      "EventClose()": {
+        "details": "The EventClose event is fired whenever an event closes. After this event is fired users can no"
+      },
+      "RegistrationOpen()": {
+        "details": "The RegistrationOpen event is fired whenever a new event starts and users can begin restering."
+      },
+      "Transfer(address,address)": {
+        "details": "Transfer event as defined in current draft of ERC721. Emitted every some Eth is transferred"
+      },
+      "WinningsClaimingOpen()": {
+        "details": "The RegistrationOpen event is fired whenever a new event starts and users can begin restering."
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "pause()": {
+        "details": "Called by any \"C-level\" role to pause the contract. Used only when  a bug or exploit is detected and we need to limit damage."
+      },
+      "setCEO(address)": {
+        "details": "Assigns a new address to act as the CEO. Only available to the current CEO.",
+        "params": {
+          "_newCEO": "The address of the new CEO"
+        }
+      },
+      "setCFO(address)": {
+        "details": "Assigns a new address to act as the CFO. Only available to the current CEO.",
+        "params": {
+          "_newCFO": "The address of the new CFO"
+        }
+      },
+      "setCOO(address)": {
+        "details": "Assigns a new address to act as the COO. Only available to the current CEO.",
+        "params": {
+          "_newCOO": "The address of the new COO"
+        }
+      },
+      "unpause()": {
+        "details": "Unpauses the smart contract. Can only be called by the CEO, since  one reason we may pause the contract is when CFO or COO accounts are  compromised."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "unpause()": {
+        "notice": "This is public rather than external so it can be called by  derived contracts."
+      }
+    },
+    "version": 1
+  }
+}
