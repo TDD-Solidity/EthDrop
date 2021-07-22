@@ -25,6 +25,8 @@ contract ExecutivesAccessControl {
     event ContractUpgrade(address newContract);
 
     // The addresses of the accounts (or contracts) that can execute actions within each roles.
+    string public stringgg;
+
     address public ceoAddress;
     address public cfoAddress;
     address public cooAddress;
@@ -68,23 +70,39 @@ contract ExecutivesAccessControl {
     function setCEO(address _newCEO) external onlyCEO {
         require(_newCEO != address(0));
 
-        ceoAddress = _newCEO;
+        ceoAddress = address(_newCEO);
     }
 
     function isCFO() external view returns (bool) {
         return msg.sender == cfoAddress;
     }
 
+    function getString() external view returns (string memory) {
+        return stringgg;
+    }
+
+    function setString(string memory _s) external {
+        stringgg = _s;
+    }
+
+    function getCFO() external view returns (address) {
+        return cfoAddress;
+    }
+
     /// @dev Assigns a new address to act as the CFO. Only available to the current CEO.
     /// @param _newCFO The address of the new CFO
     function setCFO(address _newCFO) external onlyCEO {
-        require(_newCFO != address(0));
+        // require(_newCFO != address(0));
 
-        cfoAddress = _newCFO;
+        cfoAddress = address(_newCFO);
     }
 
     function isCOO() external view returns (bool) {
         return msg.sender == cooAddress;
+    }    
+
+    function getCOO() external view returns (address) {
+        return cooAddress;
     }
 
     /// @dev Assigns a new address to act as the COO. Only available to the current CEO.
@@ -93,6 +111,10 @@ contract ExecutivesAccessControl {
         require(_newCOO != address(0));
 
         cooAddress = _newCOO;
+    }
+
+    function whoami() external view returns (address) {
+        return msg.sender;
     }
 
     /*** Pausable functionality adapted from OpenZeppelin ***/

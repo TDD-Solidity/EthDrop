@@ -66,3 +66,14 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+<br/>
+
+# Troubleshooting
+
+<br/>
+
+If you get the error `Error: [ethjs-query] while formatting outputs from RPC`...
+
+- try going in MetaMask to Account -> Settings -> Advanced, and click "Reset Account"

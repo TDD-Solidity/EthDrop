@@ -6,19 +6,50 @@ import env from "react-dotenv";
 
 import "./App.css";
 
+
+function stringToHex(string) {
+  var hex, i;
+
+  var result = "";
+  for (i = 0; i < string.length; i++) {
+    hex = string.charCodeAt(i).toString(16);
+    result += ("000" + hex).slice(-4);
+  }
+
+  return result
+}
+
 class App extends Component {
-  state = { 
-    storageValue: 0, 
-    web3: null, 
-    accounts: null, 
-    contract: null, 
+
+  constructor(props) {
+
+    super(props);
+
+    this.newCOOHandleChange = this.newCOOHandleChange.bind(this);
+    this.newCOOHandleSubmit = this.newCOOHandleSubmit.bind(this);
+    this.newCFOHandleChange = this.newCFOHandleChange.bind(this);
+    this.newCFOHandleSubmit = this.newCFOHandleSubmit.bind(this);
+  }
+
+  state = {
+    storageValue: 0,
+    web3: null,
+    accounts: null,
+    contract: null,
     simpleStorageInstance: null,
     ethDropCoreInstance: null,
     isCEO: null,
     isCFO: null,
+    newCFOInputValue: '',
     isCOO: null,
+    newCOOInputValue: '',
     groupNames: [],
-    groupIds: []
+    groupIds: [],
+    errorToDisplay: null,
+    currentCFO: '',
+    currentCOO: '',
+    stringgg: '',
+    whoami: ''
   };
 
   componentDidMount = async () => {
@@ -37,11 +68,11 @@ class App extends Component {
 
       console.log('network is: ', networkId);
 
-      // const deployedNetwork = SimpleStorageContract.networks[networkId];
-      // console.log('address: ', deployedNetwork.address);
+      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      console.log('address: ', deployedNetwork.address);
 
-      console.log('ok: ', env.CONTRACT_ADDRESS)
-      console.log('ok: ', env.SIMPLE_STORAGE_CONTRACT_ADDRESS)
+      // console.log('ok: ', env.CONTRACT_ADDRESS)
+      // console.log('ok: ', env.SIMPLE_STORAGE_CONTRACT_ADDRESS)
 
       const simpleStorageInstance = new web3.eth.Contract(
         SimpleStorageContract.abi,
@@ -75,35 +106,48 @@ class App extends Component {
 
     // Stores a given value, 5 by default.
     await simpleStorageInstance.methods.set(5).send({ from: accounts[0] });
+    
 
     // Get the value from the simpleStorageInstance to prove it worked.
     const response = await simpleStorageInstance.methods.get().call();
-    
+
     // Update state with the result.
     this.setState({ storageValue: response });
-    
+
     // Get the value from the simpleStorageInstance to prove it worked.
     const fooResponse = await ethDropCoreInstance.methods.foobar().call();
-    
+
     // const fooResponse = await ethDropCoreInstance.methods.foobar().call();
 
-    const isCEO = await ethDropCoreInstance.methods.isCEO().call();
+    const whoami = await ethDropCoreInstance.methods.whoami().call({ from: this.state.accounts[0] });
+    console.log('whoami ', whoami)
+    this.setState({ whoami });
+
+    const isCEO = await ethDropCoreInstance.methods.isCEO().call({ from: this.state.accounts[0] });
     console.log('isCEO ', isCEO)
     this.setState({ isCEO });
 
-    const isCOO = await ethDropCoreInstance.methods.isCOO().call();
+    const isCOO = await ethDropCoreInstance.methods.isCOO().call({ from: this.state.accounts[0] });
     console.log('isCOO ', isCOO)
     this.setState({ isCOO });
 
-    const isCFO = await ethDropCoreInstance.methods.isCFO().call();
+    const currentCOO = await ethDropCoreInstance.methods.getCOO().call({ from: this.state.accounts[0] });
+    console.log('currentCOO ', currentCOO)
+    this.setState({ currentCOO });
+
+    const isCFO = await ethDropCoreInstance.methods.isCFO().call({ from: this.state.accounts[0] });
     console.log('isCFO ', isCFO)
     this.setState({ isCFO });
 
-    const groupIds = await ethDropCoreInstance.methods.getGroupIds().call();
+    const currentCFO = await ethDropCoreInstance.methods.getCFO().call({ from: this.state.accounts[0] });
+    console.log('currentCFO ', currentCFO)
+    this.setState({ currentCFO });
+
+    const groupIds = await ethDropCoreInstance.methods.getGroupIds().call({ from: this.state.accounts[0] });
     console.log('groupIds: ', groupIds)
     this.setState({ groupIds });
 
-    const groupNames = await ethDropCoreInstance.methods.getGroupNames().call();
+    const groupNames = await ethDropCoreInstance.methods.getGroupNames().call({ from: this.state.accounts[0] });
     console.log('groupNames: ', groupNames)
     this.setState({ groupNames });
 
@@ -127,9 +171,88 @@ class App extends Component {
     // console.log('myUnclaimedEthBalance: ', myUnclaimedEthBalance)
     // this.setState(myUnclaimedEthBalance);
 
-    console.log('fooResponse: ', fooResponse);
+    // console.log('fooResponse: ', fooResponse);
 
   };
+
+  // handleChange(event) {
+  //   this.setState({ value: event.target.value });
+  // }
+
+  // handleSubmit(event) {
+  //   alert('A name was submitted: ' + this.state.value);
+  //   event.preventDefault();
+  // }
+
+  // handleChange(event) {
+  //   this.setState({value: event.target.value});
+  // }
+
+  async newCOOHandleSubmit(event) {
+      event.preventDefault();
+      console.log('newCOOHandleSubmit: ' + this.state.newCOOInputValue);
+      console.log('hex: ', this.state.newCOOInputValue);
+      
+      try {
+        // const ok = await this.state.ethDropCoreInstance.methods.setString(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
+        // console.log('update string success!')
+        // console.log('ok: ', ok)
+        
+        // const currentString = await this.state.ethDropCoreInstance.methods.getString().call();
+        // console.log('string: ', currentString)
+        // this.setState({ currentString });
+        
+        await this.state.ethDropCoreInstance.methods.setCOO(this.state.newCOOInputValue).send({ from: this.state.accounts[0] });
+        console.log('update COO success!')
+        
+        const currentCOO = await this.state.ethDropCoreInstance.methods.getCOO().call({ from: this.state.accounts[0] });
+        console.log('currentCOO ', currentCOO)
+        this.setState({ currentCOO });
+      }
+      catch (err) {
+        
+        console.log('update COO failed...', err);
+        
+        this.setState({ errorToDisplay: err });
+      }
+    }
+  
+  async newCFOHandleSubmit(event) {
+    event.preventDefault();
+    console.log('newCFOHandleSubmit: ' + this.state.newCFOInputValue);
+    console.log('hex: ', this.state.newCFOInputValue);
+    
+    try {
+      // const ok = await this.state.ethDropCoreInstance.methods.setString(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
+      // console.log('update string success!')
+      // console.log('ok: ', ok)
+      
+      // const currentString = await this.state.ethDropCoreInstance.methods.getString().call();
+      // console.log('string: ', currentString)
+      // this.setState({ currentString });
+      
+      await this.state.ethDropCoreInstance.methods.setCFO(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
+      console.log('update CFO success!')
+      
+      const currentCFO = await this.state.ethDropCoreInstance.methods.getCFO().call({ from: this.state.accounts[0] });
+      console.log('currentCFO ', currentCFO)
+      this.setState({ currentCFO });
+    }
+    catch (err) {
+      
+      console.log('update CFO failed...', err);
+      
+      this.setState({ errorToDisplay: err });
+    }
+  }
+  
+  newCOOHandleChange(event) {
+    this.setState({ newCOOInputValue: event.target.value });
+  }
+  
+  newCFOHandleChange(event) {
+    this.setState({ newCFOInputValue: event.target.value });
+  }
 
   render() {
     if (!this.state.web3) {
@@ -148,39 +271,89 @@ class App extends Component {
           Try changing the value stored on <strong>line 42</strong> of App.js.
         </p>
         <div>The stored value is: {this.state.storageValue}</div>
-      
-        {console.log(this.state)}
+
+        {/* {console.log(this.state)} */}
 
         <p>
-      string: 
-        {JSON.stringify(this.state.isCEO)}
+          whoami:
+          {this.state.whoami}
+        </p>
+        <p>
+          string:
+          {JSON.stringify(this.state.isCEO)}
         </p>
 
-        {this.state.isCEO && <div>You are the CEO!</div>}
+        {this.state.isCEO &&
+          <div style={{ margin: "2vw", padding: "20px", border: "solid black 2px", borderRadius: "20px" }}>
+
+            <h2>You are the CEO!</h2>
+            <p>You can set the CFO and COO addresses here.</p>
+
+            <br />
+            <br />
+            <p>
+              ok: {this.state.currentString}
+              </p>
+            <br />
+            <br />
+            <p>Current CFO: {this.state.currentCFO}</p>
+            <br />
+            <form onSubmit={this.newCFOHandleSubmit}>
+              <label>
+                New CFO:
+                <input type="text" value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
+              </label>
+              <input type="submit" value="Submit" />
+
+              <button onClick={this.newCFOHandleSubmit}>Submit </button>
+            </form>
+
+            <br />
+            <br />
+            <p>Current COO: {this.state.currentCOO}</p>
+            <br />
+            <form onSubmit={this.newCOOHandleSubmit}>
+              <label>
+                New COO:
+                <input type="text" value={this.state.newCOOInputValue} onChange={this.newCOOHandleChange} />
+              </label>
+              <input type="submit" value="Submit" />
+            </form>
+
+            <br />
+
+            {this.state.errorToDisplay &&
+              <h3 style={{ color: "darkred" }} >
+                {JSON.stringify(this.state.errorToDisplay, null, 2)}
+              </h3>}
+
+          </div>}
         {!this.state.isCEO && <div>You are NOT the CEO.</div>}
-      
-        <br/>
+
+        <br />
+        <br />
+
         {this.state.isCFO && <div>You are the CFO!</div>}
         {!this.state.isCFO && <div>You are NOT the CFO.</div>}
-        
-        <br/>
-      
+
+        <br />
+
         {this.state.isCOO && <div>You are the COO!</div>}
         {!this.state.isCOO && <div>You are NOT the COO.</div>}
-        
-        <br/>
+
+        <br />
 
         {!this.state.groupNames && <div>Loading groups...</div>}
         {this.state.groupNames && <div>
 
           <h1>
-          Groups
+            Groups
           </h1>
           <p>
-          {JSON.stringify(this.state.groupNames)}
+            {JSON.stringify(this.state.groupNames)}
           </p>
-          </div>}
-      
+        </div>}
+
       </div>
     );
   }
