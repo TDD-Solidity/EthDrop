@@ -439,8 +439,6 @@ class Home extends Component {
                 <input type="text" value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
               </label>
               <input type="submit" value="Submit" />
-
-              <button onClick={this.newCFOHandleSubmit}>Submit </button>
             </form>
 
             <br />

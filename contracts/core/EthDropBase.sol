@@ -68,6 +68,7 @@ contract EthDropBase is ExecutivesAccessControl {
 
         uint totalAmountContributed;
         uint weiWinnings;
+        uint numberOfUsersWhoClaimedWinnings;
     }
 
     // ALL events happening now or in the future.
@@ -193,9 +194,9 @@ contract EthDropBase is ExecutivesAccessControl {
             uint256, // total amount contributed,
             // uint256, // registeredRecipientsCount,
             // Data about the sponsor info (address is stored in Roles)
-            string memory, // sponsorName,
-            string memory, // sponsorImageUrl,
-            string memory // sponsorLinkToUrl,
+
+            uint,
+            uint 
             // address // currentContributor,
         )
     {
@@ -210,9 +211,9 @@ contract EthDropBase is ExecutivesAccessControl {
             // groupData.endTime,
             groupData.registeredRecipientsCount,
             groupData.totalAmountContributed,
-            groupData.sponsorName,
-            groupData.sponsorImageUrl,
-            groupData.sponsorLinkToUrl
+
+            groupData.weiWinnings,
+            groupData.numberOfUsersWhoClaimedWinnings
             // groupData.currentContributor
         );
     }

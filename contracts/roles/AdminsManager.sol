@@ -106,6 +106,7 @@ contract AdminsManager is ContributorManager {
             "",
             address(0),
             0,
+            0,
             0
         );
 
@@ -213,12 +214,12 @@ contract AdminsManager is ContributorManager {
         emit EligibleRecipientRemoved(account, groupId);
     }
 
-    function addContributor(address account, uint256 groupId)
+    function changeContributor(address account, uint256 groupId)
         external
         onlyAdminsOrCOO(groupId)
         whenNotPaused
     {
-        _addContributor(account, groupId);
+        _changeContributor(account, groupId);
     }
 
     function removeContributor(address account, uint256 groupId)
