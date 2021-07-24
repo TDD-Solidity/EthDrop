@@ -142,8 +142,14 @@ contract ExecutivesAccessControl {
     ///  compromised.
     /// @notice This is public rather than external so it can be called by
     ///  derived contracts.
-    function unpause() public onlyCEO whenPaused {
+    function unpause() public onlyCEO whenPaused returns (bool) {
         // can't unpause if contract was upgraded
         paused = false;
+
+        return paused;
+    }
+
+    function isPaused() external view returns (bool) {
+        return paused;
     }
 }

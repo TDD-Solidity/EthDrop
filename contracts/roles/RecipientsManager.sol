@@ -4,21 +4,20 @@ pragma solidity ^0.8.0;
 import "../core/EthDropBase.sol";
 
 contract RecipientsManager is EthDropBase {
+    event EligibleRecipientAdded(address indexed account, uint256 groupId);
+    event EligibleRecipientRemoved(address indexed account, uint256 groupId);
 
-    event EligibleRecipientAdded(address indexed account, uint groupId);
-    event EligibleRecipientRemoved(address indexed account, uint groupId);
-
-    event RecipientRegistered(address indexed account, uint groupId);
-    event WinningsClaimed(address indexed account, uint groupId);
+    event RecipientRegistered(address indexed account, uint256 groupId);
+    event WinningsClaimed(address indexed account, uint256 groupId);
 
     constructor() {}
 
-    modifier onlyEligibleRecipients(uint groupId) {
+    modifier onlyEligibleRecipients(uint256 groupId) {
         require(isEligibleRecipient(msg.sender, groupId));
         _;
     }
 
-    function isEligibleRecipient(address account, uint groupId)
+    function isEligibleRecipient(address account, uint256 groupId)
         public
         view
         whenNotPaused
@@ -26,13 +25,27 @@ contract RecipientsManager is EthDropBase {
     {
         return eligibleRecipients[groupId][account] == true;
     }
+    
+    function amIEligibleRecipient(uint256 groupId)
+        external
+        view
+        whenNotPaused
+        returns (bool)
+    {
+        return isEligibleRecipient(msg.sender, groupId);
+    }
 
-    modifier onlyRegisteredRecipients(uint groupId) {
+    modifier onlyRegisteredRecipients(uint256 groupId) {
         require(isRegisteredRecipient(msg.sender, groupId));
         _;
     }
 
-    function isRegisteredRecipient(address account, uint groupId)
+    modifier hasntAlreadyClaimedWinnings(uint256 groupId, address account) {
+        require(winningsCollected[groupId][msg.sender] != true);
+        _;
+    }
+
+    function isRegisteredRecipient(address account, uint256 groupId)
         public
         view
         whenNotPaused
@@ -41,12 +54,20 @@ contract RecipientsManager is EthDropBase {
         return registeredRecipients[groupId][account] == true;
     }
 
-    function registerForEvent(uint groupId)
+    function amIRegisteredRecipient(uint256 groupId)
+        external
+        view
+        whenNotPaused
+        returns (bool)
+    {
+        return isRegisteredRecipient(msg.sender, groupId);
+    }
+
+    function registerForEvent(uint256 groupId)
         external
         onlyEligibleRecipients(groupId)
         whenNotPaused
     {
-        
         registeredRecipients[groupId][msg.sender] = true;
         registeredRecipientsArray[groupId].push(msg.sender);
         currentEvents[groupId].registeredRecipientsCount++;
@@ -54,12 +75,29 @@ contract RecipientsManager is EthDropBase {
         emit RecipientRegistered(msg.sender, groupId);
     }
 
-    function claimWinnings(uint groupId)
+    function claimWinnings(uint256 groupId)
         external
         onlyRegisteredRecipients(groupId)
+        hasntAlreadyClaimedWinnings(groupId, msg.sender)
         whenNotPaused
     {
-        pot[groupId].release(payable(msg.sender));
+        winningsCollected[groupId][msg.sender] = true;
+
+        payable(msg.sender).transfer(currentEvents[groupId].weiWinnings);
+
         emit WinningsClaimed(msg.sender, groupId);
     }
+
+    function getEligibleRecipientAddresses(uint groupId) external view returns (address[] memory) {
+        return eligibleRecipientsArray[groupId];
+    }
+
+    function getEligibleRecipientIsEligibilityEnabled(uint groupId) external view returns (bool[] memory) {
+        return eligibleRecipientsEligibilityIsEnabled[groupId];
+    }
+
+    function getRegisteredRecipients(uint groupId) external view returns (address[] memory) {
+        return registeredRecipientsArray[groupId];
+    }
+
 }

@@ -10,7 +10,9 @@ contract EthDropCore is AdminsManager {
     /// @notice Creates the main EthDrop smart contract instance.
     constructor () {
         // Starts paused.
-        paused = true;
+
+        // TODO 
+        paused = false;
 
         // the creator of the contract is the initial CEO
         ceoAddress = msg.sender;

@@ -42,73 +42,178 @@ contract EthDropBase is ExecutivesAccessControl {
         ENDED
     }
 
-    uint devCutPercentage = 5;
+    uint256 devCutPercentage = 5;
 
     struct EthDropEvent {
         // The IRL organization that controls their own airdrops.
         // Each group can only be running 1 event at a time.
-        uint groupId;
+        uint256 groupId;
         // Event goes through a linear flow of states, finite state machine.
         string groupName;
         // Event goes through a linear flow of states, finite state machine.
         EventState currentState;
         // The timestamp from the block when this event started.
-        uint startTime;
+        uint256 startTime;
         // The timestamp from the block when registration for this event ended.
-        uint registrationEndTime;
+        uint256 registrationEndTime;
         // The timestamp from the block when this event ended.
-        uint endTime;
+        uint256 endTime;
         // The number of eligibleRecipients who have registered.
-        uint registeredRecipientsCount;
+        uint256 registeredRecipientsCount;
         // Data about the sponsor info (address is stored in Roles)
         string sponsorName;
         string sponsorImageUrl;
         string sponsorLinkToUrl;
         address currentContributor;
+
+        uint totalAmountContributed;
+        uint weiWinnings;
     }
 
     // ALL events happening now or in the future.
     // Key is the groupId
-    uint[] listOfGroupIds;
+    uint256[] listOfGroupIds;
     string[] listOfGroupNames;
 
     // ALL events happening now or in the future.
     // Key is the groupId
-    mapping(uint => EthDropEvent) currentEvents;
+    mapping(uint256 => EthDropEvent) currentEvents;
 
     // ALL events that have already happened.
     // Key is the groupId
-    mapping(uint => EthDropEvent[]) pastEvents;
+    mapping(uint256 => EthDropEvent[]) pastEvents;
 
     // Holds ALL admins for all groups
     // groupId => Role
-    mapping(uint => mapping(address => bool)) admins;
+    mapping(uint256 => mapping(address => bool)) admins;
+
+    // groupId => index in arrays for this specific address
+    mapping(uint256 => mapping(address => uint256)) adminAddressToIndex;
+    uint256 adminAddressToIndexNextIndex = 0;
+    
+    mapping(uint256 => mapping(address => bool)) winningsCollected;
+
+    // groupId => list of admin addresses
+    mapping(uint256 => address[]) adminAddresses;
+
+    // groupId => list of admin names
+    mapping(uint256 => string[]) adminNames;
+
+    // groupId => whether of not user is an admin
+    mapping(uint256 => bool[]) adminEnabled;
 
     // Holds ALL contributors for all groups
     // groupId => Role
-    mapping(uint => mapping(address => bool)) contributors;
+    mapping(uint256 => mapping(address => bool)) contributors;
 
     // Holds ALL eligibleRecipients for all groups
     // groupId => Role
-    mapping(uint => mapping(address => bool)) eligibleRecipients;
+    mapping(uint256 => mapping(address => bool)) eligibleRecipients;
+    mapping(uint256 => address[]) eligibleRecipientsArray;
+    mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
 
     // Holds ALL registeredRecipients for all groups
     // groupId => Role
-    mapping(uint => mapping(address => bool)) registeredRecipients;
+    mapping(uint256 => mapping(address => bool)) registeredRecipients;
 
     // Holds ALL registeredRecipients in an array (for PaymentSplitter)
     // groupId => address[]
-    mapping(uint => address[]) registeredRecipientsArray;
+    mapping(uint256 => address[]) registeredRecipientsArray;
 
     // Keeping track of winnings for all groups
-    mapping(uint => PaymentSplitter) pot;
+    mapping(uint256 => PaymentSplitter) pot;
 
-    function getGroupIds() external view returns (uint[] memory) {
+    function getGroupIds() external view returns (uint256[] memory) {
         return listOfGroupIds;
     }
-    
+
     function getGroupNames() external view returns (string[] memory) {
         return listOfGroupNames;
     }
 
+    // stack too deep
+    // function getGroupEventData(uint256 groupId)
+    //     external
+    //     view
+    //     returns (
+    //         uint256, // groupId
+    //         // Event goes through a linear flow of states, finite state machine.
+    //         string memory, // groupName
+    //         // Event goes through a linear flow of states, finite state machine.
+    //         EventState, // currentState,
+    //         // The timestamp from the block when this event started.
+    //         // uint256, // startTime,
+    //         // // The timestamp from the block when registration for this event ended.
+    //         // uint256, // registrationEndTime,
+    //         // // The timestamp from the bock when this event ended.
+    //         // uint256, // endTime,
+    //         // The number of eligibleRecipients who have registered.
+    //         uint256, // registeredRecipientsCount,
+    //         // Data about the sponsor info (address is stored in Roles)
+    //         string memory, // sponsorName,
+    //         string memory, // sponsorImageUrl,
+    //         string memory, // sponsorLinkToUrl,
+    //         address // currentContributor,
+    //     )
+    // {
+    //     // EthDropEvent memory groupData = currentEvents[groupId];
+
+    //     return (
+    //         currentEvents[groupId].groupId,
+    //         currentEvents[groupId].groupName,
+    //         currentEvents[groupId].currentState,
+    //         // groupData.startTime,
+    //         // groupData.registrationEndTime,
+    //         // groupData.endTime,
+    //         currentEvents[groupId].registeredRecipientsCount,
+    //         currentEvents[groupId].sponsorName,
+    //         currentEvents[groupId].sponsorImageUrl,
+    //         currentEvents[groupId].sponsorLinkToUrl,
+    //         currentEvents[groupId].currentContributor
+    //     );
+    // }
+
+    function getGroupEventData(uint256 groupId)
+        external
+        view
+        returns (
+            // uint256, // groupId
+            // Event goes through a linear flow of states, finite state machine.
+            // string memory, // groupName
+            // Event goes through a linear flow of states, finite state machine.
+            EventState, // currentState,
+            // The timestamp from the block when this event started.
+            // uint256, // startTime,
+            // // The timestamp from the block when registration for this event ended.
+            // uint256, // registrationEndTime,
+            // // The timestamp from the bock when this event ended.
+            // uint256, // endTime,
+            // The number of eligibleRecipients who have registered.
+            uint256, // registeredRecipientsCount,
+            uint256, // total amount contributed,
+            // uint256, // registeredRecipientsCount,
+            // Data about the sponsor info (address is stored in Roles)
+            string memory, // sponsorName,
+            string memory, // sponsorImageUrl,
+            string memory // sponsorLinkToUrl,
+            // address // currentContributor,
+        )
+    {
+        EthDropEvent memory groupData = currentEvents[groupId];
+
+        return ( 
+            // groupData.groupId,
+            // groupData.groupName,
+            groupData.currentState,
+            // groupData.startTime,
+            // groupData.registrationEndTime,
+            // groupData.endTime,
+            groupData.registeredRecipientsCount,
+            groupData.totalAmountContributed,
+            groupData.sponsorName,
+            groupData.sponsorImageUrl,
+            groupData.sponsorLinkToUrl
+            // groupData.currentContributor
+        );
+    }
 }

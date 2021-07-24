@@ -30,6 +30,15 @@ contract ContributorManager is RecipientsManager {
         return contributors[groupId][account] == true;
     }
 
+     function amIContributor(uint256 groupId)
+        external
+        view
+        whenNotPaused
+        returns (bool)
+    {
+        return isContributor(msg.sender, groupId);
+    }
+
     function renounceContributor(uint groupId)
         external
         onlyContributor(groupId)
@@ -54,6 +63,7 @@ contract ContributorManager is RecipientsManager {
         onlyContributor(groupId)
         whenNotPaused
     {
+        currentEvents[groupId].totalAmountContributed = msg.value;
         emit ContributionMade(msg.sender, groupId, msg.value);
     }
 }

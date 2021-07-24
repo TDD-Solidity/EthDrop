@@ -33,6 +33,14 @@ contract AdminsManager is ContributorManager {
         return admins[groupId][account] == true;
     }
 
+    function amIAdmin(uint groupId) external view returns (bool) {
+        return admins[groupId][msg.sender] == true;
+    }
+
+    function getAdminsForGroup(uint256 groupId) external view returns (address[] memory, bool[] memory) {
+        return (adminAddresses[groupId], adminEnabled[groupId]);
+    }
+
     modifier onlyAdminsOrCOO(uint256 groupId) {
         require(isAdmin(msg.sender, groupId) || msg.sender == cooAddress);
         _;
@@ -53,11 +61,23 @@ contract AdminsManager is ContributorManager {
 
     function _addAdmin(address account, uint256 groupId) internal {
         admins[groupId][account] = true;
+
+        adminAddressToIndex[groupId][account] = adminAddressToIndexNextIndex;
+        adminAddressToIndexNextIndex++;
+
+        adminAddresses[groupId].push(account);
+        adminEnabled[groupId].push(true);
+        // TODO - adminNames
+
         emit AdminAdded(account, groupId);
     }
 
     function _removeAdmin(address account, uint256 groupId) internal {
         admins[groupId][account] = false;
+
+        uint index = adminAddressToIndex[groupId][account];
+        adminEnabled[groupId][index] = false;
+
         emit AdminRemoved(account, groupId);
     }
 
@@ -84,12 +104,14 @@ contract AdminsManager is ContributorManager {
             "",
             "",
             "",
-            address(0)
+            address(0),
+            0,
+            0
         );
 
         currentEvents[newGroupId] = newGroup;
 
-        listOfGroupIds.push(newGroupId);
+        listOfGroupIds.push(block.timestamp);
         listOfGroupNames.push(groupName);
 
         emit GroupCreated(msg.sender, newGroupId);
@@ -113,37 +135,44 @@ contract AdminsManager is ContributorManager {
     {
         currentEvents[groupId].registrationEndTime = block.timestamp;
 
+
+        uint devCutWei = currentEvents[groupId].totalAmountContributed * devCutPercentage / 100;
+
         // Transfer dev cut to cfo
-        payable(cfoAddress).transfer(
-            (address(this).balance * devCutPercentage) / 100
-        );
+        payable(cfoAddress).transfer(devCutWei);
 
-        uint256[] memory potShares = new uint256[](
-            currentEvents[groupId].registeredRecipientsCount
-        );
+        // pot is the amount for recipients to share
+        uint pot = currentEvents[groupId].totalAmountContributed - devCutWei;
 
-        for (
-            uint256 i;
-            i < currentEvents[groupId].registeredRecipientsCount;
-            i++
-        ) {
-            potShares[i] = 1;
-        }
+        // each recipient's winnings is the "weiWinnings"
+        currentEvents[groupId].weiWinnings = pot / currentEvents[groupId].registeredRecipientsCount;
 
-        pot[groupId] = new PaymentSplitter(
-            registeredRecipientsArray[groupId],
-            potShares
-        );
+        // uint256[] memory potShares = new uint256[](
+        //     currentEvents[groupId].registeredRecipientsCount
+        // );
+
+        // for (
+        //     uint256 i;
+        //     i < currentEvents[groupId].registeredRecipientsCount;
+        //     i++
+        // ) {
+        //     potShares[i] = 1;
+        // }
+
+        // pot[groupId] = new PaymentSplitter(
+        //     registeredRecipientsArray[groupId],
+        //     potShares
+        // );
 
         currentEvents[groupId].currentState = EventState.CLAIM_WINNINGS;
 
-        uint256 winningsPerRecipient = address(this).balance /
-            pot[groupId].totalShares();
+        // uint256 winningsPerRecipient = address(this).balance /
+        //     pot[groupId].totalShares();
 
-        emit CalculatedPot(
-            currentEvents[groupId].registeredRecipientsCount,
-            winningsPerRecipient
-        );
+        // emit CalculatedPot(
+        //     currentEvents[groupId].registeredRecipientsCount,
+        //     winningsPerRecipient
+        // );
 
         emit RegistrationEnded(msg.sender, groupId);
     }
@@ -168,6 +197,10 @@ contract AdminsManager is ContributorManager {
         onlyAdmins(groupId)
     {
         eligibleRecipients[groupId][account] = true;
+
+        eligibleRecipientsArray[groupId].push(account);
+        eligibleRecipientsEligibilityIsEnabled[groupId].push(true);
+
         emit EligibleRecipientAdded(account, groupId);
     }
 

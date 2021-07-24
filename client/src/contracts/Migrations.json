@@ -1854,11 +1854,11 @@
       "events": {},
       "links": {},
       "address": "0xB6cA0ae659F0958cD4FF3e616126A010753024D6",
-      "transactionHash": "0xc17dae9d78f54680ed3d8a7cd7eb2798afc81337db14f14ff06c7a64c14e10b3"
+      "transactionHash": "0x723c0d9aceaf5bdc0500b752f8c1eb3fd1dbd0c43a71bba9aee9440de87fa260"
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-22T14:39:00.737Z",
+  "updatedAt": "2021-07-23T17:22:28.460Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
