@@ -422,11 +422,12 @@ class Home extends Component {
               Groups
             </h1>
 
-            {this.state.groupNames === [] && <p>
+            {this.state.groupNames && this.state.groupNames.length < 1 && <p>
               There are no groups yet- only the COO can create groups!
             </p>
             }
 
+            {this.state.groupNames && this.state.groupNames.length >= 1 && 
             <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
 
               <thead>
@@ -454,7 +455,7 @@ class Home extends Component {
                 })}
 
               </tbody>
-            </table>
+            </table>}
 
             {/* <table className="table-fixed mx-4 border border-blue-200 border-8 rounded">
               <thead>
@@ -723,8 +724,8 @@ class Home extends Component {
             </h1>
 
             <p>You can create new groups here.</p>
-            <br />
-            <br />
+ 
+
 
             {/* <form onSubmit={this.newGroupSubmit}> */}
             {/* <label> */}
@@ -735,6 +736,8 @@ class Home extends Component {
             {/* <input type="submit" value="Submit" /> */}
             {/* </form> */}
 
+
+
             <form onSubmit={this.newGroupSubmit2}>
               <label>
                 New Group Name:&nbsp;
@@ -742,6 +745,42 @@ class Home extends Component {
               </label>
               <input type="submit" value="Submit" />
             </form>
+
+            <div className="w-full max-w-m">
+              <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={this.newGroupSubmit2}>
+
+                <div className="mb-6">
+
+                  {/* <div className='has-tooltip'>
+                    <div className='tooltip rounded shadow-lg p-1 pb-5 bg-gray-100 text-red-500 m-2 mb-6 h-4'>{this.state.currentCFO}</div>
+                    <p>Current CFO:&nbsp;&nbsp;{shortenedAddress(this.state.currentCFO)}</p>
+                  </div> */}
+
+                  <label className="block text-gray-700 text-sm font-bold mb-2 my-4" htmlFor="new-ceo">
+                    <div className="my-4">
+                      Add new group here:
+                    </div>
+                  </label>
+                  <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
+                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+                <div className="flex items-center justify-center">
+
+                  <button onClick={this.newCFOHandleSubmit} type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Set New CFO
+                  </button>
+                  {/* <input type="submit" value="Submit"/> */}
+
+                  {/* <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+                    Forgot Password?
+                  </a> */}
+                </div>
+              </form>
+              {/* <p className="text-center text-gray-500 text-xs">
+                &copy;2020 Acme Corp. All rights reserved.
+              </p> */}
+            </div>
 
             <br />
             <br />
