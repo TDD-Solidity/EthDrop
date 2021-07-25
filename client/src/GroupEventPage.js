@@ -4,7 +4,9 @@ import getWeb3 from "./getWeb3";
 import EthDropCore from "./contracts/EthDropCore.json";
 import {
   BrowserRouter,
-  useParams
+  useParams,
+  useLocation,
+  withRouter
 } from "react-router-dom";
 
 function GroupEventPage(props) {
@@ -33,101 +35,128 @@ function GroupEventPage(props) {
   const [currentSponsorName, setCurrentSponsorName] = useState('');
   const [currentSponsorImgLinkTo, setCurrentSponsorImgLinkTo] = useState('');
   const [currentSponsorImg, setCurrentSponsorImg] = useState('');
-  const [hasAlreadyClaimedWinnings, setHasAlreadyClaimedWinnings] = useState('');
+  const [hasClaimableWinnings, setHasClaimableWinnings] = useState('');
+
+  const forceUpdate = React.useReducer(bool => !bool)[1];
 
   // let groupId;
   // let groupName;
   const groupName = useParams().groupName;
   const groupId = useParams().groupId;
 
-  useEffect(() => {
+  // const location = useLocation();
 
-    async function fetchData() {
+  let location = useLocation();
+  React.useEffect(() => {
+    // ga.send(["pageview", location.pathname]);
 
-      try {
+    fetchData().then((ok) => {
+      console.log('wtf?')
+    });
 
-        const web3 = await getWeb3();
-        const accounts = await web3.eth.getAccounts();
+    console.log('stuff happening...');
+  }, [location]);
 
-        const networkId = await web3.eth.net.getId();
-        const deployedNetwork = EthDropCore.networks[networkId];
+  async function fetchData() {
 
-        const ethDropCoreInstance = new web3.eth.Contract(
-          EthDropCore.abi,
-          deployedNetwork && deployedNetwork.address,
-        );
+    try {
+      console.log('fetch start')
 
-        setEthDropCoreInstance(ethDropCoreInstance);
-        setWeb3(web3);
-        setAccounts(accounts);
+      const web3 = await getWeb3();
+      console.log('web3 ', web3)
+      const accounts = await web3.eth.getAccounts();
 
-        const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] });
-        console.log('isAdmin ', isAdmin)
-        setIsAdmin(isAdmin);
+      const networkId = await web3.eth.net.getId();
+      const deployedNetwork = EthDropCore.networks[networkId];
 
-        const isCOO = await ethDropCoreInstance.methods.isCOO().call({ from: accounts[0] });
-        console.log('isCOO ', isCOO)
-        setIsCOO(isCOO);
+      const ethDropCoreInstance = new web3.eth.Contract(
+        EthDropCore.abi,
+        deployedNetwork && deployedNetwork.address,
+      );
 
-        const isEligibleRecipient = await ethDropCoreInstance.methods.amIEligibleRecipient(groupId).call({ from: accounts[0] });
-        console.log('isEligibleRecipient ', isEligibleRecipient)
-        setIsEligibleRecipient(isEligibleRecipient);
+      setEthDropCoreInstance(ethDropCoreInstance);
+      setWeb3(web3);
+      setAccounts(accounts);
 
-        const isRegisteredRecipient = await ethDropCoreInstance.methods.amIRegisteredRecipient(groupId).call({ from: accounts[0] });
-        console.log('isRegisteredRecipient ', isRegisteredRecipient)
-        setIsRegisteredRecipient(isRegisteredRecipient);
-        
-        const hasAlreadyClaimedWinnings = await ethDropCoreInstance.methods.haveIAlreadyClaimedWinnings(groupId).call({ from: accounts[0] });
-        console.log('hasAlreadyClaimedWinnings ', hasAlreadyClaimedWinnings)
-        setHasAlreadyClaimedWinnings(hasAlreadyClaimedWinnings);
 
-        const isContributor = await ethDropCoreInstance.methods.amIContributor(groupId).call({ from: accounts[0] });
-        console.log('isContributor ', isContributor)
-        setIsContributor(isContributor);
+      const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] });
+      console.log('isAdmin ', isAdmin)
+      setIsAdmin(isAdmin);
 
-        const currentSponsorAddress = await ethDropCoreInstance.methods.getCurrentSponsorAddress(groupId).call({ from: accounts[0] });
-        console.log('currentSponsorAddress ', currentSponsorAddress)
-        setCurrentSponsorAddress(currentSponsorAddress);
+      const isCOO = await ethDropCoreInstance.methods.isCOO().call({ from: accounts[0] });
+      console.log('isCOO ', isCOO)
+      setIsCOO(isCOO);
 
-        const adminsForGroup = await ethDropCoreInstance.methods.getAdminsForGroup(groupId).call({ from: accounts[0] });
-        console.log('adminsForGroup ', adminsForGroup)
-        setAdminsForGroup(adminsForGroup);
+      const isEligibleRecipient = await ethDropCoreInstance.methods.amIEligibleRecipient(groupId).call({ from: accounts[0] });
+      console.log('isEligibleRecipient ', isEligibleRecipient)
+      setIsEligibleRecipient(isEligibleRecipient);
 
-        const groupEventData = await ethDropCoreInstance.methods.getGroupEventData(groupId).call({ from: accounts[0] });
-        console.log('groupEventData ', groupEventData)
-        setGroupEventData(groupEventData);
+      const isRegisteredRecipient = await ethDropCoreInstance.methods.amIRegisteredRecipient(groupId).call({ from: accounts[0] });
+      console.log('isRegisteredRecipient ', isRegisteredRecipient)
+      setIsRegisteredRecipient(isRegisteredRecipient);
 
-        const eligibleRecipients = await ethDropCoreInstance.methods.getEligibleRecipientAddresses(groupId).call({ from: accounts[0] });
-        console.log('eligibleRecipients ', eligibleRecipients)
-        setEligibleRecipients(eligibleRecipients);
+      const hasClaimableWinnings = await ethDropCoreInstance.methods.doIHaveClaimableWinnings(groupId).call({ from: accounts[0] });
+      console.log('hasClaimableWinnings ', hasClaimableWinnings)
+      setHasClaimableWinnings(hasClaimableWinnings);
 
-        const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods.getEligibleRecipientIsEligibilityEnabled(groupId).call({ from: accounts[0] });
-        console.log('eligibleRecipientsEligibilityEnabled ', eligibleRecipientsEligibilityEnabled)
-        setEligibleRecipientsEligibilityEnabled(eligibleRecipientsEligibilityEnabled);
+      const isContributor = await ethDropCoreInstance.methods.amIContributor(groupId).call({ from: accounts[0] });
+      console.log('isContributor ', isContributor)
+      setIsContributor(isContributor);
 
-        const registeredRecipients = await ethDropCoreInstance.methods.getRegisteredRecipients(groupId).call({ from: accounts[0] });
-        console.log('registeredRecipients ', registeredRecipients)
-        setRegisteredRecipients(registeredRecipients);
+      const currentSponsorAddress = await ethDropCoreInstance.methods.getCurrentSponsorAddress(groupId).call({ from: accounts[0] });
+      console.log('currentSponsorAddress ', currentSponsorAddress)
+      setCurrentSponsorAddress(currentSponsorAddress);
 
-        const sponsorInfo = await ethDropCoreInstance.methods.getContributorInfo(groupId).call({ from: accounts[0] });
-        console.log('sponsorInfo ', sponsorInfo)
-        setRegisteredRecipients(sponsorInfo);
+      const adminsForGroup = await ethDropCoreInstance.methods.getAdminsForGroup(groupId).call({ from: accounts[0] });
+      console.log('adminsForGroup ', adminsForGroup)
+      setAdminsForGroup(adminsForGroup);
 
-        setCurrentSponsorName(sponsorInfo[0])
-        setCurrentSponsorImg(sponsorInfo[1])
-        setCurrentSponsorImgLinkTo(sponsorInfo[2])
+      const groupEventData = await ethDropCoreInstance.methods.getGroupEventData(groupId).call({ from: accounts[0] });
+      console.log('groupEventData ', groupEventData)
+      setGroupEventData(groupEventData);
 
-      } catch (error) {
-        // Catch any errors for any of the above operations.
-        alert(
-          `Failed to load web3, accounts, or contract. Check console for details.`,
-        );
-        console.error(error);
-      }
+      const eligibleRecipients = await ethDropCoreInstance.methods.getEligibleRecipientAddresses(groupId).call({ from: accounts[0] });
+      console.log('eligibleRecipients ', eligibleRecipients)
+      setEligibleRecipients(eligibleRecipients);
+
+      const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods.getEligibleRecipientIsEligibilityEnabled(groupId).call({ from: accounts[0] });
+      console.log('eligibleRecipientsEligibilityEnabled ', eligibleRecipientsEligibilityEnabled)
+      setEligibleRecipientsEligibilityEnabled(eligibleRecipientsEligibilityEnabled);
+
+      const registeredRecipients = await ethDropCoreInstance.methods.getRegisteredRecipients(groupId).call({ from: accounts[0] });
+      console.log('registeredRecipients ', registeredRecipients)
+      setRegisteredRecipients(registeredRecipients);
+
+      const sponsorInfo = await ethDropCoreInstance.methods.getContributorInfo(groupId).call({ from: accounts[0] });
+      console.log('sponsorInfo ', sponsorInfo)
+      setRegisteredRecipients(sponsorInfo);
+
+      setCurrentSponsorName(sponsorInfo[0])
+      setCurrentSponsorImg(sponsorInfo[1])
+      setCurrentSponsorImgLinkTo(sponsorInfo[2])
+
+      // await forceUpdate();
+      console.log('fetch end')
+
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(
+        `Failed to load web3, accounts, or contract.` + error,
+      );
+      console.error(error);
     }
-    fetchData();
+  }
 
-  });
+  // useEffect(() => {
+
+  //   // console.log('using effect...')
+
+
+  //   fetchData();
+
+  //   console.log('chyep')
+
+  // }, [location]);
 
   async function removeAdmin(address) {
 
@@ -337,6 +366,7 @@ function GroupEventPage(props) {
     }
   }
 
+  { console.log(web3) }
 
   if (!web3) {
     return <h1>Loading web3...Group event page! {groupName}</h1>
@@ -367,14 +397,14 @@ function GroupEventPage(props) {
           <ul>
 
             Admins for group...
-            {adminsForGroup[0] && adminsForGroup[0].map((adminAddress, i) => {
+            {adminsForGroup && adminsForGroup[0] && adminsForGroup[0].map((adminAddress, i) => {
 
               return <li key={i}>
                 <h2>{adminAddress} - {adminsForGroup[1][i]}</h2> <button onClick={() => removeAdmin(adminAddress)}>&nbsp;x&nbsp;</button>
-              
-                <br/>
-                <br/>
-                <br/>
+
+                <br />
+                <br />
+                <br />
               </li>
 
             })}
@@ -477,16 +507,16 @@ function GroupEventPage(props) {
         <br />
 
         Event State:
-        <h3>{groupEventData[0]}</h3>
+        <h3>{groupEventData && groupEventData[0]}</h3>
 
         Total Amount Contributed:
-        <h3>{groupEventData[2] && web3.utils.fromWei(groupEventData[2], 'ether') + ' Eth'}</h3>
+        <h3>{groupEventData && groupEventData[2] && web3.utils.fromWei(groupEventData[2], 'ether') + ' Eth'}</h3>
 
         Registered Recipient Count:
-        <h3>{groupEventData[1]}</h3>
+        <h3>{groupEventData && groupEventData[1]}</h3>
 
         {
-          groupEventData[0] === '2' && <div>
+          groupEventData && groupEventData[0] === '2' && <div>
             Winnings Per Recipient:
             <h3>{groupEventData[3] && web3.utils.fromWei(groupEventData[3], 'ether') + ' Eth'}</h3>
 
@@ -501,7 +531,7 @@ function GroupEventPage(props) {
         <br />
 
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
-        {(groupEventData[0] === '0' || groupEventData[0] === '3') && <div>
+        {(groupEventData && groupEventData[0] === '0' || groupEventData[0] === '3') && <div>
 
           There is no event currently in progress!
 
@@ -532,7 +562,7 @@ function GroupEventPage(props) {
         </div>}
 
         {/* Phase 1 - Registration */}
-        {groupEventData[0] === '1' && <div>
+        {groupEventData && groupEventData[0] === '1' && <div>
 
           {/* Phase 2 - Registration */}
           There is currently an event in progress!
@@ -631,13 +661,13 @@ function GroupEventPage(props) {
             <br />
 
             {/*  Only when not currently in progress */}
-            {groupEventData[0] === '2' && <div>
+            {groupEventData && groupEventData[0] === '2' && <div>
 
               Sorry, you can't contribute to the pot at this time because the event is in the "claim winnings" phase!
 
             </div>}
 
-            {groupEventData[0] !== '2' && <div>
+            {groupEventData && groupEventData[0] !== '2' && <div>
 
               <br />
               <br />
@@ -663,7 +693,7 @@ function GroupEventPage(props) {
           </div>}
 
         {/* Phase 2 - Claiming Winnings */}
-        {groupEventData[0] === '2' && <div>
+        {groupEventData && groupEventData[0] === '2' && <div>
 
           {isAdmin && <div>
 
@@ -686,7 +716,7 @@ function GroupEventPage(props) {
 
             <br />
             <button onClick={() => claimWinnings(groupId)}
-              disabled={hasAlreadyClaimedWinnings}
+              disabled={!hasClaimableWinnings}
             >Claim Winnings</button>
 
           </div>}
@@ -708,7 +738,7 @@ function GroupEventPage(props) {
         <br />
         <br />
 
-       
+
         <br />
         <br />
         <br />
@@ -717,4 +747,4 @@ function GroupEventPage(props) {
     )
 }
 
-export default GroupEventPage;
+export default withRouter(GroupEventPage);

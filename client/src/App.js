@@ -129,10 +129,9 @@ class App extends Component {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/g/:groupName/:groupId">
-            <GroupEventPage/>
+          <Route path="/g/:groupName/:groupId" exact render= {routeProps =><GroupEventPage {...routeProps} key={document.location.href} />} >
           </Route>
-          <Route path="/">
+          <Route path="/" key={document.location.href} >
             <Home/>
           </Route>
         </Switch>

@@ -75,12 +75,16 @@ contract RecipientsManager is EthDropBase {
         emit RecipientRegistered(msg.sender, groupId);
     }
 
-    function haveIAlreadyClaimedWinnings(uint256 groupId)
+    function doIHaveClaimableWinnings(uint256 groupId)
         external
         view
-        onlyRegisteredRecipients(groupId)
         returns (bool)
     {
+
+        if (!isRegisteredRecipient(msg.sender, groupId)) {
+            return false;
+        }
+
         return winningsCollected[groupId][msg.sender];
     }
 

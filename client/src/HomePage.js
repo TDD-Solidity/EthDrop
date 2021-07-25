@@ -133,7 +133,7 @@ class Home extends Component {
     console.log('whoami ', whoami)
     this.setState({ whoami });
 
-    const currentAddressShortened = whoami.substr(0, 6) + '...' + whoami.substr(whoami.length - 5);
+    const currentAddressShortened = whoami ? whoami.substr(0, 6) + '...' + whoami.substr(whoami.length - 5) : '';
 
     const isPaused = await ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
     console.log('isPaused ', isPaused)
@@ -172,6 +172,28 @@ class Home extends Component {
     const groupNames = await ethDropCoreInstance.methods.getGroupNames().call({ from: this.state.accounts[0] });
     console.log('groupNames: ', groupNames)
     this.setState({ groupNames });
+
+
+
+
+    // ethDropCoreInstance.GroupCreated.watch((creator, groupId) => {
+    //   console.log('heard an event for some shit "on" syntax: ' + creator + groupId)
+    // })
+    
+
+    ethDropCoreInstance.events.GroupCreated().on('data', async function (event) {
+      console.log('woah! ', event.returnValues.groupId, event.returnValues.creator)
+    })
+    
+    ethDropCoreInstance.events.allEvents((err, eventObj) => {
+      console.log('EVENT!! ', eventObj.event);
+      console.log('yerp! ', eventObj.returnValues.groupId, eventObj.returnValues.creator)
+
+
+    })
+
+
+
 
     // On group page
     // const amIAdminOfGroup = await ethDropCoreInstance.methods.amIAdminOfGroup('groupId').call();
