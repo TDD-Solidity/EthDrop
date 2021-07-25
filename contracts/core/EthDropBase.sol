@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "../roles/ExecutivesAccessControl.sol";
-import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 
 contract EthDropBase is ExecutivesAccessControl {
     /*** EVENTS ***/
@@ -122,7 +121,7 @@ contract EthDropBase is ExecutivesAccessControl {
     mapping(uint256 => address[]) registeredRecipientsArray;
 
     // Keeping track of winnings for all groups
-    mapping(uint256 => PaymentSplitter) pot;
+    // mapping(uint256 => PaymentSplitter) pot;
 
     function getGroupIds() external view returns (uint256[] memory) {
         return listOfGroupIds;

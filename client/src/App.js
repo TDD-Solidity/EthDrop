@@ -11,6 +11,7 @@ import {
   useRouteMatch,
   useParams
 } from "react-router-dom";
+import { FillButton } from 'tailwind-react-ui'
 
 import Home from "./HomePage"
 import GroupEventPage from "./GroupEventPage"
@@ -60,41 +61,41 @@ class App extends Component {
   componentDidMount = async () => {
     try {
       // Get network provider and web3 instance.
-      const web3 = await getWeb3();
+      // const web3 = await getWeb3();
 
       // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
+      // const accounts = await web3.eth.getAccounts();
 
-      // const accounts = window.ethereum.request("eth_requestAccounts")
-      console.log('accounts are: ', accounts);
+      // // const accounts = window.ethereum.request("eth_requestAccounts")
+      // console.log('accounts are: ', accounts);
 
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
+      // // Get the contract instance.
+      // const networkId = await web3.eth.net.getId();
 
-      console.log('network is: ', networkId);
+      // console.log('network is: ', networkId);
 
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      console.log('address: ', deployedNetwork.address);
+      // const deployedNetwork = SimpleStorageContract.networks[networkId];
+      // console.log('address: ', deployedNetwork.address);
 
-      const simpleStorageInstance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        // env.SIMPLE_STORAGE_CONTRACT_ADDRESS
-        // ,
-        deployedNetwork && deployedNetwork.address,
-      );
+      // const simpleStorageInstance = new web3.eth.Contract(
+      //   SimpleStorageContract.abi,
+      //   // env.SIMPLE_STORAGE_CONTRACT_ADDRESS
+      //   // ,
+      //   deployedNetwork && deployedNetwork.address,
+      // );
 
-      const ethDropCoreInstance = new web3.eth.Contract(
-        EthDropCore.abi,
-        // env.ETHDROP_CORE_CONTRACT_ADDRESS
-        // ,
-        deployedNetwork && deployedNetwork.address,
-      );
+      // const ethDropCoreInstance = new web3.eth.Contract(
+      //   EthDropCore.abi,
+      //   // env.ETHDROP_CORE_CONTRACT_ADDRESS
+      //   // ,
+      //   deployedNetwork && deployedNetwork.address,
+      // );
 
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, simpleStorageInstance, ethDropCoreInstance });
-    
+      // // Set web3, accounts, and contract to the state, and then proceed with an
+      // // example of interacting with the contract's methods.
+      // this.setState({ web3, accounts, simpleStorageInstance, ethDropCoreInstance });
+
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -107,40 +108,52 @@ class App extends Component {
   render() {
 
     return <Router>
-      <div style={{ backgroundColor: 'blue', padding: '2px 2px 2px 20px', color: "lightgreen" }}>
-        <h1>EthDrop</h1>
+
+      {/* Header Nav */}
+      <div className="bg-blue-500 px-4 py-3 text-white text-lg">
+        <h3>EthDrop</h3>
       </div>
+
+
       <div>
+        {/* Second Row Nav */}
         <nav style={{
           display: "flex", flexDirection: "row", justifyContent: "space-between",
           padding: "1px 20px", alignItems: "center"
         }}>
           {/* <li> */}
           <h2 >
-            <Link style={{ textDecoration: 'none' }} to="/">Groups</Link>
+            <Link style={{ textDecoration: 'none' }} to="/">
+              <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
+                <h4>
+                  Groups
+                </h4>
+              </FillButton>
+            </Link>
           </h2>
-          <button style={{ height: "50px" }} onClick={() => alert("Metamask connected")}>
-            Connect Metamask
-          </button>
+
         </nav>
 
         <hr />
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+        {/* Routing */}
         <Switch>
-          <Route path="/g/:groupName/:groupId" exact render= {routeProps =><GroupEventPage {...routeProps} key={document.location.href} />} >
+
+          <Route path="/g/:groupName/:groupId" key={document.location.href} >
+            <GroupEventPage />
           </Route>
+
           <Route path="/" key={document.location.href} >
-            <Home/>
+            <Home />
           </Route>
+
         </Switch>
       </div>
-    </Router>
+    </Router >
 
   }
 
-  
+
 }
 
 export default App;

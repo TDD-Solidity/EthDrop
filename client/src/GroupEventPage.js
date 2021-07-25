@@ -1,12 +1,14 @@
 import React, { Component, useState, useEffect } from "react";
 import getWeb3 from "./getWeb3";
+import ReactDOM from 'react-dom';
 
 import EthDropCore from "./contracts/EthDropCore.json";
 import {
   BrowserRouter,
   useParams,
   useLocation,
-  withRouter
+  withRouter,
+  
 } from "react-router-dom";
 
 function GroupEventPage(props) {
@@ -37,25 +39,28 @@ function GroupEventPage(props) {
   const [currentSponsorImg, setCurrentSponsorImg] = useState('');
   const [hasClaimableWinnings, setHasClaimableWinnings] = useState('');
 
-  const forceUpdate = React.useReducer(bool => !bool)[1];
+  // const forceUpdate = React.useReducer(bool => !bool)[1];
 
-  // let groupId;
-  // let groupName;
   const groupName = useParams().groupName;
   const groupId = useParams().groupId;
 
   // const location = useLocation();
 
-  let location = useLocation();
+  // let location = useLocation();
+
+
   React.useEffect(() => {
     // ga.send(["pageview", location.pathname]);
 
-    fetchData().then((ok) => {
-      console.log('wtf?')
-    });
+    console.log('^^ using effect!')
+
+    fetchData()
+    // .then((ok) => {
+    //   console.log('then finished...')
+    // });
 
     console.log('stuff happening...');
-  }, [location]);
+  }, []);
 
   async function fetchData() {
 
@@ -63,80 +68,87 @@ function GroupEventPage(props) {
       console.log('fetch start')
 
       const web3 = await getWeb3();
-      console.log('web3 ', web3)
-      const accounts = await web3.eth.getAccounts();
-
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = EthDropCore.networks[networkId];
-
-      const ethDropCoreInstance = new web3.eth.Contract(
-        EthDropCore.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-
-      setEthDropCoreInstance(ethDropCoreInstance);
+      console.log('web3 ', web3);
       setWeb3(web3);
-      setAccounts(accounts);
 
+      ReactDOM.unstable_batchedUpdates(async () => {
+        // this.setState({a: true}); // Doesn't re-render yet
+        // this.setState({b: true}); // Doesn't re-render yet
 
-      const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] });
-      console.log('isAdmin ', isAdmin)
-      setIsAdmin(isAdmin);
+        // const accounts = await web3.eth.getAccounts();
 
-      const isCOO = await ethDropCoreInstance.methods.isCOO().call({ from: accounts[0] });
-      console.log('isCOO ', isCOO)
-      setIsCOO(isCOO);
+        // const networkId = await web3.eth.net.getId();
+        // const deployedNetwork = EthDropCore.networks[networkId];
 
-      const isEligibleRecipient = await ethDropCoreInstance.methods.amIEligibleRecipient(groupId).call({ from: accounts[0] });
-      console.log('isEligibleRecipient ', isEligibleRecipient)
-      setIsEligibleRecipient(isEligibleRecipient);
+        // const ethDropCoreInstance = new web3.eth.Contract(
+        //   EthDropCore.abi,
+        //   deployedNetwork && deployedNetwork.address,
+        // );
 
-      const isRegisteredRecipient = await ethDropCoreInstance.methods.amIRegisteredRecipient(groupId).call({ from: accounts[0] });
-      console.log('isRegisteredRecipient ', isRegisteredRecipient)
-      setIsRegisteredRecipient(isRegisteredRecipient);
+        // setEthDropCoreInstance(ethDropCoreInstance);
+        // setAccounts(accounts);
 
-      const hasClaimableWinnings = await ethDropCoreInstance.methods.doIHaveClaimableWinnings(groupId).call({ from: accounts[0] });
-      console.log('hasClaimableWinnings ', hasClaimableWinnings)
-      setHasClaimableWinnings(hasClaimableWinnings);
+        // const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] });
+        // console.log('isAdmin ', isAdmin)
+        // setIsAdmin(isAdmin);
 
-      const isContributor = await ethDropCoreInstance.methods.amIContributor(groupId).call({ from: accounts[0] });
-      console.log('isContributor ', isContributor)
-      setIsContributor(isContributor);
+        // const isCOO = await ethDropCoreInstance.methods.isCOO().call({ from: accounts[0] });
+        // console.log('isCOO ', isCOO)
+        // setIsCOO(isCOO);
 
-      const currentSponsorAddress = await ethDropCoreInstance.methods.getCurrentSponsorAddress(groupId).call({ from: accounts[0] });
-      console.log('currentSponsorAddress ', currentSponsorAddress)
-      setCurrentSponsorAddress(currentSponsorAddress);
+        // const isEligibleRecipient = await ethDropCoreInstance.methods.amIEligibleRecipient(groupId).call({ from: accounts[0] });
+        // console.log('isEligibleRecipient ', isEligibleRecipient)
+        // setIsEligibleRecipient(isEligibleRecipient);
 
-      const adminsForGroup = await ethDropCoreInstance.methods.getAdminsForGroup(groupId).call({ from: accounts[0] });
-      console.log('adminsForGroup ', adminsForGroup)
-      setAdminsForGroup(adminsForGroup);
+        // const isRegisteredRecipient = await ethDropCoreInstance.methods.amIRegisteredRecipient(groupId).call({ from: accounts[0] });
+        // console.log('isRegisteredRecipient ', isRegisteredRecipient)
+        // setIsRegisteredRecipient(isRegisteredRecipient);
 
-      const groupEventData = await ethDropCoreInstance.methods.getGroupEventData(groupId).call({ from: accounts[0] });
-      console.log('groupEventData ', groupEventData)
-      setGroupEventData(groupEventData);
+        // const hasClaimableWinnings = await ethDropCoreInstance.methods.doIHaveClaimableWinnings(groupId).call({ from: accounts[0] });
+        // console.log('hasClaimableWinnings ', hasClaimableWinnings)
+        // setHasClaimableWinnings(hasClaimableWinnings);
 
-      const eligibleRecipients = await ethDropCoreInstance.methods.getEligibleRecipientAddresses(groupId).call({ from: accounts[0] });
-      console.log('eligibleRecipients ', eligibleRecipients)
-      setEligibleRecipients(eligibleRecipients);
+        // const isContributor = await ethDropCoreInstance.methods.amIContributor(groupId).call({ from: accounts[0] });
+        // console.log('isContributor ', isContributor)
+        // setIsContributor(isContributor);
 
-      const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods.getEligibleRecipientIsEligibilityEnabled(groupId).call({ from: accounts[0] });
-      console.log('eligibleRecipientsEligibilityEnabled ', eligibleRecipientsEligibilityEnabled)
-      setEligibleRecipientsEligibilityEnabled(eligibleRecipientsEligibilityEnabled);
+        // const currentSponsorAddress = await ethDropCoreInstance.methods.getCurrentSponsorAddress(groupId).call({ from: accounts[0] });
+        // console.log('currentSponsorAddress ', currentSponsorAddress)
+        // setCurrentSponsorAddress(currentSponsorAddress);
 
-      const registeredRecipients = await ethDropCoreInstance.methods.getRegisteredRecipients(groupId).call({ from: accounts[0] });
-      console.log('registeredRecipients ', registeredRecipients)
-      setRegisteredRecipients(registeredRecipients);
+        // const adminsForGroup = await ethDropCoreInstance.methods.getAdminsForGroup(groupId).call({ from: accounts[0] });
+        // console.log('adminsForGroup ', adminsForGroup)
+        // setAdminsForGroup(adminsForGroup);
 
-      const sponsorInfo = await ethDropCoreInstance.methods.getContributorInfo(groupId).call({ from: accounts[0] });
-      console.log('sponsorInfo ', sponsorInfo)
-      setRegisteredRecipients(sponsorInfo);
+        // const groupEventData = await ethDropCoreInstance.methods.getGroupEventData(groupId).call({ from: accounts[0] });
+        // console.log('groupEventData ', groupEventData)
+        // setGroupEventData(groupEventData);
 
-      setCurrentSponsorName(sponsorInfo[0])
-      setCurrentSponsorImg(sponsorInfo[1])
-      setCurrentSponsorImgLinkTo(sponsorInfo[2])
+        // const eligibleRecipients = await ethDropCoreInstance.methods.getEligibleRecipientAddresses(groupId).call({ from: accounts[0] });
+        // console.log('eligibleRecipients ', eligibleRecipients)
+        // setEligibleRecipients(eligibleRecipients);
 
-      // await forceUpdate();
-      console.log('fetch end')
+        // const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods.getEligibleRecipientIsEligibilityEnabled(groupId).call({ from: accounts[0] });
+        // console.log('eligibleRecipientsEligibilityEnabled ', eligibleRecipientsEligibilityEnabled)
+        // setEligibleRecipientsEligibilityEnabled(eligibleRecipientsEligibilityEnabled);
+
+        // const registeredRecipients = await ethDropCoreInstance.methods.getRegisteredRecipients(groupId).call({ from: accounts[0] });
+        // console.log('registeredRecipients ', registeredRecipients)
+        // setRegisteredRecipients(registeredRecipients);
+
+        // const sponsorInfo = await ethDropCoreInstance.methods.getContributorInfo(groupId).call({ from: accounts[0] });
+        // console.log('sponsorInfo ', sponsorInfo)
+        // setRegisteredRecipients(sponsorInfo);
+
+        // setCurrentSponsorName(sponsorInfo[0])
+        // setCurrentSponsorImg(sponsorInfo[1])
+        // setCurrentSponsorImgLinkTo(sponsorInfo[2])
+
+        // await forceUpdate();
+        console.log('fetch end')
+        
+      });
+      console.log('done fetching')
 
     } catch (error) {
       // Catch any errors for any of the above operations.

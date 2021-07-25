@@ -12,6 +12,9 @@ import {
   useParams
 } from "react-router-dom";
 
+import { FillButton } from 'tailwind-react-ui';
+import { shortenedAddress } from './shortened-address';
+
 class Home extends Component {
 
   connectMetaMask() {
@@ -60,13 +63,22 @@ class Home extends Component {
     ceoPausingErrorToDisplay: null
   };
 
-  componentDidMount = async () => {
+  async componentDidMount() {
+
+    console.log('^^ Home page mounting!')
+
     try {
       //   // Get network provider and web3 instance.
+      console.log('^^ calling web3...')
       const web3 = await getWeb3();
+      console.log('^^ done calling web3...')
 
       //   // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
+
+      const foo = new Promise((resolve => resolve('fobarrrr')));
+
+      await foo;
 
       //   // const accounts = window.ethereum.request("eth_requestAccounts")
       //   console.log('accounts are: ', accounts);
@@ -97,8 +109,15 @@ class Home extends Component {
 
       //   // Set web3, accounts, and contract to the state, and then proceed with an
       //   // example of interacting with the contract's methods.
-      this.setState({ accounts, ethDropCoreInstance, web3 });
 
+      const ok = { web3 }
+      // const ok = { accounts, ethDropCoreInstance, web3 }
+
+      this.setState({ ...this.state, web3, ethDropCoreInstance, accounts });
+
+      console.dir(this.state)
+
+      console.log('^^ home page done mounting!')
       await this.runExample();
 
     } catch (error) {
@@ -110,6 +129,10 @@ class Home extends Component {
     }
 
   };
+
+  componentWillUnmount() {
+    // window.removeEventListener('load', async () => {})
+  }
 
   runExample = async () => {
     const { accounts, ethDropCoreInstance } = this.state;
@@ -179,12 +202,12 @@ class Home extends Component {
     // ethDropCoreInstance.GroupCreated.watch((creator, groupId) => {
     //   console.log('heard an event for some shit "on" syntax: ' + creator + groupId)
     // })
-    
+
 
     ethDropCoreInstance.events.GroupCreated().on('data', async function (event) {
       console.log('woah! ', event.returnValues.groupId, event.returnValues.creator)
     })
-    
+
     ethDropCoreInstance.events.allEvents((err, eventObj) => {
       console.log('EVENT!! ', eventObj.event);
       console.log('yerp! ', eventObj.returnValues.groupId, eventObj.returnValues.creator)
@@ -378,38 +401,149 @@ class Home extends Component {
     }
     return (
       <div className="App">
-        <br />
-        <h1>Welcome to Eth Drop!</h1>
-        <br />
-        <p>An awesome dapp where you can run and participate in ether airdrops!</p>
-        <br />
-        <p>Below is the full list of groups running EthDrop events.</p>
-        <br />
-        <br />
 
-        {!this.state.groupNames && <div>Loading groups...</div>}
-        {this.state.groupNames && <div>
+        {/* Welcome Section */}
+        <div className="my-10">
 
-          <h1>
-            Groups
-          </h1>
-          <p>
-            {JSON.stringify(this.state.groupNames)}
-          </p>
+          <h1>Welcome to Eth Drop!</h1>
 
-          <ul>
+          <p>An awesome dapp where you can run and participate in ether airdrops!</p>
 
-            {this.state.groupNames.map((groupName, i) => {
-              return <li key={this.state.groupIds[i]} >
-                <Link style={{ textDecoration: 'none' }} to={`/g/${groupName}/${this.state.groupIds[i]}`}>{groupName} - {this.state.groupIds[i]}</Link>
-              </li>
+        </div>
 
-            })}
+        <hr />
 
-          </ul>
+        {/* Groups Section */}
+        <div className="my-10 mx-5">
+          {!this.state.groupNames && <div>Loading groups...</div>}
+          {this.state.groupNames && <div>
 
-        </div>}
+            <h1>
+              Groups
+            </h1>
 
+            {this.state.groupNames === [] && <p>
+              There are no groups yet- only the COO can create groups!
+            </p>
+            }
+
+            <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
+
+              <thead>
+                <tr >
+                  <th className="w-3/4 p-2 border-4 border-blue-200">Name</th>
+                  <th className="w-1/4 p-2 border-4 border-blue-200">More Details...</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {this.state.groupNames.map((groupName, i) => {
+                  return <tr key={this.state.groupIds[i]}>
+
+                    <td className="border-4 border-blue-200">{`${groupName} - ${this.state.groupIds[i]}`}</td>
+
+                    <td className="border-4 border-blue-200">
+
+                      <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
+                        <h4>
+                          <Link style={{ textDecoration: 'none' }} to={`/g/${groupName}/${this.state.groupIds[i]}`}>View</Link>
+                        </h4>
+                      </FillButton>
+                    </td>
+                  </tr>
+                })}
+
+              </tbody>
+            </table>
+
+            {/* <table className="table-fixed mx-4 border border-blue-200 border-8 rounded">
+              <thead>
+                <tr>
+                  <th className="w-1/2 border-4 border-blue-200">Title</th>
+                  <th className="w-1/4 border-4 border-blue-200">Author</th>
+                  <th className="w-1/4 border-4 border-blue-200">Views</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border-4 border-blue-200">Intro to CSS</td>
+                  <td className="border-4 border-blue-200">Adam</td>
+                  <td className="border-4 border-blue-200">858</td>
+                </tr>
+                <tr className="bg-blue-200">
+                  <td className="border-4 border-blue-400">A Long and Winding Tour of the History of UI Frameworks and Tools and the Impact on Design</td>
+                  <td className="border-4 border-blue-200">Adam</td>
+                  <td className="border-4 border-blue-200">112</td>
+                </tr>
+                <tr>
+                  <td className="border-4 border-blue-200">Intro to JavaScript</td>
+                  <td className="border-4 border-blue-200">Chris</td>
+                  <td className="border-4 border-blue-200">1,280</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table className="border-4 border border-green-800">
+              <thead>
+                <tr>
+                  <th className="border border-8 border-green-600 ...">State</th>
+                  <th className="border border-4 border-green-600 ...">City</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-green-600 ...">Indiana</td>
+                  <td className="border border-green-600 ...">Indianapolis</td>
+                </tr>
+                <tr>
+                  <td className="border border-green-600 ...">Ohio</td>
+                  <td className="border border-green-600 ...">Columbus</td>
+                </tr>
+                <tr>
+                  <td className="border border-green-600 ...">Michigan</td>
+                  <td className="border border-green-600 ...">Detroit</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table className="table-auto border-separate border border-green-900">
+              <thead>
+                <tr>
+                  <th className="border border-green-600">Frameworks</th>
+                  <th className="border border-green-600">About</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-green-600">Tailwind CSS</td>
+                  <td className="border border-green-600">
+                    Tailwind CSS is a highly customizable,
+                    low-level CSS framework that gives you all
+                    of the building blocks
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-green-600">Bulma</td>
+                  <td className="border border-green-600">
+                    Bulma CSS by @jgthms is just perfect.
+                    Simple, easily customizable and doesn't
+                    impose Javascript implementations.
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-green-600">Bootstrap</td>
+                  <td className="border border-green-600">
+                    Bootstrap is a free and open-source CSS
+                    framework directed at responsive, mobile-first
+                    front-end web development.
+                  </td>
+                </tr>
+              </tbody>
+            </table> */}
+
+          </div>}
+
+        </div>
         <br />
         <br />
         <br />
@@ -441,27 +575,57 @@ class Home extends Component {
 
 
         {this.state.isCEO &&
-          <div style={{ margin: "2vw", padding: "20px", border: "solid black 2px", borderRadius: "20px" }}>
+          <div className="mx-5 my-10 p-10 border-4 border-blue-200 rounded" >
 
             <h2>You are the CEO!</h2>
             <p>You can set the CFO and COO addresses here.</p>
 
-            <br />
-            <br />
-            <p>
-              ok: {this.state.currentString}
-            </p>
-            <br />
-            <br />
-            <p>Current CFO: {this.state.currentCFO}</p>
-            <br />
-            <form onSubmit={this.newCFOHandleSubmit}>
+
+            {/* <form onSubmit={this.newCFOHandleSubmit}>
               <label>
-                New CFO:
-                <input type="text" value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
+              New CFO:
+              <input type="text" value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
               </label>
               <input type="submit" value="Submit" />
-            </form>
+            </form> */}
+
+            <div className="w-full max-w-m">
+              <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={this.newCFOHandleSubmit}>
+
+                <div className="mb-6">
+
+                  <div className='has-tooltip'>
+                    <div className='tooltip rounded shadow-lg p-1 pb-5 bg-gray-100 text-red-500 m-2 mb-6 h-4'>{this.state.currentCFO}</div>
+                    <p>Current CFO:&nbsp;&nbsp;{shortenedAddress(this.state.currentCFO)}</p>
+                  </div>
+
+                  <label className="block text-gray-700 text-sm font-bold mb-2 my-4" htmlFor="new-ceo">
+                    <div className="my-4">
+                      Update CFO here:
+                    </div>
+                  </label>
+                  <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
+                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+                <div className="flex items-center justify-center">
+
+                  <button onClick={this.newCFOHandleSubmit} type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Set New CFO
+                  </button>
+                  {/* <input type="submit" value="Submit"/> */}
+
+                  {/* <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+                    Forgot Password?
+                  </a> */}
+                </div>
+              </form>
+              {/* <p className="text-center text-gray-500 text-xs">
+                &copy;2020 Acme Corp. All rights reserved.
+              </p> */}
+            </div>
+
+
 
             <br />
             <br />
@@ -488,9 +652,12 @@ class Home extends Component {
                 You can unpause it since you are the CEO.
               </p>
               <br />
-              <button onClick={this.unpauseEntireApp} style={{ backgroundColor: "lightgreen", padding: "20px" }}>
-                UNPAUSE
-              </button>
+
+              <FillButton onClick={this.unpauseEntireApp} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
+                <h4>
+                  UNPAUSE
+                </h4>
+              </FillButton>
 
               <p>
 
@@ -510,9 +677,13 @@ class Home extends Component {
                 Warning- pausing the app makes it unusable for everyone until unpaused!
               </p>
               <br />
-              <button onClick={this.pauseEntireApp} style={{ backgroundColor: "pink", padding: "20px" }}>
-                PAUSE
-              </button>
+
+              <FillButton onClick={this.pauseEntireApp} className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
+                <h4>
+                  PAUSE
+                </h4>
+              </FillButton>
+
               <br />
               <br />
               <br />

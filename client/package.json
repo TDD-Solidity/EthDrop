@@ -3,18 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^5.8.0",
+    "@headlessui/react": "^1.3.0",
+    "@heroicons/react": "^1.0.2",
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.36",
     "react": "16.11.0",
-    "react-dom": "16.11.0",
+    "react-dom": "^16.11.0",
     "react-dotenv": "^0.1.3",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.2.0",
+    "tailwind": "^4.0.0",
+    "tailwind-react-ui": "^0.8.1",
     "web3": "1.2.2"
   },
   "scripts": {
-    "start": "react-dotenv && react-scripts start",
-    "build": "react-dotenv && react-scripts build",
-    "test": "react-dotenv && react-scripts test",
+    "watch-tailwind": "tailwind build -i source.css -o output.css -w --minify",
+    "build-tailwind": "tailwind build -i source.css -o output.css --minify",
+    "start": "craco start",
+    "tw-start": "npm run build-tailwind && react-scripts start",
+    "build": "craco build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -38,5 +48,8 @@
       "ETHDROP_CORE_CONTRACT_ADDRESS",
       "SIMPLE_STORAGE_CONTRACT_ADDRESS"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7"
   }
 }
