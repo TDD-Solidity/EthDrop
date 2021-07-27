@@ -193,6 +193,44 @@ function GroupEventPage(props) {
       setCurrentSponsorImg(sponsorInfo[1])
       setCurrentSponsorImgLinkTo(sponsorInfo[2])
 
+
+
+      ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
+        console.log('group page heard event! ', eventObj.event);
+        console.log('yerp! ', eventObj.returnValues);
+  
+        switch (eventObj.event) {
+  
+          case 'CooUpdated':  
+            await this.checkIfImCOO();
+            break;
+  
+          case 'CfoUpdated':
+  
+            await this.checkIfImCFO();
+  
+            break;
+  
+          case 'GroupCreated':
+  
+            await this.getGroups();
+            break;
+  
+          case 'AppPaused':
+  
+            await this.checkIsPaused();
+            break;
+  
+          default:
+            console.log(`UNHANDLED EVENT!! : ${eventObj.event}`);
+  
+        }
+  
+      })
+
+
+
+
       // await forceUpdate();
       console.log('fetch end')
 
