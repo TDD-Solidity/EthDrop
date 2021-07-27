@@ -134,6 +134,39 @@ class Home extends Component {
     // window.removeEventListener('load', async () => {})
   }
 
+  async checkIfImCFO() {
+
+    const isCFO = await this.state.ethDropCoreInstance.methods.isCFO().call({ from: this.state.accounts[0] });
+    console.log('isCFO ', isCFO)
+    this.setState({ isCFO });
+  }
+
+  async checkIfImCOO() {
+
+    const isCOO = await this.state.ethDropCoreInstance.methods.isCOO().call({ from: this.state.accounts[0] });
+    console.log('isCOO ', isCOO)
+    this.setState({ isCOO });
+  }
+
+  async checkIsPaused() {
+    const isPaused = await ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
+    console.log('isPaused ', isPaused)
+    this.setState({ isPaused });
+  }
+    
+  async getGroups() {
+
+    const groupIds = await this.state.ethDropCoreInstance.methods.getGroupIds().call({ from: this.state.accounts[0] });
+    console.log('groupIds: ', groupIds)
+    this.setState({ groupIds });
+
+    const groupNames = await this.state.ethDropCoreInstance.methods.getGroupNames().call({ from: this.state.accounts[0] });
+    console.log('groupNames: ', groupNames)
+    this.setState({ groupNames });
+
+
+  }
+
   runExample = async () => {
     const { accounts, ethDropCoreInstance } = this.state;
 
@@ -158,25 +191,19 @@ class Home extends Component {
 
     const currentAddressShortened = whoami ? whoami.substr(0, 6) + '...' + whoami.substr(whoami.length - 5) : '';
 
-    const isPaused = await ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
-    console.log('isPaused ', isPaused)
-    this.setState({ isPaused });
+    await checkIsPaused();
 
     const isCEO = await ethDropCoreInstance.methods.isCEO().call({ from: this.state.accounts[0] });
     console.log('isCEO ', isCEO)
     this.setState({ isCEO });
 
-    const isCOO = await ethDropCoreInstance.methods.isCOO().call({ from: this.state.accounts[0] });
-    console.log('isCOO ', isCOO)
-    this.setState({ isCOO });
 
     const currentCOO = await ethDropCoreInstance.methods.getCOO().call({ from: this.state.accounts[0] });
     console.log('currentCOO ', currentCOO)
     this.setState({ currentCOO });
 
-    const isCFO = await ethDropCoreInstance.methods.isCFO().call({ from: this.state.accounts[0] });
-    console.log('isCFO ', isCFO)
-    this.setState({ isCFO });
+    await this.checkIfImCFO();
+    await this.checkIfImCOO();
 
     const currentCFO = await ethDropCoreInstance.methods.getCFO().call({ from: this.state.accounts[0] });
     console.log('currentCFO ', currentCFO)
@@ -188,15 +215,7 @@ class Home extends Component {
 
     const currentCfoBalance = 0;
 
-    const groupIds = await ethDropCoreInstance.methods.getGroupIds().call({ from: this.state.accounts[0] });
-    console.log('groupIds: ', groupIds)
-    this.setState({ groupIds });
-
-    const groupNames = await ethDropCoreInstance.methods.getGroupNames().call({ from: this.state.accounts[0] });
-    console.log('groupNames: ', groupNames)
-    this.setState({ groupNames });
-
-
+    await this.getGroups();
 
 
     // ethDropCoreInstance.GroupCreated.watch((creator, groupId) => {
@@ -204,14 +223,70 @@ class Home extends Component {
     // })
 
 
-    ethDropCoreInstance.events.GroupCreated().on('data', async function (event) {
-      console.log('woah! ', event.returnValues.groupId, event.returnValues.creator)
+    ethDropCoreInstance.events.GroupCreated().on('data', async (event) => {
+      console.log('woah! ', event.returnValues.groupId, event.returnValues.creator);
+
+      console.log('group created! ')
+      this.setState({
+        ...this.state,
+        groupNames: [event.returnValues.creator, ...this.state.groupNames],
+        groupIds: [event.returnValues.groupId, ...this.state.groupIds],
+      })
     })
 
-    ethDropCoreInstance.events.allEvents((err, eventObj) => {
-      console.log('EVENT!! ', eventObj.event);
-      console.log('yerp! ', eventObj.returnValues.groupId, eventObj.returnValues.creator)
+    ethDropCoreInstance.events.AdminAdded().on('data', async (event) => {
+      console.log('admin added! ', event.returnValues);
 
+      // this.setState({
+      //   ...this.state,
+      //   groupNames: [event.returnValues.creator, ...this.state.groupNames],
+      //   groupIds: [event.returnValues.groupId, ...this.state.groupIds],
+      // })
+    })
+
+    ethDropCoreInstance.events.GroupCreated().on('data', async (event) => {
+      console.log('groupCreated! ', event.returnValues);
+
+      // this.setState({
+      //   ...this.state,
+      //   groupNames: [event.returnValues.creator, ...this.state.groupNames],
+      //   groupIds: [event.returnValues.groupId, ...this.state.groupIds],
+      // })
+    })
+
+    ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
+      console.log('EVENT!! ', eventObj.event);
+      console.log('yerp! ', eventObj.returnValues.groupId, eventObj.returnValues.groupName);
+      console.log('yerp! ', eventObj.returnValues);
+
+      switch (eventObj.event) {
+
+        case 'CooUpdated':
+
+          await this.checkIfImCOO();
+
+          break;
+
+        case 'CfoUpdated':
+
+          await this.checkIfImCFO();
+
+          break;
+
+        case 'GroupCreated':
+
+          await this.getGroups();
+          break;
+
+        case 'AppPaused':
+
+          await checkIsPaused();
+          break;
+
+        default:
+          console.log(`UNHANDLED EVENT!! : ${eventObj.event}`);
+
+      }
 
     })
 
@@ -427,35 +502,35 @@ class Home extends Component {
             </p>
             }
 
-            {this.state.groupNames && this.state.groupNames.length >= 1 && 
-            <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
+            {this.state.groupNames && this.state.groupNames.length >= 1 &&
+              <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
 
-              <thead>
-                <tr >
-                  <th className="w-3/4 p-2 border-4 border-blue-200">Name</th>
-                  <th className="w-1/4 p-2 border-4 border-blue-200">More Details...</th>
-                </tr>
-              </thead>
-              <tbody>
-
-                {this.state.groupNames.map((groupName, i) => {
-                  return <tr key={this.state.groupIds[i]}>
-
-                    <td className="border-4 border-blue-200">{`${groupName} - ${this.state.groupIds[i]}`}</td>
-
-                    <td className="border-4 border-blue-200">
-
-                      <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
-                        <h4>
-                          <Link style={{ textDecoration: 'none' }} to={`/g/${groupName}/${this.state.groupIds[i]}`}>View</Link>
-                        </h4>
-                      </FillButton>
-                    </td>
+                <thead>
+                  <tr >
+                    <th className="w-3/4 p-2 border-4 border-blue-200">Name</th>
+                    <th className="w-1/4 p-2 border-4 border-blue-200">More Details...</th>
                   </tr>
-                })}
+                </thead>
+                <tbody>
 
-              </tbody>
-            </table>}
+                  {this.state.groupNames.map((groupName, i) => {
+                    return <tr key={i + this.state.groupIds[i]}>
+
+                      <td className="border-4 border-blue-200">{`${groupName} - ${this.state.groupIds[i]}`}</td>
+
+                      <td className="border-4 border-blue-200">
+
+                        <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
+                          <h4>
+                            <Link style={{ textDecoration: 'none' }} to={`/g/${groupName}/${this.state.groupIds[i]}`}>View</Link>
+                          </h4>
+                        </FillButton>
+                      </td>
+                    </tr>
+                  })}
+
+                </tbody>
+              </table>}
 
             {/* <table className="table-fixed mx-4 border border-blue-200 border-8 rounded">
               <thead>
@@ -621,25 +696,45 @@ class Home extends Component {
                   </a> */}
                 </div>
               </form>
+
+            </div>
+
+
+            <div className="w-full max-w-m">
+              <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={this.newCOOHandleSubmit}>
+
+                <div className="mb-6">
+
+                  <div className='has-tooltip'>
+                    <div className='tooltip rounded shadow-lg p-1 pb-5 bg-gray-100 text-red-500 m-2 mb-6 h-4'>{this.state.currentCOO}</div>
+                    <p>Current COO:&nbsp;&nbsp;{shortenedAddress(this.state.currentCOO)}</p>
+                  </div>
+
+                  <label className="block text-gray-700 text-sm font-bold mb-2 my-4" htmlFor="new-ceo">
+                    <div className="my-4">
+                      Update COO here:
+                    </div>
+                  </label>
+                  <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newCOOInputValue} onChange={this.newCOOHandleChange} />
+                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+                <div className="flex items-center justify-center">
+
+                  <button onClick={this.newCOOHandleSubmit} type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Set New COO
+                  </button>
+                  {/* <input type="submit" value="Submit"/> */}
+
+                  {/* <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+                    Forgot Password?
+                  </a> */}
+                </div>
+              </form>
               {/* <p className="text-center text-gray-500 text-xs">
                 &copy;2020 Acme Corp. All rights reserved.
               </p> */}
             </div>
-
-
-
-            <br />
-            <br />
-            <p>Current COO: {this.state.currentCOO}</p>
-            <br />
-            <br />
-            <form onSubmit={this.newCOOHandleSubmit}>
-              <label>
-                New COO:
-                <input type="text" value={this.state.newCOOInputValue} onChange={this.newCOOHandleChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form>
 
             <br />
 
@@ -724,7 +819,7 @@ class Home extends Component {
             </h1>
 
             <p>You can create new groups here.</p>
- 
+
 
 
             {/* <form onSubmit={this.newGroupSubmit}> */}
@@ -738,13 +833,13 @@ class Home extends Component {
 
 
 
-            <form onSubmit={this.newGroupSubmit2}>
+            {/* <form onSubmit={this.newGroupSubmit2}>
               <label>
                 New Group Name:&nbsp;
                 <input type="text" value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
               </label>
               <input type="submit" value="Submit" />
-            </form>
+            </form> */}
 
             <div className="w-full max-w-m">
               <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={this.newGroupSubmit2}>
@@ -762,13 +857,13 @@ class Home extends Component {
                     </div>
                   </label>
                   <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
+                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
                   {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
                 </div>
                 <div className="flex items-center justify-center">
 
-                  <button onClick={this.newCFOHandleSubmit} type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-                    Set New CFO
+                  <button onClick={this.newGroupSubmit2} type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Create New Group
                   </button>
                   {/* <input type="submit" value="Submit"/> */}
 

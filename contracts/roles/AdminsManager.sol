@@ -8,10 +8,11 @@ contract AdminsManager is ContributorManager {
     event AdminAdded(address indexed account, uint256 groupId);
     event AdminRemoved(address indexed account, uint256 groupId);
 
-    event GroupCreated(address indexed creator, uint256 groupId);
+    event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
+    event AdminAdded();
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
@@ -49,6 +50,8 @@ contract AdminsManager is ContributorManager {
     // TODO - allow COO to give "admin-granting power" to other admins
     function addAdmin(address account, uint256 groupId) external onlyCOO {
         _addAdmin(account, groupId);
+
+        emit AdminAdded();
     }
 
     function removeAdmin(address account, uint256 groupId) external onlyCOO {
@@ -116,7 +119,7 @@ contract AdminsManager is ContributorManager {
         listOfGroupIds.push(newGroupId);
         listOfGroupNames.push(groupName);
 
-        emit GroupCreated(msg.sender, newGroupId);
+        emit GroupCreated(groupName, newGroupId);
     }
 
     function startEvent(uint256 groupId)

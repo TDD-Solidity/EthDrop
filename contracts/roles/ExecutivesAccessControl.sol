@@ -24,6 +24,11 @@ contract ExecutivesAccessControl {
     /// @dev Emited when contract is upgraded - See README.md for updgrade plan
     event ContractUpgrade(address newContract);
 
+    event AppPaused(bool isPaused);
+
+    event CooUpdated();
+    event CfoUpdated();
+
     // The addresses of the accounts (or contracts) that can execute actions within each roles.
     string public stringgg;
 
@@ -71,6 +76,7 @@ contract ExecutivesAccessControl {
         require(_newCEO != address(0));
 
         ceoAddress = address(_newCEO);
+
     }
 
     function isCFO() external view returns (bool) {
@@ -95,6 +101,7 @@ contract ExecutivesAccessControl {
         // require(_newCFO != address(0));
 
         cfoAddress = address(_newCFO);
+        emit CfoUpdated();
     }
 
     function isCOO() external view returns (bool) {
@@ -111,6 +118,7 @@ contract ExecutivesAccessControl {
         require(_newCOO != address(0));
 
         cooAddress = _newCOO;
+        emit CooUpdated();
     }
 
     function whoami() external view returns (address) {

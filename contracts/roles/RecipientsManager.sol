@@ -85,7 +85,7 @@ contract RecipientsManager is EthDropBase {
             return false;
         }
 
-        return winningsCollected[groupId][msg.sender];
+        return winningsCollected[groupId][msg.sender] != true;
     }
 
     function claimWinnings(uint256 groupId)
