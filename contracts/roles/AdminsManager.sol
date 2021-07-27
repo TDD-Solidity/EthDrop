@@ -13,6 +13,7 @@ contract AdminsManager is ContributorManager {
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
     event AdminAdded(uint groupId);
+    event AdminRemoved(uint groupId);
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
@@ -51,7 +52,7 @@ contract AdminsManager is ContributorManager {
     function addAdmin(address account, uint256 groupId) external onlyCOO {
         _addAdmin(account, groupId);
 
-        emit AdminAdded();
+        emit AdminAdded(groupId);
     }
 
     function removeAdmin(address account, uint256 groupId) external onlyCOO {
@@ -72,7 +73,7 @@ contract AdminsManager is ContributorManager {
         adminEnabled[groupId].push(true);
         // TODO - adminNames
 
-        emit AdminAdded(account, groupId);
+        emit AdminAdded(groupId);
     }
 
     function _removeAdmin(address account, uint256 groupId) internal {
@@ -81,7 +82,7 @@ contract AdminsManager is ContributorManager {
         uint index = adminAddressToIndex[groupId][account];
         adminEnabled[groupId][index] = false;
 
-        emit AdminRemoved(account, groupId);
+        emit AdminRemoved(groupId);
     }
 
     function readEventInfo(uint256 groupId)
@@ -165,7 +166,7 @@ contract AdminsManager is ContributorManager {
         // }
 
         // pot[groupId] = new PaymentSplitter(
-        //     registeredRecipientsArray[groupId],
+        //     registeredRecipientAddressesArray[groupId],
         //     potShares
         // );
 
@@ -196,14 +197,17 @@ contract AdminsManager is ContributorManager {
         emit EventEnded(msg.sender, groupId);
     }
 
-    function addEligibleRecipient(address account, uint256 groupId)
+    function addEligibleRecipient(address account, string memory name, uint256 groupId)
         external
         whenNotPaused
         onlyAdmins(groupId)
     {
         eligibleRecipients[groupId][account] = true;
 
-        eligibleRecipientsArray[groupId].push(account);
+        eligibleRecipientAddressesArray[groupId].push(account);
+        eligibleRecipientNamesArray[groupId].push(name);
+
+        recipientAddressToName[groupId][account] = name;
         eligibleRecipientsEligibilityIsEnabled[groupId].push(true);
 
         emit EligibleRecipientAdded(account, groupId);

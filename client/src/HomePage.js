@@ -497,7 +497,7 @@ class Home extends Component {
               Groups
             </h1>
 
-            {this.state.groupNames && this.state.groupNames.length < 1 && <p>
+            {this.state.groupNames && (this.state.groupNames.length < 1) && <p>
               There are no groups yet- only the COO can create groups!
             </p>
             }

@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "../core/EthDropBase.sol";
 
 contract RecipientsManager is EthDropBase {
-    
     event EligibleRecipientAdded(address indexed account, uint256 groupId);
     event EligibleRecipientRemoved(address indexed account, uint256 groupId);
 
@@ -70,7 +69,12 @@ contract RecipientsManager is EthDropBase {
         whenNotPaused
     {
         registeredRecipients[groupId][msg.sender] = true;
-        registeredRecipientsArray[groupId].push(msg.sender);
+        registeredRecipientAddressesArray[groupId].push(msg.sender);
+
+        string memory name = recipientAddressToName[groupId][msg.sender];
+
+        registeredRecipientNamesArray[groupId].push(name);
+
         currentEvents[groupId].registeredRecipientsCount++;
 
         emit RecipientRegistered(msg.sender, groupId);
@@ -81,7 +85,6 @@ contract RecipientsManager is EthDropBase {
         view
         returns (bool)
     {
-
         if (!isRegisteredRecipient(msg.sender, groupId)) {
             return false;
         }
@@ -108,7 +111,23 @@ contract RecipientsManager is EthDropBase {
         view
         returns (address[] memory)
     {
-        return eligibleRecipientsArray[groupId];
+        return eligibleRecipientAddressesArray[groupId];
+    }
+
+    function getEligibleRecipientNames(uint256 groupId)
+        external
+        view
+        returns (string[] memory)
+    {
+        return eligibleRecipientNamesArray[groupId];
+    }
+
+    function getRegisteredRecipientNames(uint256 groupId)
+        external
+        view
+        returns (string[] memory)
+    {
+        return registeredRecipientNamesArray[groupId];
     }
 
     function getEligibleRecipientIsEligibilityEnabled(uint256 groupId)
@@ -124,6 +143,6 @@ contract RecipientsManager is EthDropBase {
         view
         returns (address[] memory)
     {
-        return registeredRecipientsArray[groupId];
+        return registeredRecipientAddressesArray[groupId];
     }
 }

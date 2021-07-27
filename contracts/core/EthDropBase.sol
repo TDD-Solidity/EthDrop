@@ -109,8 +109,12 @@ contract EthDropBase is ExecutivesAccessControl {
     // Holds ALL eligibleRecipients for all groups
     // groupId => Role
     mapping(uint256 => mapping(address => bool)) eligibleRecipients;
-    mapping(uint256 => address[]) eligibleRecipientsArray;
+    mapping(uint256 => address[]) eligibleRecipientAddressesArray;
+    mapping(uint256 => string[]) eligibleRecipientNamesArray;
     mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
+    mapping(uint256 => mapping(address => string)) recipientAddressToName;
+
+    mapping(uint256 => string[]) registeredRecipientNamesArray;
 
     // Holds ALL registeredRecipients for all groups
     // groupId => Role
@@ -118,7 +122,7 @@ contract EthDropBase is ExecutivesAccessControl {
 
     // Holds ALL registeredRecipients in an array (for PaymentSplitter)
     // groupId => address[]
-    mapping(uint256 => address[]) registeredRecipientsArray;
+    mapping(uint256 => address[]) registeredRecipientAddressesArray;
 
     // Keeping track of winnings for all groups
     // mapping(uint256 => PaymentSplitter) pot;

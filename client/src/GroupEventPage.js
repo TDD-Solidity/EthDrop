@@ -31,8 +31,12 @@ function GroupEventPage(props) {
   const [eligibleRecipients, setEligibleRecipients] = useState('')
   const [registeredRecipients, setRegisteredRecipients] = useState('')
   const [
-    newEligibleRecipientInputValue,
-    setEligibleRecipientInputValue,
+    newEligibleRecipientAddressInputValue,
+    setEligibleRecipientAddressInputValue,
+  ] = useState('')
+  const [
+    newEligibleRecipientNameInputValue,
+    setEligibleRecipientNameInputValue,
   ] = useState('')
   const [
     eligibleRecipientsEligibilityEnabled,
@@ -72,10 +76,7 @@ function GroupEventPage(props) {
 
     console.log('^^ using effect!')
 
-    fetchData()
-    // .then((ok) => {
-    //   console.log('then finished...')
-    // });
+    fetchData();
 
     console.log('stuff happening...')
   }, [])
@@ -177,7 +178,7 @@ function GroupEventPage(props) {
       )
 
       const registeredRecipients = await ethDropCoreInstance.methods
-        .getRegisteredRecipients(groupId)
+        .getRegisteredRecipientNames(groupId)
         .call({ from: accounts[0] })
       console.log('registeredRecipients ', registeredRecipients)
       setRegisteredRecipients(registeredRecipients)
@@ -186,7 +187,7 @@ function GroupEventPage(props) {
         .getContributorInfo(groupId)
         .call({ from: accounts[0] })
       console.log('sponsorInfo ', sponsorInfo)
-      setRegisteredRecipients(sponsorInfo)
+
 
       setCurrentSponsorName(sponsorInfo[0])
       setCurrentSponsorImg(sponsorInfo[1])
@@ -203,16 +204,6 @@ function GroupEventPage(props) {
       console.error(error)
     }
   }
-
-  // useEffect(() => {
-
-  //   // console.log('using effect...')
-
-  //   fetchData();
-
-  //   console.log('chyep')
-
-  // }, [location]);
 
   async function removeAdmin(address) {
     try {
@@ -289,7 +280,9 @@ function GroupEventPage(props) {
 
     try {
       await ethDropCoreInstance.methods
-        .addEligibleRecipient(newEligibleRecipientInputValue, groupId)
+        .addEligibleRecipient(newEligibleRecipientAddressInputValue,
+          newEligibleRecipientNameInputValue,
+          groupId)
         .send({ from: accounts[0] })
       console.log('added eligible recipient! ')
     } catch (err) {
@@ -301,8 +294,12 @@ function GroupEventPage(props) {
     setNewAdminInputValue(event.target.value)
   }
 
-  function newEligibleRecipientHandleChange(event) {
-    setEligibleRecipientInputValue(event.target.value)
+  function newEligibleRecipientAddressHandleChange(event) {
+    setEligibleRecipientAddressInputValue(event.target.value)
+  }
+
+  function newEligibleRecipientNameHandleChange(event) {
+    setEligibleRecipientNameInputValue(event.target.value)
   }
 
   function contributionAmountHandleChange(event) {
@@ -386,10 +383,6 @@ function GroupEventPage(props) {
     }
   }
 
-  {
-    console.log(web3)
-  }
-
   if (!web3) {
     return <h1>Loading web3...Group event page! {groupName}</h1>
   }
@@ -397,8 +390,11 @@ function GroupEventPage(props) {
   if (web3)
     return (
       <div className="App">
-        <br />
-        <h1>{groupName}</h1>
+
+        <div className="mx-5 my-10">
+
+          <h1>{groupName}</h1>
+        </div>
 
         {isCOO && (
           <div
@@ -434,20 +430,20 @@ function GroupEventPage(props) {
                       <tbody>
                         {adminsForGroup[0].map((adminAddress, i) => {
                           return (
-                            <tr key={i}>
+                            <tr key={adminAddress + i}>
                               <td className="border-4 border-blue-200">{`${adminAddress}`}</td>
 
                               <td className="border-4 border-blue-200">
                                 <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
                                   <h4>
-                                    <Link
+                                    <a
                                       style={{ textDecoration: 'none' }}
                                       onClick={() =>
                                         alert('this button does nothing yet...')
                                       }
                                     >
                                       x
-                                    </Link>
+                                    </a>
                                   </h4>
                                 </FillButton>
                               </td>
@@ -579,7 +575,7 @@ function GroupEventPage(props) {
             {eligibleRecipients[0] &&
               eligibleRecipients.map((eligibleRecipient, i) => {
                 return (
-                  <li key={i}>
+                  <li key={'eligibleRecipient' + i}>
                     {/* <p> */}
                     {eligibleRecipient} -{' '}
                     {JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
@@ -595,7 +591,7 @@ function GroupEventPage(props) {
             {/* <form onSubmit={newEligibleRecipientSubmit}>
               <label>
                 New Eligible Recipient Address:
-                <input type="text" value={newEligibleRecipientInputValue} onChange={newEligibleRecipientHandleChange} />
+                <input type="text" value={newEligibleRecipientAddressInputValue} onChange={newEligibleRecipientAddressHandleChange} />
               </label>
               <input type="submit" value="Submit" />
             </form> */}
@@ -607,17 +603,34 @@ function GroupEventPage(props) {
                 <div className="mb-6">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
+                    htmlFor="new-recipient-address"
                   >
                     <div className="my-4">New Eligible Recipient Address:</div>
                   </label>
                   <input
                     className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
+                    id="new-recipient-address"
                     type="text"
                     placeholder="0x1234..."
-                    value={newEligibleRecipientInputValue}
-                    onChange={newEligibleRecipientHandleChange}
+                    value={newEligibleRecipientAddressInputValue}
+                    onChange={newEligibleRecipientAddressHandleChange}
+                  />
+                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+                <div className="mb-6">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                    htmlFor="new-ceo"
+                  >
+                    <div className="my-4">New Eligible Recipient Name:</div>
+                  </label>
+                  <input
+                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo"
+                    type="text"
+                    placeholder="Bob"
+                    value={newEligibleRecipientNameInputValue}
+                    onChange={newEligibleRecipientNameHandleChange}
                   />
                   {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
                 </div>
@@ -639,18 +652,18 @@ function GroupEventPage(props) {
 
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-          <div className="my-10">
-            <h2>There is no event currently in progress!</h2>
+            <div className="my-10">
+              <h2>There is no event currently in progress!</h2>
 
-            <br />
-            <br />
+              <br />
+              <br />
 
-            <h4>
-              Check with the group admins for information on when the next
-              airdrop event is happening!
-            </h4>
-          </div>
-        )}
+              <h4>
+                Check with the group admins for information on when the next
+                airdrop event is happening!
+              </h4>
+            </div>
+          )}
 
         {/* Today's Sponsor Header */}
         <div className="my-5 mx-4">
@@ -665,7 +678,7 @@ function GroupEventPage(props) {
         <div className="my-5 mx-4">
           {currentSponsorName && (
             <a href={currentSponsorImgLinkTo}>
-              <img src={currentSponsorImg} style={{ maxWidth: '85vw' }} />
+              <img src={currentSponsorImg} class="w-85 my-10 mx-auto" />
             </a>
           )}
 
@@ -715,35 +728,35 @@ function GroupEventPage(props) {
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-          <div>
-            {isEligibleRecipient && (
-              <div>
-                <p>You are an eligible recipient for airdrops by this group!</p>
-              </div>
-            )}
+            <div>
+              {isEligibleRecipient && (
+                <div>
+                  <p>You are an eligible recipient for airdrops by this group!</p>
+                </div>
+              )}
 
-            {isAdmin && (
-              <div class="m-3 mb-10">
-                <p>
-                  Since you are an admin, you can start the event by opening
-                  registration!
-                </p>
-                <button
-                  onClick={() => startAirdropEvent(groupId)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Open AirDrop Registration
-                </button>
-              </div>
-            )}
+              {isAdmin && (
+                <div className="m-3 mb-10">
+                  <p>
+                    Since you are an admin, you can start the event by opening
+                    registration!
+                  </p>
+                  <button
+                    onClick={() => startAirdropEvent(groupId)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Open AirDrop Registration
+                  </button>
+                </div>
+              )}
 
-            {!isAdmin && (
-              <div>
-                <p>Waiting for a group admin to open registration...</p>
-              </div>
-            )}
-          </div>
-        )}
+              {!isAdmin && (
+                <div>
+                  <p>Waiting for a group admin to open registration...</p>
+                </div>
+              )}
+            </div>
+          )}
 
         {/* Phase 1 - Registration */}
         {groupEventData && groupEventData[0] === '1' && (
@@ -965,10 +978,6 @@ function GroupEventPage(props) {
               <div>
                 <p>Click the button below to claim your winnings!!</p>
 
-                <p>
-                  has claimable winnings: {JSON.stringify(hasClaimableWinnings)}
-                </p>
-
                 <button
                   onClick={() => claimWinnings(groupId)}
                   disabled={!hasClaimableWinnings}
@@ -980,6 +989,24 @@ function GroupEventPage(props) {
             )}
           </div>
         )}
+
+        <hr className="m-5"/>
+
+        {registeredRecipients && registeredRecipients.length > 0 && <div>
+
+          <h3 className="my-10">
+            Registered Users:
+          </h3>
+          <ul>
+
+            {registeredRecipients.map((recipientName, i) => {
+              return <li key={'recipName ' + i} className="m-5 my-10">
+                <h1>{'-  ' + recipientName}</h1>
+              </li>
+            })}
+          </ul>
+
+        </div>}
 
         <br />
         <br />
