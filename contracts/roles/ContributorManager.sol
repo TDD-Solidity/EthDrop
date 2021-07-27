@@ -4,8 +4,11 @@ pragma solidity ^0.8.0;
 import "./RecipientsManager.sol";
 
 contract ContributorManager is RecipientsManager {
-    event ContributorAdded(address indexed account, uint256 groupId);
-    event ContributorRemoved(address indexed account, uint256 groupId);
+    // event ContributorAdded(address indexed account, uint256 groupId);
+    // event ContributorRemoved(address indexed account, uint256 groupId);
+
+    event ContributorAddressUpdated(uint groupId, address newContributor);
+    event ContributorInfoUpdated(uint groupId, address newContributor);
 
     event ContributionMade(
         address indexed account,

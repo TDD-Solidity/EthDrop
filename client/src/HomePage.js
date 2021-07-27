@@ -149,7 +149,7 @@ class Home extends Component {
   }
 
   async checkIsPaused() {
-    const isPaused = await ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
+    const isPaused = await this.state.ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
     console.log('isPaused ', isPaused)
     this.setState({ isPaused });
   }
@@ -191,7 +191,7 @@ class Home extends Component {
 
     const currentAddressShortened = whoami ? whoami.substr(0, 6) + '...' + whoami.substr(whoami.length - 5) : '';
 
-    await checkIsPaused();
+    await this.checkIsPaused();
 
     const isCEO = await ethDropCoreInstance.methods.isCEO().call({ from: this.state.accounts[0] });
     console.log('isCEO ', isCEO)
@@ -280,7 +280,7 @@ class Home extends Component {
 
         case 'AppPaused':
 
-          await checkIsPaused();
+          await this.checkIsPaused();
           break;
 
         default:

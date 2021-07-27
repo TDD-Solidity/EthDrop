@@ -5,14 +5,14 @@ import "./ContributorManager.sol";
 
 contract AdminsManager is ContributorManager {
 
-    event AdminAdded(address indexed account, uint256 groupId);
-    event AdminRemoved(address indexed account, uint256 groupId);
+    // event AdminAdded(address indexed account, uint256 groupId);
+    // event AdminRemoved(address indexed account, uint256 groupId);
 
     event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
-    event AdminAdded();
+    event AdminAdded(uint groupId);
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
