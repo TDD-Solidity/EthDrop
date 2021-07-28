@@ -194,6 +194,19 @@ contract AdminsManager is ContributorManager {
 
         pastEvents[groupId].push(currentEvents[groupId]);
 
+        currentEvents[groupId].registeredRecipientsCount = 0;
+        currentEvents[groupId].totalAmountContributed = 0;
+        currentEvents[groupId].weiWinnings = 0;
+        currentEvents[groupId].numberOfUsersWhoClaimedWinnings = 0;
+
+        // TODO - reset mappings
+        
+        // winningsCollected[groupId] = new mapping(address => bool);
+        // registeredRecipientNamesArray[groupId] = new mapping(address => bool);
+        // registeredRecipients[groupId] = new mapping(address => bool);
+        // registeredRecipientAddressesArray[groupId] = address[];
+        
+
         emit EventEnded(msg.sender, groupId);
     }
 

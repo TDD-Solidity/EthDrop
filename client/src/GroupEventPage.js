@@ -29,6 +29,7 @@ function GroupEventPage(props) {
   const [groupEventData, setGroupEventData] = useState('')
   const [newAdminInputValue, setNewAdminInputValue] = useState('')
   const [eligibleRecipients, setEligibleRecipients] = useState('')
+  const [eligibleRecipientNames, setEligibleRecipientNames] = useState('')
   const [registeredRecipients, setRegisteredRecipients] = useState('')
   const [
     newEligibleRecipientAddressInputValue,
@@ -71,12 +72,26 @@ function GroupEventPage(props) {
 
   // let location = useLocation();
 
+  async function getAdminData(ethDropCoreInstance, currentAccount, groupId) {
+    const adminsForGroup = await ethDropCoreInstance.methods
+      .getAdminsForGroup(groupId)
+      .call({ from: currentAccount })
+    console.log('adminsForGroup ', adminsForGroup)
+    setAdminsForGroup(adminsForGroup)
+
+    const isAdmin = await ethDropCoreInstance.methods
+      .amIAdmin(groupId)
+      .call({ from: currentAccount })
+    console.log('isAdmin ', isAdmin)
+    setIsAdmin(isAdmin)
+  }
+
   React.useEffect(() => {
     // ga.send(["pageview", location.pathname]);
 
     console.log('^^ using effect!')
 
-    fetchData();
+    fetchData()
 
     console.log('stuff happening...')
   }, [])
@@ -166,6 +181,12 @@ function GroupEventPage(props) {
       console.log('eligibleRecipients ', eligibleRecipients)
       setEligibleRecipients(eligibleRecipients)
 
+      const eligibleRecipientNames = await ethDropCoreInstance.methods
+        .getEligibleRecipientNames(groupId)
+        .call({ from: accounts[0] })
+      console.log('eligibleRecipientNames ', eligibleRecipientNames)
+      setEligibleRecipientNames(eligibleRecipientNames)
+
       const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods
         .getEligibleRecipientIsEligibilityEnabled(groupId)
         .call({ from: accounts[0] })
@@ -188,48 +209,95 @@ function GroupEventPage(props) {
         .call({ from: accounts[0] })
       console.log('sponsorInfo ', sponsorInfo)
 
-
       setCurrentSponsorName(sponsorInfo[0])
       setCurrentSponsorImg(sponsorInfo[1])
       setCurrentSponsorImgLinkTo(sponsorInfo[2])
 
-
-
       ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
-        console.log('group page heard event! ', eventObj.event);
-        console.log('yerp! ', eventObj.returnValues);
-  
-        switch (eventObj.event) {
-  
-          case 'CooUpdated':  
-            await this.checkIfImCOO();
-            break;
-  
-          case 'CfoUpdated':
-  
-            await this.checkIfImCFO();
-  
-            break;
-  
-          case 'GroupCreated':
-  
-            await this.getGroups();
-            break;
-  
-          case 'AppPaused':
-  
-            await this.checkIsPaused();
-            break;
-  
-          default:
-            console.log(`UNHANDLED EVENT!! : ${eventObj.event}`);
-  
+        console.log('group page heard event! ', eventObj.event)
+        console.log('yerp! ', eventObj.returnValues)
+
+        if (eventObj.returnValues.groupId) {
+          switch (eventObj.event) {
+            case 'CooUpdated':
+              await this.checkIfImCOO()
+              break
+
+            case 'AppPaused':
+              await this.checkIsPaused()
+              break
+
+            case 'EventStarted':
+            case 'EventEnded':
+            case 'RegistrationEnded':
+              const groupEventData = await ethDropCoreInstance.methods
+                .getGroupEventData(groupId)
+                .call({ from: accounts[0] })
+              console.log('groupEventData ', groupEventData)
+              setGroupEventData(groupEventData)
+
+              break
+
+            case 'AdminAdded':
+            case 'AdminRemoved':
+              await getAdminData(ethDropCoreInstance, accounts[0], groupId)
+              break
+
+            case 'ContributorAdded':
+              const isContributor = await ethDropCoreInstance.methods
+                .amIContributor(groupId)
+                .call({ from: accounts[0] })
+              console.log('isContributor ', isContributor)
+              setIsContributor(isContributor)
+              break
+
+            case 'ContributorInfoUpdated':
+              setCurrentSponsorName(eventObj.returnValues.name)
+              setCurrentSponsorImg(eventObj.returnValues.imgUrl)
+              setCurrentSponsorImgLinkTo(eventObj.returnValues.imgLinkTo)
+
+              break
+
+            case 'ContributionMade':
+              console.log(
+                'setting contribution amount: ',
+                eventObj.returnValues.amount,
+              )
+              setContributionAmount(eventObj.returnValues.amount)
+              break
+
+            case 'EligibleRecipientAdded':
+            case 'EligibleRecipientRemoved':
+              const isEligibleRecipient = await ethDropCoreInstance.methods
+                .amIEligibleRecipient(groupId)
+                .call({ from: accounts[0] })
+              console.log('isEligibleRecipient ', isEligibleRecipient)
+              setIsEligibleRecipient(isEligibleRecipient)
+
+              break
+
+            case 'RecipientRegistered':
+              const isRegisteredRecipient = await ethDropCoreInstance.methods
+                .amIRegisteredRecipient(groupId)
+                .call({ from: accounts[0] })
+              console.log('isRegisteredRecipient ', isRegisteredRecipient)
+              setIsRegisteredRecipient(isRegisteredRecipient)
+
+              break
+
+            case 'WinningsClaimed':
+              const hasClaimableWinnings = await ethDropCoreInstance.methods
+                .doIHaveClaimableWinnings(groupId)
+                .call({ from: accounts[0] })
+              console.log('hasClaimableWinnings ', hasClaimableWinnings)
+              setHasClaimableWinnings(hasClaimableWinnings)
+              break
+
+            default:
+              console.log(`UNHANDLED EVENT!! : ${eventObj.event}`)
+          }
         }
-  
       })
-
-
-
 
       // await forceUpdate();
       console.log('fetch end')
@@ -318,9 +386,11 @@ function GroupEventPage(props) {
 
     try {
       await ethDropCoreInstance.methods
-        .addEligibleRecipient(newEligibleRecipientAddressInputValue,
+        .addEligibleRecipient(
+          newEligibleRecipientAddressInputValue,
           newEligibleRecipientNameInputValue,
-          groupId)
+          groupId,
+        )
         .send({ from: accounts[0] })
       console.log('added eligible recipient! ')
     } catch (err) {
@@ -428,12 +498,9 @@ function GroupEventPage(props) {
   if (web3)
     return (
       <div className="App">
-
         <div className="mx-5 my-10">
-
           <h1>{groupName}</h1>
         </div>
-
         {isCOO && (
           <div
             style={{
@@ -539,7 +606,6 @@ function GroupEventPage(props) {
             <br />
           </div>
         )}
-
         {isAdmin && (
           <div
             style={{
@@ -615,8 +681,11 @@ function GroupEventPage(props) {
                 return (
                   <li key={'eligibleRecipient' + i}>
                     {/* <p> */}
-                    {eligibleRecipient} -{' '}
-                    {JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
+                    {shortenedAddress(eligibleRecipient) +
+                      ' - ' +
+                      eligibleRecipientNames[i] +
+                      ' - ' +
+                      JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
                     {/* </p> */}
                     <br />
                     <br />
@@ -687,22 +756,20 @@ function GroupEventPage(props) {
             </div>
           </div>
         )}
-
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-            <div className="my-10">
-              <h2>There is no event currently in progress!</h2>
+          <div className="my-10">
+            <h2>There is no event currently in progress!</h2>
 
-              <br />
-              <br />
+            <br />
+            <br />
 
-              <h4>
-                Check with the group admins for information on when the next
-                airdrop event is happening!
-              </h4>
-            </div>
-          )}
-
+            <h4>
+              Check with the group admins for information on when the next
+              airdrop event is happening!
+            </h4>
+          </div>
+        )}
         {/* Today's Sponsor Header */}
         <div className="my-5 mx-4">
           <p>Event Sponsor:</p>
@@ -711,7 +778,6 @@ function GroupEventPage(props) {
           <p></p>
           <h1> {currentSponsorName}</h1>
         </div>
-
         {/* Sponsor Image */}
         <div className="my-5 mx-4">
           {currentSponsorName && (
@@ -722,20 +788,18 @@ function GroupEventPage(props) {
 
           {!currentSponsorName && <p>(Sponsor has not yet set their image)</p>}
         </div>
-
         {/* The Pot Section */}
-
         {groupEventData && groupEventData[2] && (
           <div>
             <div className="mt-10 py-5">
-              <h2 className="m-5">There Is Currently</h2>
+              <h2 className="m-5">There has been</h2>
               <h1 className="my-10">
                 {groupEventData &&
                   groupEventData[2] &&
                   web3.utils.fromWei(groupEventData[2], 'ether') + ' Eth'}
               </h1>
               <h2 className="m-5">
-                In The Pot{+groupEventData[2] > 0 ? '!' : '.'}
+                contributed to the pot{+groupEventData[2] > 0 ? '!' : '.'}
               </h2>
               {/* <h1></h1> */}
 
@@ -762,40 +826,61 @@ function GroupEventPage(props) {
             <hr className="m-2" />
           </div>
         )}
+        {registeredRecipients && registeredRecipients.length > 0 && (
+          <div className="my-5">
+            <h3 className="my-5">There is currently</h3>
+            <h1 className="my-5">{registeredRecipients.length}</h1>
+            <h3 className="my-5">
+              user{registeredRecipients.length !== 1 ? 's' : ''} registered for
+            </h3>
+            <h3 className="my-5">this airdrop!</h3>
+            <ul>
+              {registeredRecipients.map((recipientName, i) => {
+                return (
+                  <li key={'recipName ' + i} className="m-5 my-10">
+                    <h2>{'-  ' + recipientName}</h2>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )}
+
+        {/* // spacer */}
+        <div className="my-10"></div>
 
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-            <div>
-              {isEligibleRecipient && (
-                <div>
-                  <p>You are an eligible recipient for airdrops by this group!</p>
-                </div>
-              )}
+          <div>
+            {isEligibleRecipient && (
+              <div>
+                <p>You are an eligible recipient for airdrops by this group!</p>
+              </div>
+            )}
 
-              {isAdmin && (
-                <div className="m-3 mb-10">
-                  <p>
-                    Since you are an admin, you can start the event by opening
-                    registration!
-                  </p>
-                  <button
-                    onClick={() => startAirdropEvent(groupId)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  >
-                    Open AirDrop Registration
-                  </button>
-                </div>
-              )}
+            {isAdmin && (
+              <div className="m-3 mb-10">
+                <p>
+                  Since you are an admin, you can start the event by opening
+                  registration!
+                </p>
+                <button
+                  onClick={() => startAirdropEvent(groupId)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Open AirDrop Registration
+                </button>
+              </div>
+            )}
 
-              {!isAdmin && (
-                <div>
-                  <p>Waiting for a group admin to open registration...</p>
-                </div>
-              )}
-            </div>
-          )}
-
+            {!isAdmin && (
+              <div>
+                <p>Waiting for a group admin to open registration...</p>
+              </div>
+            )}
+          </div>
+        )}
         {/* Phase 1 - Registration */}
         {groupEventData && groupEventData[0] === '1' && (
           <div>
@@ -832,7 +917,8 @@ function GroupEventPage(props) {
                     <p>Click the button to register!</p>
                     <button
                       onClick={() => registerForEvent(groupId)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-65"
+                      disabled={!isRegisteredRecipient}
                     >
                       Register!
                     </button>
@@ -848,7 +934,6 @@ function GroupEventPage(props) {
             )}
           </div>
         )}
-
         {isContributor && (
           <div
             style={{
@@ -994,10 +1079,34 @@ function GroupEventPage(props) {
             <br />
           </div>
         )}
-
         {/* Phase 2 - Claiming Winnings */}
         {groupEventData && groupEventData[0] === '2' && (
           <div>
+            {isRegisteredRecipient && (
+              <div>
+                {hasClaimableWinnings && (
+                  <p>Click the button below to claim your winnings!!</p>
+                )}
+
+                {!hasClaimableWinnings && (
+                  <div>
+                    <p>
+                      You have already claimed your winnings for this event.
+                    </p>
+                    <p>Thanks for coming out!</p>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => claimWinnings(groupId)}
+                  disabled={!hasClaimableWinnings}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                >
+                  Claim Winnings
+                </button>
+              </div>
+            )}
+
             {isAdmin && (
               <div>
                 <p>Since you are an admin, you can end the event!</p>
@@ -1011,41 +1120,9 @@ function GroupEventPage(props) {
                 </button>
               </div>
             )}
-
-            {isRegisteredRecipient && (
-              <div>
-                <p>Click the button below to claim your winnings!!</p>
-
-                <button
-                  onClick={() => claimWinnings(groupId)}
-                  disabled={!hasClaimableWinnings}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Claim Winnings
-                </button>
-              </div>
-            )}
           </div>
         )}
-
-        <hr className="m-5"/>
-
-        {registeredRecipients && registeredRecipients.length > 0 && <div>
-
-          <h3 className="my-10">
-            Registered Users:
-          </h3>
-          <ul>
-
-            {registeredRecipients.map((recipientName, i) => {
-              return <li key={'recipName ' + i} className="m-5 my-10">
-                <h1>{'-  ' + recipientName}</h1>
-              </li>
-            })}
-          </ul>
-
-        </div>}
-
+        <hr className="m-5" />
         <br />
         <br />
       </div>
