@@ -11,7 +11,15 @@ module.exports = {
       network_id: "*",
       gas: 4698712000,
       gasPrice: 25000000000
-    }
+    },
+
+    matic: {
+      provider: () => new HDWalletProvider(mnemonic, `https://rpc-mumbai.matic.today`),
+      network_id: 80001,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    },
   },
   compilers: {
     solc: {
