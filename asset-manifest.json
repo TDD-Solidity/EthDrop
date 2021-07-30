@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.5335588d.chunk.css",
-    "main.js": "/static/js/main.a257ec84.chunk.js",
-    "main.js.map": "/static/js/main.a257ec84.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.b240f91f.js",
-    "runtime-main.js.map": "/static/js/runtime-main.b240f91f.js.map",
-    "static/js/2.daaa3084.chunk.js": "/static/js/2.daaa3084.chunk.js",
-    "static/js/2.daaa3084.chunk.js.map": "/static/js/2.daaa3084.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.ba4720cc411ae5ac47e46ec1f7fbc75d.js": "/precache-manifest.ba4720cc411ae5ac47e46ec1f7fbc75d.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.5335588d.chunk.css.map": "/static/css/main.5335588d.chunk.css.map",
-    "static/media/pot-of-gold-full.png": "/static/media/pot-of-gold-full.6cc0f846.png"
+    "main.css": "/JimLynchCodes.github.io/static/css/main.5335588d.chunk.css",
+    "main.js": "/JimLynchCodes.github.io/static/js/main.147a230e.chunk.js",
+    "main.js.map": "/JimLynchCodes.github.io/static/js/main.147a230e.chunk.js.map",
+    "runtime-main.js": "/JimLynchCodes.github.io/static/js/runtime-main.734459e3.js",
+    "runtime-main.js.map": "/JimLynchCodes.github.io/static/js/runtime-main.734459e3.js.map",
+    "static/js/2.daaa3084.chunk.js": "/JimLynchCodes.github.io/static/js/2.daaa3084.chunk.js",
+    "static/js/2.daaa3084.chunk.js.map": "/JimLynchCodes.github.io/static/js/2.daaa3084.chunk.js.map",
+    "index.html": "/JimLynchCodes.github.io/index.html",
+    "precache-manifest.3d632d5b4263bd89b167d29e0608441a.js": "/JimLynchCodes.github.io/precache-manifest.3d632d5b4263bd89b167d29e0608441a.js",
+    "service-worker.js": "/JimLynchCodes.github.io/service-worker.js",
+    "static/css/main.5335588d.chunk.css.map": "/JimLynchCodes.github.io/static/css/main.5335588d.chunk.css.map",
+    "static/media/pot-of-gold-full.png": "/JimLynchCodes.github.io/static/media/pot-of-gold-full.6cc0f846.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.b240f91f.js",
+    "static/js/runtime-main.734459e3.js",
     "static/js/2.daaa3084.chunk.js",
     "static/css/main.5335588d.chunk.css",
-    "static/js/main.a257ec84.chunk.js"
+    "static/js/main.147a230e.chunk.js"
   ]
 }
