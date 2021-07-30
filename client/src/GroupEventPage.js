@@ -792,16 +792,16 @@ function GroupEventPage(props) {
                 <div className="mb-6">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
+                    htmlFor="sponsor-name-input"
                   >
                     <div className="my-4">Sponsor Name</div>
                   </label>
 
                   <input
                     className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
+                    id="sponsor-name-input"
                     type="text"
-                    placeholder="0x1234..."
+                    placeholder="The Foobar Protocol"
                     value={updateSponsorNameInputValue}
                     onChange={updateSponsorNameHandleChange}
                   />
@@ -811,16 +811,16 @@ function GroupEventPage(props) {
                 <div className="mb-6">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
+                    htmlFor="sponsor-img-input"
                   >
                     <div className="my-4">Sponsor Image Url:</div>
                   </label>
 
                   <input
                     className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
+                    id="sponsor-img-input"
                     type="text"
-                    placeholder="0x1234..."
+                    placeholder="https://www.your-awesome-website.io/your-cool-image.svg"
                     value={updateSponsorImgInputValue}
                     onChange={updateSponsorImgHandleChange}
                   />
@@ -837,9 +837,9 @@ function GroupEventPage(props) {
 
                   <input
                     className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
+                    id="link-to-input"
                     type="text"
-                    placeholder="0x1234..."
+                    placeholder="https://www.your-awesome-website.io/special-promo-page"
                     value={updateSponsorLinkToInputValue}
                     onChange={updateSponsorLinkToHandleChange}
                   />

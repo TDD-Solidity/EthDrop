@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import EthDropCore from "./contracts/EthDropCore.json";
 import getWeb3 from "./getWeb3";
-import env from "react-dotenv";
 import {
   BrowserRouter as Router,
   Switch,
@@ -60,7 +58,9 @@ class Home extends Component {
     newGroupInputValue: '',
     newGroupInputValue2: '',
     isPaused: null,
-    ceoPausingErrorToDisplay: null
+    ceoPausingErrorToDisplay: null,
+    currentNetwork: '',
+    showMainnetErrorMessage: false
   };
 
   async componentDidMount() {
@@ -71,7 +71,9 @@ class Home extends Component {
       //   // Get network provider and web3 instance.
       console.log('^^ calling web3...')
       const web3 = await getWeb3();
-      console.log('^^ done calling web3...')
+
+      const currentNetwork = await web3.eth.net.getNetworkType()
+
 
       //   // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
@@ -101,24 +103,34 @@ class Home extends Component {
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = EthDropCore.networks[networkId];
 
-      const ethDropCoreInstance = new web3.eth.Contract(
-        EthDropCore.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
+      if (currentNetwork === 'main') {
+        this.setState({ showMainnetErrorMessage: true });
+
+        this.setState({ ...this.state, showMainnetErrorMessage: true });
+
+      }
+      else {
 
 
-      //   // Set web3, accounts, and contract to the state, and then proceed with an
-      //   // example of interacting with the contract's methods.
+        const ethDropCoreInstance = new web3.eth.Contract(
+          EthDropCore.abi,
+          deployedNetwork && deployedNetwork.address,
+        );
 
-      const ok = { web3 }
-      // const ok = { accounts, ethDropCoreInstance, web3 }
 
-      this.setState({ ...this.state, web3, ethDropCoreInstance, accounts });
+        //   // Set web3, accounts, and contract to the state, and then proceed with an
+        //   // example of interacting with the contract's methods.
 
-      console.dir(this.state)
+        const ok = { web3 }
+        // const ok = { accounts, ethDropCoreInstance, web3 }
 
-      console.log('^^ home page done mounting!')
-      await this.runExample();
+        this.setState({ ...this.state, web3, ethDropCoreInstance, accounts, currentNetwork, showMainnetErrorMessage: false });
+
+        console.dir(this.state)
+
+        console.log('^^ home page done mounting!')
+        await this.runExample();
+      }
 
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -153,7 +165,7 @@ class Home extends Component {
     console.log('isPaused ', isPaused)
     this.setState({ isPaused });
   }
-    
+
   async getGroups() {
 
     const groupIds = await this.state.ethDropCoreInstance.methods.getGroupIds().call({ from: this.state.accounts[0] });
@@ -461,6 +473,19 @@ class Home extends Component {
   // }
 
   render() {
+    if (this.state.showMainnetErrorMessage) {
+      return <div className="w-100 text-center m-10">
+        <h1>
+          Whoops!
+        </h1>
+        <p>
+          Looks like you are connected to Mainnet.
+        </p>
+        <p>
+          Please go to your wallet and change the network to ropsten!
+        </p>
+      </div>;
+    }
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and simpleStorageInstance...</div>;
     }
@@ -795,7 +820,7 @@ class Home extends Component {
             </h1>
 
             <p>
-            Current contract eth balance: {this.state.currentCfoBalance}
+              Current contract eth balance: {this.state.currentCfoBalance}
             </p>
 
           </div>}
@@ -849,7 +874,7 @@ class Home extends Component {
                     </div>
                   </label>
                   <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
+                    id="new-cfo" type="text" placeholder="Cool New Group!" value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
                   {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
                 </div>
                 <div className="flex items-center justify-center">

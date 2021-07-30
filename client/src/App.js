@@ -55,13 +55,18 @@ class App extends Component {
     whoami: '',
     currentCfoBalance: 0,
     createGroupErrorToDisplay: null,
-    newCOOInputValue: ''
+    newCOOInputValue: '',
+    currentNetwork: ''
   };
 
   componentDidMount = async () => {
     try {
       // Get network provider and web3 instance.
-      // const web3 = await getWeb3();
+      const web3 = await getWeb3();
+
+      const currentNetwork = await web3.eth.net.getNetworkType()
+
+      console.log('currentNetwork: ', currentNetwork)
 
       // Use web3 to get the user's accounts.
       // const accounts = await web3.eth.getAccounts();
@@ -92,9 +97,10 @@ class App extends Component {
       // );
 
 
+
       // // Set web3, accounts, and contract to the state, and then proceed with an
       // // example of interacting with the contract's methods.
-      // this.setState({ web3, accounts, simpleStorageInstance, ethDropCoreInstance });
+      this.setState({ currentNetwork });
 
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -122,7 +128,7 @@ class App extends Component {
           padding: "1px 20px", alignItems: "center"
         }}>
           {/* <li> */}
-          <h2 >
+          <h4 >
             <Link style={{ textDecoration: 'none' }} to="/">
               <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
                 <h4>
@@ -130,7 +136,9 @@ class App extends Component {
                 </h4>
               </FillButton>
             </Link>
-          </h2>
+            &nbsp;
+            Connected to: {this.state.currentNetwork} network
+          </h4>
 
         </nav>
 

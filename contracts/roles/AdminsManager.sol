@@ -102,7 +102,6 @@ contract AdminsManager is ContributorManager {
         onlyCOO
         whenNotPaused
     {
-        // uint256 newGroupId = uint256(blockhash(block.number));
         uint256 newGroupId = block.timestamp;
 
         EthDropEvent memory newGroup = EthDropEvent(
