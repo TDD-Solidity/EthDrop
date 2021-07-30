@@ -147,12 +147,15 @@ class App extends Component {
         {/* Routing */}
         <Switch>
 
-          <Route path="/g/:groupName/:groupId" key={document.location.href} >
-            
+          <Route path="" key={document.location.href}
+
+            path={process.env.PUBLIC_URL + '/g/:groupName/:groupId'}
+          >
+
             <GroupEventPage />
           </Route>
 
-          <Route path="/" key={document.location.href} >
+          <Route path="*" key={document.location.href} >
             <Home />
           </Route>
 
