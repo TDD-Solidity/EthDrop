@@ -1,10 +1,13 @@
+var HDWalletProvider = require("truffle-hdwallet-provider");
 const path = require("path");
+require('dotenv').config();
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
   contracts_build_directory: path.join(__dirname, "client/src/contracts"),
   networks: {
+
     develop: {
       host: "localhost",
       port: 8545, // Using ganache as development network
@@ -13,17 +16,26 @@ module.exports = {
       gasPrice: 25000000000
     },
 
+    rinkeby: {
+      provider: function () {
+        return new HDWalletProvider(process.env.MNEMONIC, process.env.RINKEBY_INFURA_URL);
+      },
+      network_id: 4,
+      gas: 29900000,
+      gasPrice: 10000000000,
+    },
+
     matic: {
-      provider: () => new HDWalletProvider(mnemonic, `https://rpc-mumbai.matic.today`),
+      provider: () => new HDWalletProvider(process.env.MNEMONIC, process.env.MATIC_MUMBAI_URL),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true
     },
-  
-  
-  
-  
+
+
+
+
   },
   compilers: {
     solc: {

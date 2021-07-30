@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import EthDropCore from "./contracts/EthDropCore.json";
 import getWeb3 from "./getWeb3";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
   Link,
@@ -874,7 +874,7 @@ class Home extends Component {
                     </div>
                   </label>
                   <input className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
+                    id="new-cfo" type="text" placeholder="Cool New Group!" value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
                   {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
                 </div>
                 <div className="flex items-center justify-center">

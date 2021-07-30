@@ -524,18 +524,18 @@ function GroupEventPage(props) {
 
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-          <div className="my-10">
-            <h2>There is no event currently in progress!</h2>
+            <div className="my-10">
+              <h2>There is no event currently in progress!</h2>
 
-            <br />
-            <br />
+              <br />
+              <br />
 
-            <h4>
-              Check with the group admins for information on when the next
-              airdrop event is happening!
-            </h4>
-          </div>
-        )}
+              <h4>
+                Check with the group admins for information on when the next
+                airdrop event is happening!
+              </h4>
+            </div>
+          )}
         {/* Today's Sponsor Header */}
         <div className="my-5 mx-4">
           <p>Event Sponsor:</p>
@@ -622,35 +622,35 @@ function GroupEventPage(props) {
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-          <div>
-            {isEligibleRecipient && (
-              <div>
-                <p>You are an eligible recipient for airdrops by this group!</p>
-              </div>
-            )}
+            <div>
+              {isEligibleRecipient && (
+                <div>
+                  <p>You are an eligible recipient for airdrops by this group!</p>
+                </div>
+              )}
 
-            {isAdmin && (
-              <div className="m-3 mb-10">
-                <p>
-                  Since you are an admin, you can start the event by opening
-                  registration!
-                </p>
-                <button
-                  onClick={() => startAirdropEvent(groupId)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Open AirDrop Registration
-                </button>
-              </div>
-            )}
+              {isAdmin && (
+                <div className="m-3 mb-10">
+                  <p>
+                    Since you are an admin, you can start the event by opening
+                    registration!
+                  </p>
+                  <button
+                    onClick={() => startAirdropEvent(groupId)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Open AirDrop Registration
+                  </button>
+                </div>
+              )}
 
-            {!isAdmin && (
-              <div>
-                <p>Waiting for a group admin to open registration...</p>
-              </div>
-            )}
-          </div>
-        )}
+              {!isAdmin && (
+                <div>
+                  <p>Waiting for a group admin to open registration...</p>
+                </div>
+              )}
+            </div>
+          )}
         {/* Phase 1 - Registration */}
         {groupEventData && groupEventData[0] === '1' && (
           <div>
@@ -1083,7 +1083,7 @@ function GroupEventPage(props) {
             <h1>Eligible Recipients</h1>
             <br />
             <br />
-            {eligibleRecipients[0] &&
+            {/* {eligibleRecipients[0] &&
               eligibleRecipients.map((eligibleRecipient, i) => {
                 return (
                   // <div >
@@ -1103,7 +1103,57 @@ function GroupEventPage(props) {
                   </li>
                   // </div>
                 )
-              })}
+              })} */}
+
+            {eligibleRecipients &&
+              eligibleRecipients[0] &&
+              eligibleRecipients.length !== null && (
+                <div>
+                  {+eligibleRecipients.length > 0 && (
+                    <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
+                      <thead>
+                        <tr>
+                          <th className="w-1/2 p-2 border-4 border-blue-200">
+                            Address
+                          </th>
+                          <th className="w-1/4 p-2 border-4 border-blue-200">
+                            Name
+                          </th>
+                          <th className="w-1/4 p-2 border-4 border-blue-200">
+                            Eligible
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {eligibleRecipients.map((recipient, i) => {
+                          return (
+                            <tr key={recipient + i}>
+                              <td className="border-4 border-blue-200 break-all p-5">
+
+                                {`${shortenedAddress(recipient)}`}
+
+                              </td>
+
+                              <td className="border-4 border-blue-200 p-5">
+
+                                {eligibleRecipientNames[i]}
+
+                              </td>
+
+                              <td className="border-4 border-blue-200 p-5">
+
+                                {JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
+
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              )}
             <br />
             <br />
             {/* <form onSubmit={newEligibleRecipientSubmit}>

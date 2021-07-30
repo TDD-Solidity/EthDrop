@@ -4,7 +4,7 @@ import EthDropCore from "./contracts/EthDropCore.json";
 import getWeb3 from "./getWeb3";
 import env from "react-dotenv";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
   Link,
@@ -113,7 +113,7 @@ class App extends Component {
 
   render() {
 
-    return <Router>
+    return <Router basename={process.env.PUBLIC_URL}>
 
       {/* Header Nav */}
       <div className="bg-blue-500 px-4 py-3 text-white text-lg">
@@ -148,6 +148,7 @@ class App extends Component {
         <Switch>
 
           <Route path="/g/:groupName/:groupId" key={document.location.href} >
+            
             <GroupEventPage />
           </Route>
 
