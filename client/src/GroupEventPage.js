@@ -1,23 +1,24 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import getWeb3 from './getWeb3'
-import ReactDOM from 'react-dom'
 
 import potOfGoldEmptyImg from './assets/pot-of-gold-empty.png'
 import potOfGoldFullImg from './assets/pot-of-gold-full.png'
 
 import EthDropCore from './contracts/EthDropCore.json'
 import {
-  BrowserRouter,
   useParams,
-  useLocation,
-  withRouter,
-  Link,
+  withRouter
 } from 'react-router-dom'
 
 import { FillButton } from 'tailwind-react-ui'
 import { shortenedAddress } from './shortened-address'
 
 function GroupEventPage(props) {
+
+  /**
+   *  State Variables
+   */
+
   const [accounts, setAccounts] = useState([])
   const [ethDropCoreInstance, setEthDropCoreInstance] = useState(null)
   const [web3, setWeb3] = useState(null)
@@ -44,7 +45,8 @@ function GroupEventPage(props) {
     setEligibleRecipientsEligibilityEnabled,
   ] = useState('')
   const [isRegisteredRecipient, setIsRegisteredRecipient] = useState('')
-  const [contributionAmountInputValue, setContributionAmount] = useState('')
+  const [contributionAmountInputValue, setContributionAmountInputValue] = useState('')
+  const [contributionAmount, setContributionAmount] = useState('')
   const [newSponsorInputValue, setNewSponsorInputValue] = useState('')
   const [
     updateSponsorNameInputValue,
@@ -63,14 +65,20 @@ function GroupEventPage(props) {
   const [currentSponsorImg, setCurrentSponsorImg] = useState('')
   const [hasClaimableWinnings, setHasClaimableWinnings] = useState('')
 
-  // const forceUpdate = React.useReducer(bool => !bool)[1];
-
   const groupName = useParams().groupName
   const groupId = useParams().groupId
 
-  // const location = useLocation();
+  /**
+   *  Fetch initial data
+   */
 
-  // let location = useLocation();
+  React.useEffect(() => {
+    fetchData()
+  }, [])
+
+  /**
+   *  Handler Functions
+   */
 
   async function getAdminData(ethDropCoreInstance, currentAccount, groupId) {
     const adminsForGroup = await ethDropCoreInstance.methods
@@ -86,16 +94,6 @@ function GroupEventPage(props) {
     setIsAdmin(isAdmin)
   }
 
-  React.useEffect(() => {
-    // ga.send(["pageview", location.pathname]);
-
-    console.log('^^ using effect!')
-
-    fetchData()
-
-    console.log('stuff happening...')
-  }, [])
-
   async function fetchData() {
     try {
       console.log('fetch start')
@@ -103,10 +101,6 @@ function GroupEventPage(props) {
       const web3 = await getWeb3()
       console.log('web3 ', web3)
       setWeb3(web3)
-
-      // ReactDOM.unstable_batchedUpdates(async () => {
-      // this.setState({a: true}); // Doesn't re-render yet
-      // this.setState({b: true}); // Doesn't re-render yet
 
       const accounts = await web3.eth.getAccounts()
 
@@ -119,13 +113,10 @@ function GroupEventPage(props) {
       )
 
       setEthDropCoreInstance(ethDropCoreInstance)
+
       setAccounts(accounts)
 
-      const isAdmin = await ethDropCoreInstance.methods
-        .amIAdmin(groupId)
-        .call({ from: accounts[0] })
-      console.log('isAdmin ', isAdmin)
-      setIsAdmin(isAdmin)
+      await checkAdminStuff(groupId, ethDropCoreInstance)
 
       const isCOO = await ethDropCoreInstance.methods
         .isCOO()
@@ -139,17 +130,7 @@ function GroupEventPage(props) {
       console.log('isEligibleRecipient ', isEligibleRecipient)
       setIsEligibleRecipient(isEligibleRecipient)
 
-      const isRegisteredRecipient = await ethDropCoreInstance.methods
-        .amIRegisteredRecipient(groupId)
-        .call({ from: accounts[0] })
-      console.log('isRegisteredRecipient ', isRegisteredRecipient)
-      setIsRegisteredRecipient(isRegisteredRecipient)
-
-      const hasClaimableWinnings = await ethDropCoreInstance.methods
-        .doIHaveClaimableWinnings(groupId)
-        .call({ from: accounts[0] })
-      console.log('hasClaimableWinnings ', hasClaimableWinnings)
-      setHasClaimableWinnings(hasClaimableWinnings)
+      await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance);
 
       const isContributor = await ethDropCoreInstance.methods
         .amIContributor(groupId)
@@ -163,17 +144,12 @@ function GroupEventPage(props) {
       console.log('currentSponsorAddress ', currentSponsorAddress)
       setCurrentSponsorAddress(currentSponsorAddress)
 
-      const adminsForGroup = await ethDropCoreInstance.methods
-        .getAdminsForGroup(groupId)
-        .call({ from: accounts[0] })
-      console.log('adminsForGroup ', adminsForGroup)
-      setAdminsForGroup(adminsForGroup)
-
       const groupEventData = await ethDropCoreInstance.methods
         .getGroupEventData(groupId)
         .call({ from: accounts[0] })
       console.log('groupEventData ', groupEventData)
       setGroupEventData(groupEventData)
+      setContributionAmount(groupEventData[2])
 
       const eligibleRecipients = await ethDropCoreInstance.methods
         .getEligibleRecipientAddresses(groupId)
@@ -198,12 +174,6 @@ function GroupEventPage(props) {
         eligibleRecipientsEligibilityEnabled,
       )
 
-      const registeredRecipients = await ethDropCoreInstance.methods
-        .getRegisteredRecipientNames(groupId)
-        .call({ from: accounts[0] })
-      console.log('registeredRecipients ', registeredRecipients)
-      setRegisteredRecipients(registeredRecipients)
-
       const sponsorInfo = await ethDropCoreInstance.methods
         .getContributorInfo(groupId)
         .call({ from: accounts[0] })
@@ -220,11 +190,11 @@ function GroupEventPage(props) {
         if (eventObj.returnValues.groupId) {
           switch (eventObj.event) {
             case 'CooUpdated':
-              await this.checkIfImCOO()
+              // await this.checkIfImCOO()
               break
 
             case 'AppPaused':
-              await this.checkIsPaused()
+              // await this.checkIsPaused()
               break
 
             case 'EventStarted':
@@ -240,21 +210,30 @@ function GroupEventPage(props) {
 
             case 'AdminAdded':
             case 'AdminRemoved':
-              await getAdminData(ethDropCoreInstance, accounts[0], groupId)
+              await checkAdminStuff(groupId, ethDropCoreInstance);
               break
 
             case 'ContributorAdded':
+
               const isContributor = await ethDropCoreInstance.methods
                 .amIContributor(groupId)
                 .call({ from: accounts[0] })
               console.log('isContributor ', isContributor)
-              setIsContributor(isContributor)
+              setIsContributor(isContributor);
+
+              const currentSponsorAddress = await ethDropCoreInstance.methods
+                .getCurrentSponsorAddress(groupId)
+                .call({ from: accounts[0] })
+              console.log('currentSponsorAddress ', currentSponsorAddress)
+              setCurrentSponsorAddress(currentSponsorAddress)
               break
 
             case 'ContributorInfoUpdated':
-              setCurrentSponsorName(eventObj.returnValues.name)
+
+              console.log('heard ContributorInfoUpdated event')
+              setCurrentSponsorName(eventObj.returnValues.sponsorName)
               setCurrentSponsorImg(eventObj.returnValues.imgUrl)
-              setCurrentSponsorImgLinkTo(eventObj.returnValues.imgLinkTo)
+              setCurrentSponsorImgLinkTo(eventObj.returnValues.imgLinkToUrl)
 
               break
 
@@ -277,20 +256,12 @@ function GroupEventPage(props) {
               break
 
             case 'RecipientRegistered':
-              const isRegisteredRecipient = await ethDropCoreInstance.methods
-                .amIRegisteredRecipient(groupId)
-                .call({ from: accounts[0] })
-              console.log('isRegisteredRecipient ', isRegisteredRecipient)
-              setIsRegisteredRecipient(isRegisteredRecipient)
+              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance);
 
               break
 
             case 'WinningsClaimed':
-              const hasClaimableWinnings = await ethDropCoreInstance.methods
-                .doIHaveClaimableWinnings(groupId)
-                .call({ from: accounts[0] })
-              console.log('hasClaimableWinnings ', hasClaimableWinnings)
-              setHasClaimableWinnings(hasClaimableWinnings)
+              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance);
               break
 
             default:
@@ -299,16 +270,51 @@ function GroupEventPage(props) {
         }
       })
 
-      // await forceUpdate();
-      console.log('fetch end')
-
-      // });
       console.log('done fetching')
     } catch (error) {
+
       // Catch any errors for any of the above operations.
       alert(`Failed to load web3, accounts, or contract.` + error)
       console.error(error)
     }
+  }
+
+  async function checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance) {
+
+    const isRegisteredRecipient = await ethDropCoreInstance.methods
+      .amIRegisteredRecipient(groupId)
+      .call({ from: accounts[0] })
+    console.log('isRegisteredRecipient ', isRegisteredRecipient)
+    setIsRegisteredRecipient(isRegisteredRecipient)
+
+    const hasClaimableWinnings = await ethDropCoreInstance.methods
+      .doIHaveClaimableWinnings(groupId)
+      .call({ from: accounts[0] })
+    console.log('hasClaimableWinnings ', hasClaimableWinnings)
+    setHasClaimableWinnings(hasClaimableWinnings)
+
+    const registeredRecipients = await ethDropCoreInstance.methods
+      .getRegisteredRecipientNames(groupId)
+      .call({ from: accounts[0] })
+    console.log('registeredRecipients ', registeredRecipients)
+    setRegisteredRecipients(registeredRecipients)
+  }
+
+  const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
+
+    console.log('checking if admin...')
+
+    const isAdmin = await ethDropCoreInstance.methods
+      .amIAdmin(groupId)
+      .call({ from: accounts[0] })
+    console.log('isAdmin ', isAdmin)
+    setIsAdmin(isAdmin);
+
+    const adminsForGroup = await ethDropCoreInstance.methods
+      .getAdminsForGroup(groupId)
+      .call({ from: accounts[0] })
+    console.log('adminsForGroup ', adminsForGroup)
+    setAdminsForGroup(adminsForGroup)
   }
 
   async function removeAdmin(address) {
@@ -316,10 +322,12 @@ function GroupEventPage(props) {
       const isAdmin = await ethDropCoreInstance.methods
         .removeAdmin()
         .send({ from: accounts[0] })
+
       console.log('admin removed!')
+
       setIsAdmin(isAdmin)
+
     } catch (error) {
-      // Catch any errors for any of the above operations.
       alert(`Failed to remove admin...` + error)
     }
   }
@@ -329,10 +337,10 @@ function GroupEventPage(props) {
       await ethDropCoreInstance.methods
         .startEvent(groupId)
         .send({ from: accounts[0] })
+
       console.log('event started!')
-      // setIsAdmin(isAdmin);
+
     } catch (error) {
-      // Catch any errors for any of the above operations.
       alert(`Failed to start event...` + error)
     }
   }
@@ -392,9 +400,90 @@ function GroupEventPage(props) {
           groupId,
         )
         .send({ from: accounts[0] })
-      console.log('added eligible recipient! ')
+
+      console.log('added eligible recipient! ');
+
+      setEligibleRecipientAddressInputValue('');
+      setEligibleRecipientNameInputValue('');
+
     } catch (err) {
       console.log('adding eligible recipient failed...', err)
+    }
+  }
+
+  async function newAdminSubmit(event) {
+    event.preventDefault()
+
+    try {
+      const createdGroup = await ethDropCoreInstance.methods
+        .addAdmin(newAdminInputValue, groupId)
+        .send({ from: accounts[0] })
+
+      console.log('added admin! ')
+
+      setNewAdminInputValue('');
+
+    } catch (err) {
+      console.log('adding admin failed...', err)
+    }
+  }
+
+  async function newSponsorSubmit(event) {
+    event.preventDefault()
+
+    try {
+      await ethDropCoreInstance.methods
+        .changeContributor(newSponsorInputValue, groupId)
+        .send({ from: accounts[0] })
+
+      console.log('contributior changed! ');
+
+      setNewSponsorInputValue('');
+
+    } catch (err) {
+      console.log('changing contributor failed...', err)
+    }
+  }
+
+  async function submitUpdateContributorInfo(event) {
+    event.preventDefault()
+
+    try {
+      await ethDropCoreInstance.methods
+        .updateContributorInfo(
+          groupId,
+          updateSponsorNameInputValue,
+          updateSponsorImgInputValue,
+          updateSponsorLinkToInputValue,
+        )
+        .send({ from: accounts[0] })
+
+      console.log('contributor changed! ');
+
+      setUpdateSponsorNameInputValue('');
+      setUpdateSponsorImgInputValue('');
+      setUpdateSponsorLinkToInputValue('');
+
+    } catch (err) {
+      console.log('changing contributor failed...', err)
+    }
+  }
+
+  async function submitContribution(event) {
+    event.preventDefault()
+
+    try {
+      const weiAmount = web3.utils.toWei(contributionAmountInputValue, 'ether')
+
+      await ethDropCoreInstance.methods
+        .contributeToPot(groupId)
+        .send({ value: weiAmount, from: accounts[0] })
+
+      console.log('contribution submitted! ')
+      setContributionAmountInputValue('');
+
+    } catch (err) {
+      console.log('submitting contribution failed...', err)
     }
   }
 
@@ -411,7 +500,7 @@ function GroupEventPage(props) {
   }
 
   function contributionAmountHandleChange(event) {
-    setContributionAmount(event.target.value)
+    setContributionAmountInputValue(event.target.value)
   }
 
   function newSponsorHandleChange(event) {
@@ -430,67 +519,6 @@ function GroupEventPage(props) {
     setUpdateSponsorLinkToInputValue(event.target.value)
   }
 
-  async function newAdminSubmit(event) {
-    event.preventDefault()
-
-    try {
-      const createdGroup = await ethDropCoreInstance.methods
-        .addAdmin(newAdminInputValue, groupId)
-        .send({ from: accounts[0] })
-      console.log('added admin! ')
-    } catch (err) {
-      console.log('adding admin failed...', err)
-    }
-  }
-
-  async function newSponsorSubmit(event) {
-    event.preventDefault()
-
-    try {
-      await ethDropCoreInstance.methods
-        .changeContributor(newSponsorInputValue, groupId)
-        .send({ from: accounts[0] })
-      console.log('contributior changed! ')
-    } catch (err) {
-      console.log('changing contributor failed...', err)
-    }
-  }
-
-  async function submitUpdateContributorInfo(event) {
-    event.preventDefault()
-
-    try {
-      await ethDropCoreInstance.methods
-        .updateContributorInfo(
-          groupId,
-          updateSponsorNameInputValue,
-          updateSponsorImgInputValue,
-          updateSponsorLinkToInputValue,
-        )
-        .send({ from: accounts[0] })
-      console.log('contributor changed! ')
-    } catch (err) {
-      console.log('changing contributor failed...', err)
-    }
-  }
-
-  async function submitContribution(event) {
-    event.preventDefault()
-
-    try {
-      const weiAmount = web3.utils.toWei(contributionAmountInputValue, 'ether')
-
-      await ethDropCoreInstance.methods
-        .contributeToPot(groupId)
-        .send({ value: weiAmount, from: accounts[0] })
-      console.log('contribution submitted! ')
-
-      setContributionAmount('')
-    } catch (err) {
-      console.log('submitting contribution failed...', err)
-    }
-  }
-
   if (!web3) {
     return <h1>Loading web3...Group event page! {groupName}</h1>
   }
@@ -499,8 +527,398 @@ function GroupEventPage(props) {
     return (
       <div className="App">
         <div className="mx-5 my-10">
-          <h1>{groupName}</h1>
+          <h1 className="break-all">{groupName}</h1>
         </div>
+
+        {((groupEventData && groupEventData[0] === '0') ||
+          groupEventData[0] === '3') && (
+            <div className="my-10">
+              <h2>There is no event currently in progress!</h2>
+
+              <br />
+              <br />
+
+              <h4>
+                Check with the group admins for information on when the next
+                airdrop event is happening!
+              </h4>
+            </div>
+          )}
+        {/* Today's Sponsor Header */}
+        <div className="my-5 mx-4">
+          <p>Event Sponsor:</p>
+
+          {!currentSponsorName && <p>(Sponsor has not yet set their name)</p>}
+          <p></p>
+          <h1> {currentSponsorName}</h1>
+        </div>
+        {/* Sponsor Image */}
+        <div className="my-5 mx-4">
+          {currentSponsorName && (
+            <a href={currentSponsorImgLinkTo}>
+              <img src={currentSponsorImg} className="w-85 my-10 mx-auto" />
+            </a>
+          )}
+
+          {!currentSponsorName && <p>(Sponsor has not yet set their image)</p>}
+        </div>
+
+        {/* The Pot Section */}
+        {groupEventData && groupEventData[2] && (
+          <div>
+            <div className="mt-10 py-5">
+              <h2 className="m-5">There has been</h2>
+              <h1 className="my-10">
+                {groupEventData &&
+                  groupEventData[2] &&
+                  web3.utils.fromWei(contributionAmount, 'ether') + ' Eth'}
+              </h1>
+              <h2 className="m-5">
+                contributed to the pot{+contributionAmount > 0 ? '!' : '.'}
+              </h2>
+              {/* <h1></h1> */}
+
+              {+contributionAmount === 0 && (
+                <div className="mt-10">
+                  <img
+                    src={potOfGoldEmptyImg}
+                    alt="pot of gold empty"
+                    className="m-auto w-1/4"
+                  ></img>
+                </div>
+              )}
+
+              {+contributionAmount > 0 && (
+                <div className="mt-10">
+                  <img
+                    src={potOfGoldFullImg}
+                    alt="pot of gold full"
+                    className="m-auto w-1/4"
+                  ></img>
+                </div>
+              )}
+
+              <hr className="m-2" />
+
+              {registeredRecipients.length > 0 && (
+                <div className="my-5">
+                  <h3 className="my-5">There is currently</h3>
+                  <h1 className="my-5">{registeredRecipients.length}</h1>
+                  <h3 className="my-5">
+                    user{registeredRecipients.length !== 1 ? 's' : ''} registered for
+                  </h3>
+                  <h3 className="my-5">this airdrop!</h3>
+                  <ul>
+                    {registeredRecipients.map((recipientName, i) => {
+                      return (
+                        <li key={'recipName ' + i} className="m-5 my-10">
+                          <h2>{'-  ' + recipientName}</h2>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              )}
+
+            </div>
+
+          </div>
+        )}
+
+        {/* // spacer */}
+        <div className="my-10"></div>
+
+        {/* Phase 0 - Has Not yet started (or 3- ended) */}
+        {((groupEventData && groupEventData[0] === '0') ||
+          groupEventData[0] === '3') && (
+            <div>
+              {isEligibleRecipient && (
+                <div>
+                  <p>You are an eligible recipient for airdrops by this group!</p>
+                </div>
+              )}
+
+              {isAdmin && (
+                <div className="m-3 mb-10">
+                  <p>
+                    Since you are an admin, you can start the event by opening
+                    registration!
+                  </p>
+                  <button
+                    onClick={() => startAirdropEvent(groupId)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Open AirDrop Registration
+                  </button>
+                </div>
+              )}
+
+              {!isAdmin && (
+                <div>
+                  <p>Waiting for a group admin to open registration...</p>
+                </div>
+              )}
+            </div>
+          )}
+        {/* Phase 1 - Registration */}
+        {groupEventData && groupEventData[0] === '1' && (
+          <div>
+            {/* Phase 2 - Registration */}
+
+            <div>
+              <p>Registration for this airdrop event is still open!</p>
+            </div>
+
+
+            <br />
+            {isEligibleRecipient && (
+              <div>
+                {isRegisteredRecipient && (
+                  <div>
+                    <p>You are registered for this event!</p>
+                  </div>
+                )}
+
+                <div>
+                  {!isRegisteredRecipient && (<div>
+                    <p>You are an eligible recipient for this event!</p>
+                    <p>Click the button to register!</p>
+                  </div>
+                  )}
+                  <button
+                    onClick={() => registerForEvent(groupId)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                    disabled={isRegisteredRecipient === true}
+                  >
+                    Register!
+                  </button>
+                </div>
+              </div>
+            )}
+            {!isEligibleRecipient && (
+              <div>
+                You are not an eligible recipient for this airdrop! Get in touch
+                with the group admins to be added!
+              </div>
+            )}
+
+            {isAdmin && (
+              <div>
+                <p>
+                  Since you are an admin, you can move the event from
+                  registration phase to claim winnings phase!
+                </p>
+                <button
+                  onClick={() => endRegistration(groupId)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  End Registration Phase
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+
+        {/* Phase 2 - Claiming Winnings */}
+        {groupEventData && groupEventData[0] === '2' && (
+          <div>
+
+            <h2 className="m-5">
+              Each user can claim {web3.utils.fromWei(groupEventData[3], 'ether')} Eth!
+            </h2>
+
+            {isRegisteredRecipient && (
+              <div>
+                {hasClaimableWinnings && (
+                  <p>Click the button below to claim your winnings!!</p>
+                )}
+
+                {!hasClaimableWinnings && (
+                  <div>
+                    <p>
+                      You have already claimed your winnings for this event.
+                    </p>
+                    <p>Thanks for coming out!</p>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => claimWinnings(groupId)}
+                  disabled={!hasClaimableWinnings}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                >
+                  Claim Winnings
+                </button>
+              </div>
+            )}
+
+            {isAdmin && (
+              <div>
+                <p>Since you are an admin, you can end the event!</p>
+                <br />
+
+                <button
+                  onClick={() => endEvent(groupId)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  End Event
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+        <hr className="m-5" />
+
+        {/* Contributor Admin Panel */}
+        {isContributor && (
+          <div
+            style={{
+              margin: '2vw',
+              padding: '20px',
+              border: 'solid black 2px',
+              borderRadius: '20px',
+            }}
+          >
+            <h1>You are the sponsor for this event!</h1>
+
+            <p>You can update your sponsor details here!</p>
+
+            <div className="w-full max-w-m">
+              <form
+                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                onSubmit={submitUpdateContributorInfo}
+              >
+                <div className="mb-6">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                    htmlFor="new-ceo"
+                  >
+                    <div className="my-4">Sponsor Name</div>
+                  </label>
+
+                  <input
+                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo"
+                    type="text"
+                    placeholder="0x1234..."
+                    value={updateSponsorNameInputValue}
+                    onChange={updateSponsorNameHandleChange}
+                  />
+                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+
+                <div className="mb-6">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                    htmlFor="new-ceo"
+                  >
+                    <div className="my-4">Sponsor Image Url:</div>
+                  </label>
+
+                  <input
+                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo"
+                    type="text"
+                    placeholder="0x1234..."
+                    value={updateSponsorImgInputValue}
+                    onChange={updateSponsorImgHandleChange}
+                  />
+                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+
+                <div className="mb-6">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                    htmlFor="new-ceo"
+                  >
+                    <div className="my-4">Sponsor Link To Url:</div>
+                  </label>
+
+                  <input
+                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo"
+                    type="text"
+                    placeholder="0x1234..."
+                    value={updateSponsorLinkToInputValue}
+                    onChange={updateSponsorLinkToHandleChange}
+                  />
+                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+
+                <div className="flex items-center justify-center">
+                  <button
+                    onClick={submitUpdateContributorInfo}
+                    type="submit"
+                    value="Submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                  >
+                    Update Sponsor Info
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/*  Only when not currently in progress */}
+            {/* {groupEventData && groupEventData[0] === '2' && (
+              <div>
+                Sorry, you can't contribute to the pot at this time because the
+                event is in the "claim winnings" phase!
+              </div>
+            )} */}
+
+            {groupEventData && groupEventData[0] !== '2' && (
+              <div>
+                <p>You can contribute ether to the pot here.</p>
+                Choose the amount you would like to contribute and then hit
+                "submit".
+                <div className="w-full max-w-m">
+                  <form
+                    className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                    onSubmit={submitContribution}
+                  >
+                    <div className="mb-6">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                        htmlFor="new-ceo"
+                      >
+                        <div className="my-4">Ether to contribute:&nbsp;</div>
+                      </label>
+                      <input
+                        className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="new-cfo"
+                        type="number"
+                        placeholder="0.01"
+                        step="0.01"
+                        value={contributionAmountInputValue}
+                        onChange={contributionAmountHandleChange}
+                      />
+                      {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <button
+                        onClick={submitContribution}
+                        type="submit"
+                        value="Submit"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                      >
+                        Submit Contribution
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            <br />
+            <br />
+          </div>
+        )}
+
+
+        {/* Admin Section */}
         {isCOO && (
           <div
             style={{
@@ -536,9 +954,9 @@ function GroupEventPage(props) {
                         {adminsForGroup[0].map((adminAddress, i) => {
                           return (
                             <tr key={adminAddress + i}>
-                              <td className="border-4 border-blue-200">{`${adminAddress}`}</td>
+                              <td className="border-4 border-blue-200 break-all p-2">{`${adminAddress}`}</td>
 
-                              <td className="border-4 border-blue-200">
+                              <td className="border-4 border-blue-200 p-2">
                                 <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
                                   <h4>
                                     <a
@@ -679,18 +1097,13 @@ function GroupEventPage(props) {
             {eligibleRecipients[0] &&
               eligibleRecipients.map((eligibleRecipient, i) => {
                 return (
-                  <li key={'eligibleRecipient' + i}>
-                    {/* <p> */}
-                    {shortenedAddress(eligibleRecipient) +
-                      ' - ' +
-                      eligibleRecipientNames[i] +
-                      ' - ' +
-                      JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
-                    {/* </p> */}
-                    <br />
-                    <br />
-                    <br />
+                  // <div >
+                  <li className='has-tooltip' key={'eligibleRecipient' + i}>
+                    <div className='tooltip rounded shadow-lg p-1 pb-5 bg-gray-100 text-red-500 m-2 mb-6 h-4'>{eligibleRecipient}</div>
+                    <p>{i + ') ' + shortenedAddress(eligibleRecipient) + ' - ' + JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}</p>
                   </li>
+                  // </div>
+
                 )
               })}
             <br />
@@ -756,375 +1169,6 @@ function GroupEventPage(props) {
             </div>
           </div>
         )}
-        {((groupEventData && groupEventData[0] === '0') ||
-          groupEventData[0] === '3') && (
-          <div className="my-10">
-            <h2>There is no event currently in progress!</h2>
-
-            <br />
-            <br />
-
-            <h4>
-              Check with the group admins for information on when the next
-              airdrop event is happening!
-            </h4>
-          </div>
-        )}
-        {/* Today's Sponsor Header */}
-        <div className="my-5 mx-4">
-          <p>Event Sponsor:</p>
-
-          {!currentSponsorName && <p>(Sponsor has not yet set their name)</p>}
-          <p></p>
-          <h1> {currentSponsorName}</h1>
-        </div>
-        {/* Sponsor Image */}
-        <div className="my-5 mx-4">
-          {currentSponsorName && (
-            <a href={currentSponsorImgLinkTo}>
-              <img src={currentSponsorImg} class="w-85 my-10 mx-auto" />
-            </a>
-          )}
-
-          {!currentSponsorName && <p>(Sponsor has not yet set their image)</p>}
-        </div>
-        {/* The Pot Section */}
-        {groupEventData && groupEventData[2] && (
-          <div>
-            <div className="mt-10 py-5">
-              <h2 className="m-5">There has been</h2>
-              <h1 className="my-10">
-                {groupEventData &&
-                  groupEventData[2] &&
-                  web3.utils.fromWei(groupEventData[2], 'ether') + ' Eth'}
-              </h1>
-              <h2 className="m-5">
-                contributed to the pot{+groupEventData[2] > 0 ? '!' : '.'}
-              </h2>
-              {/* <h1></h1> */}
-
-              {+groupEventData[2] === 0 && (
-                <div className="mt-10">
-                  <img
-                    src={potOfGoldEmptyImg}
-                    alt="pot of gold empty"
-                    className="m-auto w-1/4"
-                  ></img>
-                </div>
-              )}
-
-              {+groupEventData[2] > 0 && (
-                <div className="mt-10">
-                  <img
-                    src={potOfGoldFullImg}
-                    alt="pot of gold full"
-                    className="m-auto w-1/4"
-                  ></img>
-                </div>
-              )}
-            </div>
-            <hr className="m-2" />
-          </div>
-        )}
-        {registeredRecipients && registeredRecipients.length > 0 && (
-          <div className="my-5">
-            <h3 className="my-5">There is currently</h3>
-            <h1 className="my-5">{registeredRecipients.length}</h1>
-            <h3 className="my-5">
-              user{registeredRecipients.length !== 1 ? 's' : ''} registered for
-            </h3>
-            <h3 className="my-5">this airdrop!</h3>
-            <ul>
-              {registeredRecipients.map((recipientName, i) => {
-                return (
-                  <li key={'recipName ' + i} className="m-5 my-10">
-                    <h2>{'-  ' + recipientName}</h2>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        )}
-
-        {/* // spacer */}
-        <div className="my-10"></div>
-
-        {/* Phase 0 - Has Not yet started (or 3- ended) */}
-        {((groupEventData && groupEventData[0] === '0') ||
-          groupEventData[0] === '3') && (
-          <div>
-            {isEligibleRecipient && (
-              <div>
-                <p>You are an eligible recipient for airdrops by this group!</p>
-              </div>
-            )}
-
-            {isAdmin && (
-              <div className="m-3 mb-10">
-                <p>
-                  Since you are an admin, you can start the event by opening
-                  registration!
-                </p>
-                <button
-                  onClick={() => startAirdropEvent(groupId)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Open AirDrop Registration
-                </button>
-              </div>
-            )}
-
-            {!isAdmin && (
-              <div>
-                <p>Waiting for a group admin to open registration...</p>
-              </div>
-            )}
-          </div>
-        )}
-        {/* Phase 1 - Registration */}
-        {groupEventData && groupEventData[0] === '1' && (
-          <div>
-            {/* Phase 2 - Registration */}
-
-            <p>There is currently an event in progress!</p>
-
-            {isAdmin && (
-              <div>
-                <p>
-                  Since you are an admin, you can move the event from
-                  registration phase to claim winnings phase!
-                </p>
-                <button
-                  onClick={() => endRegistration(groupId)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  End Registration Phase
-                </button>
-              </div>
-            )}
-            <br />
-            {isEligibleRecipient && (
-              <div>
-                {isRegisteredRecipient && (
-                  <div>
-                    <p>You are registered for this event!</p>
-                  </div>
-                )}
-
-                {!isRegisteredRecipient && (
-                  <div>
-                    <p>You are an eligible recipient for this event!</p>
-                    <p>Click the button to register!</p>
-                    <button
-                      onClick={() => registerForEvent(groupId)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-65"
-                      disabled={!isRegisteredRecipient}
-                    >
-                      Register!
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-            {!isEligibleRecipient && (
-              <div>
-                You are not an eligible recipient for this airdrop! Get in touch
-                with the group admins to be added!
-              </div>
-            )}
-          </div>
-        )}
-        {isContributor && (
-          <div
-            style={{
-              margin: '2vw',
-              padding: '20px',
-              border: 'solid black 2px',
-              borderRadius: '20px',
-            }}
-          >
-            <h1>You are the sponsor for this event!</h1>
-
-            <p>You can update your sponsor details here!</p>
-
-            <div className="w-full max-w-m">
-              <form
-                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                onSubmit={submitUpdateContributorInfo}
-              >
-                <div className="mb-6">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
-                  >
-                    <div className="my-4">Sponsor Name</div>
-                  </label>
-
-                  <input
-                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
-                    type="text"
-                    placeholder="0x1234..."
-                    value={updateSponsorNameInputValue}
-                    onChange={updateSponsorNameHandleChange}
-                  />
-                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
-                  >
-                    <div className="my-4">Sponsor Image Url:</div>
-                  </label>
-
-                  <input
-                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
-                    type="text"
-                    placeholder="0x1234..."
-                    value={updateSponsorImgInputValue}
-                    onChange={updateSponsorImgHandleChange}
-                  />
-                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
-                  >
-                    <div className="my-4">Sponsor Link To Url:</div>
-                  </label>
-
-                  <input
-                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
-                    type="text"
-                    placeholder="0x1234..."
-                    value={updateSponsorLinkToInputValue}
-                    onChange={updateSponsorLinkToHandleChange}
-                  />
-                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
-                </div>
-
-                <div className="flex items-center justify-center">
-                  <button
-                    onClick={submitUpdateContributorInfo}
-                    type="submit"
-                    value="Submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                  >
-                    Update Sponsor Info
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {/*  Only when not currently in progress */}
-            {groupEventData && groupEventData[0] === '2' && (
-              <div>
-                Sorry, you can't contribute to the pot at this time because the
-                event is in the "claim winnings" phase!
-              </div>
-            )}
-
-            {groupEventData && groupEventData[0] !== '2' && (
-              <div>
-                <p>You can contribute ether to the pot here.</p>
-                Choose the amount you would like to contribute and then hit
-                "submit".
-                <div className="w-full max-w-m">
-                  <form
-                    className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                    onSubmit={submitContribution}
-                  >
-                    <div className="mb-6">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                        htmlFor="new-ceo"
-                      >
-                        <div className="my-4">Ether to contribute:&nbsp;</div>
-                      </label>
-                      <input
-                        className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        id="new-cfo"
-                        type="number"
-                        placeholder="0.01"
-                        step="0.01"
-                        value={contributionAmountInputValue}
-                        onChange={contributionAmountHandleChange}
-                      />
-                      {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <button
-                        onClick={submitContribution}
-                        type="submit"
-                        value="Submit"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button"
-                      >
-                        Submit Contribution
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-
-            <br />
-            <br />
-          </div>
-        )}
-        {/* Phase 2 - Claiming Winnings */}
-        {groupEventData && groupEventData[0] === '2' && (
-          <div>
-            {isRegisteredRecipient && (
-              <div>
-                {hasClaimableWinnings && (
-                  <p>Click the button below to claim your winnings!!</p>
-                )}
-
-                {!hasClaimableWinnings && (
-                  <div>
-                    <p>
-                      You have already claimed your winnings for this event.
-                    </p>
-                    <p>Thanks for coming out!</p>
-                  </div>
-                )}
-
-                <button
-                  onClick={() => claimWinnings(groupId)}
-                  disabled={!hasClaimableWinnings}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
-                >
-                  Claim Winnings
-                </button>
-              </div>
-            )}
-
-            {isAdmin && (
-              <div>
-                <p>Since you are an admin, you can end the event!</p>
-                <br />
-
-                <button
-                  onClick={() => endEvent(groupId)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  End Event
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-        <hr className="m-5" />
-        <br />
-        <br />
       </div>
     )
 }

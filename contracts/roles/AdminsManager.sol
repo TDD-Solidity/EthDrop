@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "./ContributorManager.sol";
 
 contract AdminsManager is ContributorManager {
-
     // event AdminAdded(address indexed account, uint256 groupId);
     // event AdminRemoved(address indexed account, uint256 groupId);
 
@@ -12,8 +11,8 @@ contract AdminsManager is ContributorManager {
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
-    event AdminAdded(uint groupId);
-    event AdminRemoved(uint groupId);
+    event AdminAdded(uint256 groupId);
+    event AdminRemoved(uint256 groupId);
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
@@ -35,11 +34,15 @@ contract AdminsManager is ContributorManager {
         return admins[groupId][account] == true;
     }
 
-    function amIAdmin(uint groupId) external view returns (bool) {
+    function amIAdmin(uint256 groupId) external view returns (bool) {
         return admins[groupId][msg.sender] == true;
     }
 
-    function getAdminsForGroup(uint256 groupId) external view returns (address[] memory, bool[] memory) {
+    function getAdminsForGroup(uint256 groupId)
+        external
+        view
+        returns (address[] memory, bool[] memory)
+    {
         return (adminAddresses[groupId], adminEnabled[groupId]);
     }
 
@@ -79,7 +82,7 @@ contract AdminsManager is ContributorManager {
     function _removeAdmin(address account, uint256 groupId) internal {
         admins[groupId][account] = false;
 
-        uint index = adminAddressToIndex[groupId][account];
+        uint256 index = adminAddressToIndex[groupId][account];
         adminEnabled[groupId][index] = false;
 
         emit AdminRemoved(groupId);
@@ -94,7 +97,11 @@ contract AdminsManager is ContributorManager {
         return currentEvents[groupId];
     }
 
-    function createNewGroup(string memory groupName) external onlyCOO whenNotPaused {
+    function createNewGroup(string memory groupName)
+        external
+        onlyCOO
+        whenNotPaused
+    {
         // uint256 newGroupId = uint256(blockhash(block.number));
         uint256 newGroupId = block.timestamp;
 
@@ -141,44 +148,21 @@ contract AdminsManager is ContributorManager {
     {
         currentEvents[groupId].registrationEndTime = block.timestamp;
 
-
-        uint devCutWei = currentEvents[groupId].totalAmountContributed * devCutPercentage / 100;
+        uint256 devCutWei = (currentEvents[groupId].totalAmountContributed *
+            devCutPercentage) / 100;
 
         // Transfer dev cut to cfo
         payable(cfoAddress).transfer(devCutWei);
 
         // pot is the amount for recipients to share
-        uint pot = currentEvents[groupId].totalAmountContributed - devCutWei;
+        uint256 pot = currentEvents[groupId].totalAmountContributed - devCutWei;
 
         // each recipient's winnings is the "weiWinnings"
-        currentEvents[groupId].weiWinnings = pot / currentEvents[groupId].registeredRecipientsCount;
-
-        // uint256[] memory potShares = new uint256[](
-        //     currentEvents[groupId].registeredRecipientsCount
-        // );
-
-        // for (
-        //     uint256 i;
-        //     i < currentEvents[groupId].registeredRecipientsCount;
-        //     i++
-        // ) {
-        //     potShares[i] = 1;
-        // }
-
-        // pot[groupId] = new PaymentSplitter(
-        //     registeredRecipientAddressesArray[groupId],
-        //     potShares
-        // );
+        currentEvents[groupId].weiWinnings =
+            pot /
+            currentEvents[groupId].registeredRecipientsCount;
 
         currentEvents[groupId].currentState = EventState.CLAIM_WINNINGS;
-
-        // uint256 winningsPerRecipient = address(this).balance /
-        //     pot[groupId].totalShares();
-
-        // emit CalculatedPot(
-        //     currentEvents[groupId].registeredRecipientsCount,
-        //     winningsPerRecipient
-        // );
 
         emit RegistrationEnded(msg.sender, groupId);
     }
@@ -192,6 +176,24 @@ contract AdminsManager is ContributorManager {
 
         currentEvents[groupId].currentState = EventState.ENDED;
 
+        // First delete mappings, then arrays
+        for (
+            uint256 i = 0;
+            i < currentEvents[groupId].registeredRecipientsCount;
+            i++
+        ) {
+            address currentAddress = registeredRecipientAddressesArray[groupId][
+                i
+            ];
+
+            delete registeredRecipients[groupId][currentAddress];
+            delete recipientAddressToName[groupId][currentAddress];
+            delete winningsCollected[groupId][currentAddress];
+        }
+
+        delete registeredRecipientNamesArray[groupId];
+        delete registeredRecipientAddressesArray[groupId];
+
         pastEvents[groupId].push(currentEvents[groupId]);
 
         currentEvents[groupId].registeredRecipientsCount = 0;
@@ -199,22 +201,25 @@ contract AdminsManager is ContributorManager {
         currentEvents[groupId].weiWinnings = 0;
         currentEvents[groupId].numberOfUsersWhoClaimedWinnings = 0;
 
+        emit ContributionMade(msg.sender, groupId, 0);
+
+        emit RecipientRegistered(msg.sender, groupId);
+
         // TODO - reset mappings
-        
+
         // winningsCollected[groupId] = new mapping(address => bool);
         // registeredRecipientNamesArray[groupId] = new mapping(address => bool);
         // registeredRecipients[groupId] = new mapping(address => bool);
         // registeredRecipientAddressesArray[groupId] = address[];
-        
 
         emit EventEnded(msg.sender, groupId);
     }
 
-    function addEligibleRecipient(address account, string memory name, uint256 groupId)
-        external
-        whenNotPaused
-        onlyAdmins(groupId)
-    {
+    function addEligibleRecipient(
+        address account,
+        string memory name,
+        uint256 groupId
+    ) external whenNotPaused onlyAdmins(groupId) {
         eligibleRecipients[groupId][account] = true;
 
         eligibleRecipientAddressesArray[groupId].push(account);

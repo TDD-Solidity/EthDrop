@@ -7,8 +7,13 @@ contract ContributorManager is RecipientsManager {
     event ContributorAdded(address indexed account, uint256 groupId);
     event ContributorRemoved(address indexed account, uint256 groupId);
 
-    event ContributorAddressUpdated(uint groupId, address newContributor);
-    event ContributorInfoUpdated(uint groupId, address newContributor);
+    event ContributorAddressUpdated(uint256 groupId, address newContributor);
+    event ContributorInfoUpdated(
+        uint256 groupId,
+        string sponsorName,
+        string imgUrl,
+        string imgLinkToUrl
+    );
 
     event ContributionMade(
         address indexed account,
@@ -29,7 +34,7 @@ contract ContributorManager is RecipientsManager {
         whenNotPaused
         returns (bool)
     {
-        return contributors[groupId][account] == true;
+        return account == currentEvents[groupId].currentContributor;
     }
 
     function amIContributor(uint256 groupId)
@@ -77,21 +82,37 @@ contract ContributorManager is RecipientsManager {
         string memory newContributorImgUrl,
         string memory newContributorLinkToUrl
     ) external onlyContributor(groupId) {
-        currentEvents[groupId].sponsorName = newContributorName;
-        currentEvents[groupId].sponsorImageUrl = newContributorImgUrl;
-        currentEvents[groupId].sponsorLinkToUrl = newContributorLinkToUrl;
+        if (bytes(newContributorName).length > 0) {
+            currentEvents[groupId].sponsorName = newContributorName;
+        }
+        if (bytes(newContributorImgUrl).length > 0) {
+            currentEvents[groupId].sponsorImageUrl = newContributorImgUrl;
+        }
+        if (bytes(newContributorLinkToUrl).length > 0) {
+            currentEvents[groupId].sponsorLinkToUrl = newContributorLinkToUrl;
+        }
 
-        // emit contributor info updated
+        emit ContributorInfoUpdated(
+            groupId,
+            currentEvents[groupId].sponsorName,
+            currentEvents[groupId].sponsorImageUrl,
+            currentEvents[groupId].sponsorLinkToUrl
+        );
     }
-    function getContributorInfo(uint groupId) external view returns (
-        string memory newContributorName,
-        string memory newContributorImgUrl,
-        string memory newContributorLinkToUrl
-    ) {
+
+    function getContributorInfo(uint256 groupId)
+        external
+        view
+        returns (
+            string memory newContributorName,
+            string memory newContributorImgUrl,
+            string memory newContributorLinkToUrl
+        )
+    {
         return (
-        currentEvents[groupId].sponsorName,
-        currentEvents[groupId].sponsorImageUrl,
-        currentEvents[groupId].sponsorLinkToUrl
+            currentEvents[groupId].sponsorName,
+            currentEvents[groupId].sponsorImageUrl,
+            currentEvents[groupId].sponsorLinkToUrl
         );
     }
 
@@ -101,7 +122,11 @@ contract ContributorManager is RecipientsManager {
         onlyContributor(groupId)
         whenNotPaused
     {
-        currentEvents[groupId].totalAmountContributed = msg.value;
-        emit ContributionMade(msg.sender, groupId, msg.value);
+        currentEvents[groupId].totalAmountContributed += msg.value;
+        emit ContributionMade(
+            msg.sender,
+            groupId,
+            currentEvents[groupId].totalAmountContributed
+        );
     }
 }
