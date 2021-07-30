@@ -695,7 +695,7 @@ class Home extends Component {
                       Update CFO here:
                     </div>
                   </label>
-                  <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  <input className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newCFOInputValue} onChange={this.newCFOHandleChange} />
                   {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
                 </div>
@@ -730,7 +730,7 @@ class Home extends Component {
                       Update COO here:
                     </div>
                   </label>
-                  <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  <input className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newCOOInputValue} onChange={this.newCOOHandleChange} />
                   {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
                 </div>
@@ -873,8 +873,8 @@ class Home extends Component {
                       Add new group here:
                     </div>
                   </label>
-                  <input className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo" type="text" placeholder="Cool New Group!" value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
+                  <input className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-cfo" type="text" placeholder="0x1234..." value={this.state.newGroupInputValue2} onChange={this.newGroupChange2} />
                   {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
                 </div>
                 <div className="flex items-center justify-center">

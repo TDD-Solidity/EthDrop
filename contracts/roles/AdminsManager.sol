@@ -74,7 +74,7 @@ contract AdminsManager is ContributorManager {
 
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
-        // TODO - adminNames
+        // TODO - give admins human readable names
 
         emit AdminAdded(groupId);
     }
@@ -102,6 +102,7 @@ contract AdminsManager is ContributorManager {
         onlyCOO
         whenNotPaused
     {
+        // TODO - is this the best way to set the groupId? 🤔
         uint256 newGroupId = block.timestamp;
 
         EthDropEvent memory newGroup = EthDropEvent(
@@ -145,6 +146,9 @@ contract AdminsManager is ContributorManager {
         onlyAdmins(groupId)
         whenNotPaused
     {
+        require(currentEvents[groupId].registeredRecipientsCount >= 1,
+        "Can't end registration with zero registrants!");
+        
         currentEvents[groupId].registrationEndTime = block.timestamp;
 
         uint256 devCutWei = (currentEvents[groupId].totalAmountContributed *
@@ -201,16 +205,7 @@ contract AdminsManager is ContributorManager {
         currentEvents[groupId].numberOfUsersWhoClaimedWinnings = 0;
 
         emit ContributionMade(msg.sender, groupId, 0);
-
         emit RecipientRegistered(msg.sender, groupId);
-
-        // TODO - reset mappings
-
-        // winningsCollected[groupId] = new mapping(address => bool);
-        // registeredRecipientNamesArray[groupId] = new mapping(address => bool);
-        // registeredRecipients[groupId] = new mapping(address => bool);
-        // registeredRecipientAddressesArray[groupId] = address[];
-
         emit EventEnded(msg.sender, groupId);
     }
 
@@ -247,11 +242,4 @@ contract AdminsManager is ContributorManager {
         _changeContributor(account, groupId);
     }
 
-    function removeContributor(address account, uint256 groupId)
-        external
-        onlyAdminsOrCOO(groupId)
-        whenNotPaused
-    {
-        _removeContributor(account, groupId);
-    }
 }

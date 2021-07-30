@@ -5,16 +5,12 @@ import potOfGoldEmptyImg from './assets/pot-of-gold-empty.png'
 import potOfGoldFullImg from './assets/pot-of-gold-full.png'
 
 import EthDropCore from './contracts/EthDropCore.json'
-import {
-  useParams,
-  withRouter
-} from 'react-router-dom'
+import { useParams, withRouter } from 'react-router-dom'
 
 import { FillButton } from 'tailwind-react-ui'
 import { shortenedAddress } from './shortened-address'
 
 function GroupEventPage(props) {
-
   /**
    *  State Variables
    */
@@ -45,7 +41,10 @@ function GroupEventPage(props) {
     setEligibleRecipientsEligibilityEnabled,
   ] = useState('')
   const [isRegisteredRecipient, setIsRegisteredRecipient] = useState('')
-  const [contributionAmountInputValue, setContributionAmountInputValue] = useState('')
+  const [
+    contributionAmountInputValue,
+    setContributionAmountInputValue,
+  ] = useState('')
   const [contributionAmount, setContributionAmount] = useState('')
   const [newSponsorInputValue, setNewSponsorInputValue] = useState('')
   const [
@@ -124,13 +123,7 @@ function GroupEventPage(props) {
       console.log('isCOO ', isCOO)
       setIsCOO(isCOO)
 
-      const isEligibleRecipient = await ethDropCoreInstance.methods
-        .amIEligibleRecipient(groupId)
-        .call({ from: accounts[0] })
-      console.log('isEligibleRecipient ', isEligibleRecipient)
-      setIsEligibleRecipient(isEligibleRecipient)
-
-      await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance);
+      await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
 
       const isContributor = await ethDropCoreInstance.methods
         .amIContributor(groupId)
@@ -151,28 +144,7 @@ function GroupEventPage(props) {
       setGroupEventData(groupEventData)
       setContributionAmount(groupEventData[2])
 
-      const eligibleRecipients = await ethDropCoreInstance.methods
-        .getEligibleRecipientAddresses(groupId)
-        .call({ from: accounts[0] })
-      console.log('eligibleRecipients ', eligibleRecipients)
-      setEligibleRecipients(eligibleRecipients)
-
-      const eligibleRecipientNames = await ethDropCoreInstance.methods
-        .getEligibleRecipientNames(groupId)
-        .call({ from: accounts[0] })
-      console.log('eligibleRecipientNames ', eligibleRecipientNames)
-      setEligibleRecipientNames(eligibleRecipientNames)
-
-      const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods
-        .getEligibleRecipientIsEligibilityEnabled(groupId)
-        .call({ from: accounts[0] })
-      console.log(
-        'eligibleRecipientsEligibilityEnabled ',
-        eligibleRecipientsEligibilityEnabled,
-      )
-      setEligibleRecipientsEligibilityEnabled(
-        eligibleRecipientsEligibilityEnabled,
-      )
+      await checkEligibleRecipients(groupId, ethDropCoreInstance)
 
       const sponsorInfo = await ethDropCoreInstance.methods
         .getContributorInfo(groupId)
@@ -210,16 +182,15 @@ function GroupEventPage(props) {
 
             case 'AdminAdded':
             case 'AdminRemoved':
-              await checkAdminStuff(groupId, ethDropCoreInstance);
+              await checkAdminStuff(groupId, ethDropCoreInstance)
               break
 
             case 'ContributorAdded':
-
               const isContributor = await ethDropCoreInstance.methods
                 .amIContributor(groupId)
                 .call({ from: accounts[0] })
               console.log('isContributor ', isContributor)
-              setIsContributor(isContributor);
+              setIsContributor(isContributor)
 
               const currentSponsorAddress = await ethDropCoreInstance.methods
                 .getCurrentSponsorAddress(groupId)
@@ -229,7 +200,6 @@ function GroupEventPage(props) {
               break
 
             case 'ContributorInfoUpdated':
-
               console.log('heard ContributorInfoUpdated event')
               setCurrentSponsorName(eventObj.returnValues.sponsorName)
               setCurrentSponsorImg(eventObj.returnValues.imgUrl)
@@ -247,21 +217,22 @@ function GroupEventPage(props) {
 
             case 'EligibleRecipientAdded':
             case 'EligibleRecipientRemoved':
-              const isEligibleRecipient = await ethDropCoreInstance.methods
-                .amIEligibleRecipient(groupId)
-                .call({ from: accounts[0] })
-              console.log('isEligibleRecipient ', isEligibleRecipient)
-              setIsEligibleRecipient(isEligibleRecipient)
+              // const isEligibleRecipient = await ethDropCoreInstance.methods
+              //   .amIEligibleRecipient(groupId)
+              //   .call({ from: accounts[0] })
+              // console.log('isEligibleRecipient ', isEligibleRecipient)
+              // setIsEligibleRecipient(isEligibleRecipient)
+              await checkEligibleRecipients(groupId, ethDropCoreInstance)
 
               break
 
             case 'RecipientRegistered':
-              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance);
+              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
 
               break
 
             case 'WinningsClaimed':
-              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance);
+              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
               break
 
             default:
@@ -272,15 +243,44 @@ function GroupEventPage(props) {
 
       console.log('done fetching')
     } catch (error) {
-
       // Catch any errors for any of the above operations.
       alert(`Failed to load web3, accounts, or contract.` + error)
       console.error(error)
     }
   }
 
-  async function checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance) {
+  async function checkEligibleRecipients(groupId, ethDropCoreInstance) {
+    const isEligibleRecipient = await ethDropCoreInstance.methods
+      .amIEligibleRecipient(groupId)
+      .call({ from: accounts[0] })
+    console.log('isEligibleRecipient ', isEligibleRecipient)
+    setIsEligibleRecipient(isEligibleRecipient)
 
+    const eligibleRecipients = await ethDropCoreInstance.methods
+      .getEligibleRecipientAddresses(groupId)
+      .call({ from: accounts[0] })
+    console.log('eligibleRecipients ', eligibleRecipients)
+    setEligibleRecipients(eligibleRecipients)
+
+    const eligibleRecipientNames = await ethDropCoreInstance.methods
+      .getEligibleRecipientNames(groupId)
+      .call({ from: accounts[0] })
+    console.log('eligibleRecipientNames ', eligibleRecipientNames)
+    setEligibleRecipientNames(eligibleRecipientNames)
+
+    const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods
+      .getEligibleRecipientIsEligibilityEnabled(groupId)
+      .call({ from: accounts[0] })
+    console.log(
+      'eligibleRecipientsEligibilityEnabled ',
+      eligibleRecipientsEligibilityEnabled,
+    )
+    setEligibleRecipientsEligibilityEnabled(
+      eligibleRecipientsEligibilityEnabled,
+    )
+  }
+
+  async function checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance) {
     const isRegisteredRecipient = await ethDropCoreInstance.methods
       .amIRegisteredRecipient(groupId)
       .call({ from: accounts[0] })
@@ -301,14 +301,13 @@ function GroupEventPage(props) {
   }
 
   const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
-
     console.log('checking if admin...')
 
     const isAdmin = await ethDropCoreInstance.methods
       .amIAdmin(groupId)
       .call({ from: accounts[0] })
     console.log('isAdmin ', isAdmin)
-    setIsAdmin(isAdmin);
+    setIsAdmin(isAdmin)
 
     const adminsForGroup = await ethDropCoreInstance.methods
       .getAdminsForGroup(groupId)
@@ -326,7 +325,6 @@ function GroupEventPage(props) {
       console.log('admin removed!')
 
       setIsAdmin(isAdmin)
-
     } catch (error) {
       alert(`Failed to remove admin...` + error)
     }
@@ -339,7 +337,6 @@ function GroupEventPage(props) {
         .send({ from: accounts[0] })
 
       console.log('event started!')
-
     } catch (error) {
       alert(`Failed to start event...` + error)
     }
@@ -401,11 +398,10 @@ function GroupEventPage(props) {
         )
         .send({ from: accounts[0] })
 
-      console.log('added eligible recipient! ');
+      console.log('added eligible recipient! ')
 
-      setEligibleRecipientAddressInputValue('');
-      setEligibleRecipientNameInputValue('');
-
+      setEligibleRecipientAddressInputValue('')
+      setEligibleRecipientNameInputValue('')
     } catch (err) {
       console.log('adding eligible recipient failed...', err)
     }
@@ -421,8 +417,7 @@ function GroupEventPage(props) {
 
       console.log('added admin! ')
 
-      setNewAdminInputValue('');
-
+      setNewAdminInputValue('')
     } catch (err) {
       console.log('adding admin failed...', err)
     }
@@ -436,10 +431,9 @@ function GroupEventPage(props) {
         .changeContributor(newSponsorInputValue, groupId)
         .send({ from: accounts[0] })
 
-      console.log('contributior changed! ');
+      console.log('contributior changed! ')
 
-      setNewSponsorInputValue('');
-
+      setNewSponsorInputValue('')
     } catch (err) {
       console.log('changing contributor failed...', err)
     }
@@ -458,12 +452,11 @@ function GroupEventPage(props) {
         )
         .send({ from: accounts[0] })
 
-      console.log('contributor changed! ');
+      console.log('contributor changed! ')
 
-      setUpdateSponsorNameInputValue('');
-      setUpdateSponsorImgInputValue('');
-      setUpdateSponsorLinkToInputValue('');
-
+      setUpdateSponsorNameInputValue('')
+      setUpdateSponsorImgInputValue('')
+      setUpdateSponsorLinkToInputValue('')
     } catch (err) {
       console.log('changing contributor failed...', err)
     }
@@ -480,8 +473,7 @@ function GroupEventPage(props) {
         .send({ value: weiAmount, from: accounts[0] })
 
       console.log('contribution submitted! ')
-      setContributionAmountInputValue('');
-
+      setContributionAmountInputValue('')
     } catch (err) {
       console.log('submitting contribution failed...', err)
     }
@@ -532,18 +524,18 @@ function GroupEventPage(props) {
 
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-            <div className="my-10">
-              <h2>There is no event currently in progress!</h2>
+          <div className="my-10">
+            <h2>There is no event currently in progress!</h2>
 
-              <br />
-              <br />
+            <br />
+            <br />
 
-              <h4>
-                Check with the group admins for information on when the next
-                airdrop event is happening!
-              </h4>
-            </div>
-          )}
+            <h4>
+              Check with the group admins for information on when the next
+              airdrop event is happening!
+            </h4>
+          </div>
+        )}
         {/* Today's Sponsor Header */}
         <div className="my-5 mx-4">
           <p>Event Sponsor:</p>
@@ -605,7 +597,8 @@ function GroupEventPage(props) {
                   <h3 className="my-5">There is currently</h3>
                   <h1 className="my-5">{registeredRecipients.length}</h1>
                   <h3 className="my-5">
-                    user{registeredRecipients.length !== 1 ? 's' : ''} registered for
+                    user{registeredRecipients.length !== 1 ? 's' : ''}{' '}
+                    registered for
                   </h3>
                   <h3 className="my-5">this airdrop!</h3>
                   <ul>
@@ -619,9 +612,7 @@ function GroupEventPage(props) {
                   </ul>
                 </div>
               )}
-
             </div>
-
           </div>
         )}
 
@@ -631,35 +622,35 @@ function GroupEventPage(props) {
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-            <div>
-              {isEligibleRecipient && (
-                <div>
-                  <p>You are an eligible recipient for airdrops by this group!</p>
-                </div>
-              )}
+          <div>
+            {isEligibleRecipient && (
+              <div>
+                <p>You are an eligible recipient for airdrops by this group!</p>
+              </div>
+            )}
 
-              {isAdmin && (
-                <div className="m-3 mb-10">
-                  <p>
-                    Since you are an admin, you can start the event by opening
-                    registration!
-                  </p>
-                  <button
-                    onClick={() => startAirdropEvent(groupId)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  >
-                    Open AirDrop Registration
-                  </button>
-                </div>
-              )}
+            {isAdmin && (
+              <div className="m-3 mb-10">
+                <p>
+                  Since you are an admin, you can start the event by opening
+                  registration!
+                </p>
+                <button
+                  onClick={() => startAirdropEvent(groupId)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Open AirDrop Registration
+                </button>
+              </div>
+            )}
 
-              {!isAdmin && (
-                <div>
-                  <p>Waiting for a group admin to open registration...</p>
-                </div>
-              )}
-            </div>
-          )}
+            {!isAdmin && (
+              <div>
+                <p>Waiting for a group admin to open registration...</p>
+              </div>
+            )}
+          </div>
+        )}
         {/* Phase 1 - Registration */}
         {groupEventData && groupEventData[0] === '1' && (
           <div>
@@ -668,7 +659,6 @@ function GroupEventPage(props) {
             <div>
               <p>Registration for this airdrop event is still open!</p>
             </div>
-
 
             <br />
             {isEligibleRecipient && (
@@ -680,10 +670,11 @@ function GroupEventPage(props) {
                 )}
 
                 <div>
-                  {!isRegisteredRecipient && (<div>
-                    <p>You are an eligible recipient for this event!</p>
-                    <p>Click the button to register!</p>
-                  </div>
+                  {!isRegisteredRecipient && (
+                    <div>
+                      <p>You are an eligible recipient for this event!</p>
+                      <p>Click the button to register!</p>
+                    </div>
                   )}
                   <button
                     onClick={() => registerForEvent(groupId)}
@@ -703,7 +694,7 @@ function GroupEventPage(props) {
             )}
 
             {isAdmin && (
-              <div>
+              <div className="m-5">
                 <p>
                   Since you are an admin, you can move the event from
                   registration phase to claim winnings phase!
@@ -719,13 +710,12 @@ function GroupEventPage(props) {
           </div>
         )}
 
-
         {/* Phase 2 - Claiming Winnings */}
         {groupEventData && groupEventData[0] === '2' && (
           <div>
-
             <h2 className="m-5">
-              Each user can claim {web3.utils.fromWei(groupEventData[3], 'ether')} Eth!
+              Each user can claim{' '}
+              {web3.utils.fromWei(groupEventData[3], 'ether')} Eth!
             </h2>
 
             {isRegisteredRecipient && (
@@ -886,7 +876,7 @@ function GroupEventPage(props) {
                         <div className="my-4">Ether to contribute:&nbsp;</div>
                       </label>
                       <input
-                        className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         id="new-cfo"
                         type="number"
                         placeholder="0.01"
@@ -916,7 +906,6 @@ function GroupEventPage(props) {
             <br />
           </div>
         )}
-
 
         {/* Admin Section */}
         {isCOO && (
@@ -998,7 +987,7 @@ function GroupEventPage(props) {
                     <div className="my-4">New Admin Address:</div>
                   </label>
                   <input
-                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     id="new-cfo"
                     type="text"
                     placeholder="0x1234..."
@@ -1062,7 +1051,7 @@ function GroupEventPage(props) {
                     <div className="my-4">New Sponsor Address:</div>
                   </label>
                   <input
-                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     id="new-cfo"
                     type="text"
                     placeholder="0x1234..."
@@ -1098,12 +1087,21 @@ function GroupEventPage(props) {
               eligibleRecipients.map((eligibleRecipient, i) => {
                 return (
                   // <div >
-                  <li className='has-tooltip' key={'eligibleRecipient' + i}>
-                    <div className='tooltip rounded shadow-lg p-1 pb-5 bg-gray-100 text-red-500 m-2 mb-6 h-4'>{eligibleRecipient}</div>
-                    <p>{i + ') ' + shortenedAddress(eligibleRecipient) + ' - ' + JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}</p>
+                  <li className="has-tooltip" key={'eligibleRecipient' + i}>
+                    <div className="tooltip rounded shadow-lg p-1 pb-5 bg-gray-100 text-red-500 m-2 mb-6 h-4">
+                      {eligibleRecipient}
+                    </div>
+                    <p>
+                      {i +
+                        ') ' +
+                        shortenedAddress(eligibleRecipient) +
+                        ' - ' +
+                        eligibleRecipientNames[i] +
+                        ' - ' +
+                        JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
+                    </p>
                   </li>
                   // </div>
-
                 )
               })}
             <br />
@@ -1128,7 +1126,7 @@ function GroupEventPage(props) {
                     <div className="my-4">New Eligible Recipient Address:</div>
                   </label>
                   <input
-                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     id="new-recipient-address"
                     type="text"
                     placeholder="0x1234..."
@@ -1145,7 +1143,7 @@ function GroupEventPage(props) {
                     <div className="my-4">New Eligible Recipient Name:</div>
                   </label>
                   <input
-                    className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     id="new-cfo"
                     type="text"
                     placeholder="Bob"

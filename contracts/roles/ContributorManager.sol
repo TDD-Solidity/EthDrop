@@ -54,26 +54,11 @@ contract ContributorManager is RecipientsManager {
         return currentEvents[groupId].currentContributor;
     }
 
-    function renounceContributor(uint256 groupId)
-        external
-        onlyContributor(groupId)
-        whenNotPaused
-    {
-        _removeContributor(msg.sender, groupId);
-    }
-
     function _changeContributor(address account, uint256 groupId) internal {
         contributors[groupId][account] = true;
 
         currentEvents[groupId].currentContributor = account;
         emit ContributorAdded(account, groupId);
-    }
-
-    function _removeContributor(address account, uint256 groupId) internal {
-        contributors[groupId][account] = false;
-
-        currentEvents[groupId].currentContributor = address(0);
-        emit ContributorRemoved(account, groupId);
     }
 
     function updateContributorInfo(
