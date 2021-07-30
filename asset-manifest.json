@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.5335588d.chunk.css",
-    "main.js": "/static/js/main.72c297ae.chunk.js",
-    "main.js.map": "/static/js/main.72c297ae.chunk.js.map",
+    "main.js": "/static/js/main.1b7047cd.chunk.js",
+    "main.js.map": "/static/js/main.1b7047cd.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.b240f91f.js",
     "runtime-main.js.map": "/static/js/runtime-main.b240f91f.js.map",
     "static/js/2.daaa3084.chunk.js": "/static/js/2.daaa3084.chunk.js",
     "static/js/2.daaa3084.chunk.js.map": "/static/js/2.daaa3084.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.add9030cdd656a4df61e0238adfc7c24.js": "/precache-manifest.add9030cdd656a4df61e0238adfc7c24.js",
+    "precache-manifest.1667e2afba12d72f35329a97590032a5.js": "/precache-manifest.1667e2afba12d72f35329a97590032a5.js",
     "service-worker.js": "/service-worker.js",
     "static/css/main.5335588d.chunk.css.map": "/static/css/main.5335588d.chunk.css.map",
     "static/media/pot-of-gold-full.png": "/static/media/pot-of-gold-full.6cc0f846.png"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.b240f91f.js",
     "static/js/2.daaa3084.chunk.js",
     "static/css/main.5335588d.chunk.css",
-    "static/js/main.72c297ae.chunk.js"
+    "static/js/main.1b7047cd.chunk.js"
   ]
 }
