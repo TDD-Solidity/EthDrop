@@ -20,6 +20,10 @@ module.exports = {
       timeoutBlocks: 200,
       skipDryRun: true
     },
+  
+  
+  
+  
   },
   compilers: {
     solc: {

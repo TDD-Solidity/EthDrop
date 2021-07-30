@@ -237,21 +237,11 @@ class Home extends Component {
     ethDropCoreInstance.events.AdminAdded().on('data', async (event) => {
       console.log('admin added! ', event.returnValues);
 
-      // this.setState({
-      //   ...this.state,
-      //   groupNames: [event.returnValues.creator, ...this.state.groupNames],
-      //   groupIds: [event.returnValues.groupId, ...this.state.groupIds],
-      // })
     })
 
     ethDropCoreInstance.events.GroupCreated().on('data', async (event) => {
       console.log('groupCreated! ', event.returnValues);
 
-      // this.setState({
-      //   ...this.state,
-      //   groupNames: [event.returnValues.creator, ...this.state.groupNames],
-      //   groupIds: [event.returnValues.groupId, ...this.state.groupIds],
-      // })
     })
 
     ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
@@ -804,7 +794,9 @@ class Home extends Component {
               You are the CFO!
             </h1>
 
-            Current Balance: {this.state.currentCfoBalance}
+            <p>
+            Current contract eth balance: {this.state.currentCfoBalance}
+            </p>
 
           </div>}
         {!this.state.isCFO && <div>You are NOT the CFO.</div>}
