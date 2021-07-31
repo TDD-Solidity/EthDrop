@@ -3,7 +3,7 @@ An webapp &amp; smart contracts for airdropping ether
 
 <br/>
 
-Live Demo: [https:tdd-solidity.github.io/EthDrop/](https:tdd-solidity.github.io/EthDrop/)
+Live Demo: [https://tdd-solidity.github.io/EthDrop/](https://tdd-solidity.github.io/EthDrop/)
 
 <br/>
 
@@ -102,10 +102,43 @@ If in Metamask to the left of the address is says "Not connected", click on the 
 
 <br/>
 
-## If you see the error, "This contract object doesn't have address set yet, please set an address first."
+## If you see the error, "This contract object doesn't have address set yet, please set an address first"...
 
-// TODO
+You probably need to run "migrate" in the shell running your local blockchain.
 
+
+## If you see the error, "Tx has not good" when calling a blockchain function from js...
+
+You probably need to "reset the user in metamask".
+
+You can do this by:
+  1. Open the metamask extension
+  2. Click on the user icon circle in the top-right of the window.
+  3. Click Settings.
+  4. Click Advanced.
+  5. Scroll down a little.
+  6. Click "Reset Account".
+  7. Click "Reset".
+  8. Then close metamask and refresh the page.
+  
+
+<br/>
+<br/>
+
+## Want to Contribute? ❤️
+
+- Join into our [slack](https://join.slack.com/t/nyc-blockchain-devs/shared_invite/zt-9q57smnm-HHkovOCbhT_i_~U2V3Nuew) and [discord](https://discord.gg/4wnYpZNAnJ) servers!
+
+- Come out to one of our [remote meetup events](https://www.meetup.com/ethbuilders/) and ask about EthDrop!
+
+- Start up the smart contracts and react frontend running locally on your computer. 
+
+- Look through the [issues for this repo](https://github.com/TDD-Solidity/EthDrop/issues) and work with Jim to find a good thing to work on.
+
+- Open a [pull request](https://github.com/TDD-Solidity/EthDrop/pulls) to merge your awesome new changes!
+
+
+<br/>
 <br/>
 
 # Scaffolded from the [react truffle box](https://www.trufflesuite.com/boxes/react).
