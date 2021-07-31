@@ -105,12 +105,9 @@ class Home extends Component {
 
       if (currentNetwork === 'main') {
         this.setState({ showMainnetErrorMessage: true });
-
         this.setState({ ...this.state, showMainnetErrorMessage: true });
-
       }
       else {
-
 
         const ethDropCoreInstance = new web3.eth.Contract(
           EthDropCore.abi,
