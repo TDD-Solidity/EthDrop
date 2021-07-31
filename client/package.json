@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "homepage": "https://jimlynchcodes.github.io/EthDrop/",
+  "homepage": "/EthDrop/",
   "dependencies": {
     "@craco/craco": "^5.8.0",
     "@headlessui/react": "^1.3.0",
@@ -22,12 +22,12 @@
   "scripts": {
     "watch-tailwind": "tailwind build -i source.css -o output.css -w --minify",
     "build-tailwind": "tailwind build -i source.css -o output.css --minify",
-    "start": "craco start",
+    "start": "PUBLIC_URL=\"/EthDrop/\" craco start",
     "tw-start": "npm run build-tailwind && react-scripts start",
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "PUBLIC_URL=https://jimlynchcodes.github.io/EthDrop npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

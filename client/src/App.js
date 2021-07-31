@@ -62,7 +62,8 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
-    let match = useRouteMatch();
+    // let match = useRouteMatch();
+
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
@@ -150,11 +151,11 @@ class App extends Component {
         {/* Routing */}
         <Switch>
 
-          <Route key={document.location.href} path={'EthDrop/g/:groupName/:groupId'}>
+          <Route key={document.location.href} path='/g/:groupName/:groupId' >
             <GroupEventPage />
           </Route>
 
-          <Route path={'EthDrop/'} key={document.location.href} >
+          <Route path='/EthDrop' key={document.location.href} >
             <Home />
           </Route>
 
