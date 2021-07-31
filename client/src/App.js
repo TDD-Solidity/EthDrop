@@ -73,32 +73,32 @@ class App extends Component {
 
 
       // Use web3 to get the user's accounts.
-      // const accounts = await web3.eth.getAccounts();
+      const accounts = await web3.eth.getAccounts();
 
-      // // const accounts = window.ethereum.request("eth_requestAccounts")
-      // console.log('accounts are: ', accounts);
+      // const accounts = window.ethereum.request("eth_requestAccounts")
+      console.log('accounts are: ', accounts);
 
-      // // Get the contract instance.
-      // const networkId = await web3.eth.net.getId();
+      // Get the contract instance.
+      const networkId = await web3.eth.net.getId();
 
-      // console.log('network is: ', networkId);
+      console.log('network is: ', networkId);
 
-      // const deployedNetwork = SimpleStorageContract.networks[networkId];
-      // console.log('address: ', deployedNetwork.address);
+      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      console.log('address: ', deployedNetwork.address);
 
-      // const simpleStorageInstance = new web3.eth.Contract(
-      //   SimpleStorageContract.abi,
-      //   // env.SIMPLE_STORAGE_CONTRACT_ADDRESS
-      //   // ,
-      //   deployedNetwork && deployedNetwork.address,
-      // );
+      const simpleStorageInstance = new web3.eth.Contract(
+        SimpleStorageContract.abi,
+        // env.SIMPLE_STORAGE_CONTRACT_ADDRESS
+        // ,
+        deployedNetwork && deployedNetwork.address,
+      );
 
-      // const ethDropCoreInstance = new web3.eth.Contract(
-      //   EthDropCore.abi,
-      //   // env.ETHDROP_CORE_CONTRACT_ADDRESS
-      //   // ,
-      //   deployedNetwork && deployedNetwork.address,
-      // );
+      const ethDropCoreInstance = new web3.eth.Contract(
+        EthDropCore.abi,
+        // env.ETHDROP_CORE_CONTRACT_ADDRESS
+        // ,
+        deployedNetwork && deployedNetwork.address,
+      );
 
 
       // // Set web3, accounts, and contract to the state, and then proceed with an
