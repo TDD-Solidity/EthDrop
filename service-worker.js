@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "https://tdd-solidity.github.io/EthDrop/precache-manifest.07d66c0404ea086733e5792251be39fd.js"
+  "https://tdd-solidity.github.io/EthDrop/precache-manifest.7ad30a700b44d287f1c5bfa991ba7f43.js"
 );
 
 self.addEventListener('message', (event) => {

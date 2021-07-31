@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "77f550f85997cc2ccf118fedeb5ba777",
+    "revision": "b1cabf3af690afbbe94b06e56e9db99d",
     "url": "https://tdd-solidity.github.io/EthDrop/index.html"
   },
   {
-    "revision": "5f8778fc07fc2876b237",
+    "revision": "f38e27caad4841b59304",
     "url": "https://tdd-solidity.github.io/EthDrop/static/css/main.5335588d.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://tdd-solidity.github.io/EthDrop/static/js/2.faa2640e.chunk.js"
   },
   {
-    "revision": "5f8778fc07fc2876b237",
-    "url": "https://tdd-solidity.github.io/EthDrop/static/js/main.7dee88c1.chunk.js"
+    "revision": "f38e27caad4841b59304",
+    "url": "https://tdd-solidity.github.io/EthDrop/static/js/main.6321fd7a.chunk.js"
   },
   {
     "revision": "2940bc16bd75b2aacc29",
