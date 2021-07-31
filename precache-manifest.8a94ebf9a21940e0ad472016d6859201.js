@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1aff50b5d0f1f6b0e7c86e2244e1f891",
+    "revision": "c06016de8a24437891c21ddc5411ff84",
     "url": "https://jimlynchcodes.github.io/EthDrop/index.html"
   },
   {
-    "revision": "0361890286f94219ceff",
+    "revision": "67bb629b4d7525b7d982",
     "url": "https://jimlynchcodes.github.io/EthDrop/static/css/main.5335588d.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://jimlynchcodes.github.io/EthDrop/static/js/2.faa2640e.chunk.js"
   },
   {
-    "revision": "0361890286f94219ceff",
-    "url": "https://jimlynchcodes.github.io/EthDrop/static/js/main.c790e56c.chunk.js"
+    "revision": "67bb629b4d7525b7d982",
+    "url": "https://jimlynchcodes.github.io/EthDrop/static/js/main.f37f2772.chunk.js"
   },
   {
     "revision": "8e8ccbcd7ededb2f59a4",
