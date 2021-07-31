@@ -534,7 +534,7 @@ class Home extends Component {
 
                         <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
                           <h4>
-                            <Link style={{ textDecoration: 'none' }} to={`/g/${groupName}/${this.state.groupIds[i]}`}>View</Link>
+                            <Link style={{ textDecoration: 'none' }} to={`/EthDrop/g/${groupName}/${this.state.groupIds[i]}`}>View</Link>
                           </h4>
                         </FillButton>
                       </td>

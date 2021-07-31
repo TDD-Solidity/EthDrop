@@ -303,9 +303,9 @@ function GroupEventPage(props) {
   const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
     console.log('checking if admin...')
 
-    const isAdmin = await ethDropCoreInstance.methods
-      .amIAdmin(groupId)
-      .call({ from: accounts[0] })
+    console.log('am I an admin of group: ', groupId)
+
+    const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] })
     console.log('isAdmin ', isAdmin)
     setIsAdmin(isAdmin)
 

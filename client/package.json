@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "homepage": "/EthDrop/",
+  "homepage": "https://tdd-solidity.github.io/EthDrop",
   "dependencies": {
     "@craco/craco": "^5.8.0",
     "@headlessui/react": "^1.3.0",
@@ -27,7 +27,7 @@
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "PUBLIC_URL=https://jimlynchcodes.github.io/EthDrop npm run build",
+    "predeploy": "PUBLIC_URL=https://tdd-solidity.github.io/EthDrop npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

@@ -121,7 +121,9 @@ class App extends Component {
 
       {/* Header Nav */}
       <div className="bg-blue-500 px-4 py-3 text-white text-lg">
-        <h3>EthDrop</h3>
+        <Link style={{ textDecoration: 'none' }} to="/EthDrop">
+          <h3>EthDrop</h3>
+        </Link>
       </div>
 
 
@@ -151,7 +153,7 @@ class App extends Component {
         {/* Routing */}
         <Switch>
 
-          <Route key={document.location.href} path='/g/:groupName/:groupId' >
+          <Route key={document.location.href} path='/EthDrop/g/:groupName/:groupId' >
             <GroupEventPage />
           </Route>
 
