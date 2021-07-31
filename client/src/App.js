@@ -4,7 +4,7 @@ import EthDropCore from "./contracts/EthDropCore.json";
 import getWeb3 from "./getWeb3";
 import env from "react-dotenv";
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Switch,
   Route,
   Link,
@@ -15,6 +15,7 @@ import { FillButton } from 'tailwind-react-ui'
 
 import Home from "./HomePage"
 import GroupEventPage from "./GroupEventPage"
+import NotFound from "./NotFound"
 
 import "./App.css";
 
@@ -56,10 +57,12 @@ class App extends Component {
     currentCfoBalance: 0,
     createGroupErrorToDisplay: null,
     newCOOInputValue: '',
-    currentNetwork: ''
+    currentNetwork: '',
+    routerMatch: ''
   };
 
   componentDidMount = async () => {
+    let match = useRouteMatch();
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
@@ -67,6 +70,7 @@ class App extends Component {
       const currentNetwork = await web3.eth.net.getNetworkType()
 
       console.log('currentNetwork: ', currentNetwork)
+
 
       // Use web3 to get the user's accounts.
       // const accounts = await web3.eth.getAccounts();
@@ -97,7 +101,6 @@ class App extends Component {
       // );
 
 
-
       // // Set web3, accounts, and contract to the state, and then proceed with an
       // // example of interacting with the contract's methods.
       this.setState({ currentNetwork });
@@ -113,7 +116,7 @@ class App extends Component {
 
   render() {
 
-    return <Router basename={process.env.PUBLIC_URL}>
+    return <Router>
 
       {/* Header Nav */}
       <div className="bg-blue-500 px-4 py-3 text-white text-lg">
@@ -147,17 +150,15 @@ class App extends Component {
         {/* Routing */}
         <Switch>
 
-          <Route path="" key={document.location.href}
-
-            path={process.env.PUBLIC_URL + '/g/:groupName/:groupId'}
-          >
-
+          <Route key={document.location.href} path={'EthDrop/g/:groupName/:groupId'}>
             <GroupEventPage />
           </Route>
 
-          <Route path="*" key={document.location.href} >
+          <Route path={'EthDrop/'} key={document.location.href} >
             <Home />
           </Route>
+
+          <Route path='*' component={NotFound} />
 
         </Switch>
       </div>
