@@ -3,7 +3,7 @@ An webapp &amp; smart contracts for airdropping ether
 
 <br/>
 
-Live Demo: ______
+Live Demo: [https:jimlynchcodes.github.io/EthDrop/](https:jimlynchcodes.github.io/EthDrop/)
 
 <br/>
 
