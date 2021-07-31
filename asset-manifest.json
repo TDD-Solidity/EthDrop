@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "https://jimlynchcodes.github.io/static/css/main.5335588d.chunk.css",
-    "main.js": "https://jimlynchcodes.github.io/static/js/main.d999f5f6.chunk.js",
-    "main.js.map": "https://jimlynchcodes.github.io/static/js/main.d999f5f6.chunk.js.map",
-    "runtime-main.js": "https://jimlynchcodes.github.io/static/js/runtime-main.1811ab8d.js",
-    "runtime-main.js.map": "https://jimlynchcodes.github.io/static/js/runtime-main.1811ab8d.js.map",
-    "static/js/2.28c7fbee.chunk.js": "https://jimlynchcodes.github.io/static/js/2.28c7fbee.chunk.js",
-    "static/js/2.28c7fbee.chunk.js.map": "https://jimlynchcodes.github.io/static/js/2.28c7fbee.chunk.js.map",
-    "index.html": "https://jimlynchcodes.github.io/index.html",
-    "precache-manifest.81b09fd0f73255025eed4071dbd0db31.js": "https://jimlynchcodes.github.io/precache-manifest.81b09fd0f73255025eed4071dbd0db31.js",
-    "service-worker.js": "https://jimlynchcodes.github.io/service-worker.js",
-    "static/css/main.5335588d.chunk.css.map": "https://jimlynchcodes.github.io/static/css/main.5335588d.chunk.css.map",
-    "static/media/pot-of-gold-full.png": "https://jimlynchcodes.github.io/static/media/pot-of-gold-full.6cc0f846.png"
+    "main.css": "http://jimlynchcodes.github.io/EthDrop/static/css/main.5335588d.chunk.css",
+    "main.js": "http://jimlynchcodes.github.io/EthDrop/static/js/main.39fdfe95.chunk.js",
+    "main.js.map": "http://jimlynchcodes.github.io/EthDrop/static/js/main.39fdfe95.chunk.js.map",
+    "runtime-main.js": "http://jimlynchcodes.github.io/EthDrop/static/js/runtime-main.583b3a3d.js",
+    "runtime-main.js.map": "http://jimlynchcodes.github.io/EthDrop/static/js/runtime-main.583b3a3d.js.map",
+    "static/js/2.28c7fbee.chunk.js": "http://jimlynchcodes.github.io/EthDrop/static/js/2.28c7fbee.chunk.js",
+    "static/js/2.28c7fbee.chunk.js.map": "http://jimlynchcodes.github.io/EthDrop/static/js/2.28c7fbee.chunk.js.map",
+    "index.html": "http://jimlynchcodes.github.io/EthDrop/index.html",
+    "precache-manifest.d15e0e894cf268f52b91b850844485be.js": "http://jimlynchcodes.github.io/EthDrop/precache-manifest.d15e0e894cf268f52b91b850844485be.js",
+    "service-worker.js": "http://jimlynchcodes.github.io/EthDrop/service-worker.js",
+    "static/css/main.5335588d.chunk.css.map": "http://jimlynchcodes.github.io/EthDrop/static/css/main.5335588d.chunk.css.map",
+    "static/media/pot-of-gold-full.png": "http://jimlynchcodes.github.io/EthDrop/static/media/pot-of-gold-full.6cc0f846.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.1811ab8d.js",
+    "static/js/runtime-main.583b3a3d.js",
     "static/js/2.28c7fbee.chunk.js",
     "static/css/main.5335588d.chunk.css",
-    "static/js/main.d999f5f6.chunk.js"
+    "static/js/main.39fdfe95.chunk.js"
   ]
 }
