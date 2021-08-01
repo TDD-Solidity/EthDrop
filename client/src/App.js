@@ -87,12 +87,12 @@ class App extends Component {
       const deployedNetwork = SimpleStorageContract.networks[networkId];
       console.log('address: ', deployedNetwork.address);
 
-      const simpleStorageInstance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        // env.SIMPLE_STORAGE_CONTRACT_ADDRESS
-        // ,
-        deployedNetwork && deployedNetwork.address,
-      );
+      // const simpleStorageInstance = new web3.eth.Contract(
+      //   SimpleStorageContract.abi,
+      //   // env.SIMPLE_STORAGE_CONTRACT_ADDRESS
+      //   // ,
+      //   deployedNetwork && deployedNetwork.address,
+      // );
 
       const ethDropCoreInstance = new web3.eth.Contract(
         EthDropCore.abi,

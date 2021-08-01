@@ -83,13 +83,15 @@ contract EthDropBase is ExecutivesAccessControl {
     // Key is the groupId
     mapping(uint256 => EthDropEvent[]) pastEvents;
 
-    // Holds ALL admins for all groups
+    // Deprecated: Holds ALL admins for all groups
     // groupId => Role
-    mapping(uint256 => mapping(address => bool)) admins;
+    // mapping(uint256 => mapping(address => bool)) admins;
 
     // groupId => index in arrays for this specific address
-    mapping(uint256 => mapping(address => uint256)) adminAddressToIndex;
-    uint256 adminAddressToIndexNextIndex = 0;
+    mapping(uint256 => mapping(address => uint256)) adminAddresToIndex;
+    
+    // groupId => nextAvailableIndex
+    mapping(uint256 => uint256) adminAddressNextIndex3;
     
     mapping(uint256 => mapping(address => bool)) winningsCollected;
 

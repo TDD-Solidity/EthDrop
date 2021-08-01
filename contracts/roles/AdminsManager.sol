@@ -4,9 +4,6 @@ pragma solidity ^0.8.0;
 import "./ContributorManager.sol";
 
 contract AdminsManager is ContributorManager {
-    // event AdminAdded(address indexed account, uint256 groupId);
-    // event AdminRemoved(address indexed account, uint256 groupId);
-
     event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
@@ -31,11 +28,41 @@ contract AdminsManager is ContributorManager {
         view
         returns (bool)
     {
-        return admins[groupId][account] == true;
+        uint256 adminIndex = adminAddresToIndex[groupId][account];
+
+        // if user was never an admin, return false
+        if (adminIndex == 0) {
+            return false;
+        }
+
+        // // make sure their "adminship" is still enabled
+        // return adminEnabled[groupId][adminIndex] == true;
+
+        if (!adminEnabled[groupId][adminIndex]) {
+            return false;
+        }
+
+        return adminEnabled[groupId][adminIndex] == true;
+
+        // return true;
+    }
+
+    // debug
+    function getMyAdminIndex(uint256 groupId) external view returns (uint256) {
+        return adminAddresToIndex[groupId][msg.sender];
+    }
+
+    // debug
+    function getAddressNextAdminIndex(uint256 groupId)
+        external
+        view
+        returns (uint256)
+    {
+        return adminAddressNextIndex3[groupId];
     }
 
     function amIAdmin(uint256 groupId) external view returns (bool) {
-        return admins[groupId][msg.sender] == true;
+        return isAdmin(msg.sender, groupId);
     }
 
     function getAdminsForGroup(uint256 groupId)
@@ -67,22 +94,30 @@ contract AdminsManager is ContributorManager {
     }
 
     function _addAdmin(address account, uint256 groupId) internal {
-        admins[groupId][account] = true;
-
-        adminAddressToIndex[groupId][account] = adminAddressToIndexNextIndex;
-        adminAddressToIndexNextIndex++;
-
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
         // TODO - give admins human readable names
+
+        // push twice to make the index actually true for the first admin...
+        if (adminAddressNextIndex3[groupId] < 1) {
+            adminAddresses[groupId].push(account);
+            adminEnabled[groupId].push(true);
+
+            adminAddressNextIndex3[groupId] = 1;
+            adminAddresToIndex[groupId][account] = 1;
+        } else {
+            adminAddresToIndex[groupId][account] =
+                adminAddressNextIndex3[groupId] +
+                1;
+        }
+
+        adminAddressNextIndex3[groupId] = adminAddressNextIndex3[groupId] + 1;
 
         emit AdminAdded(groupId);
     }
 
     function _removeAdmin(address account, uint256 groupId) internal {
-        admins[groupId][account] = false;
-
-        uint256 index = adminAddressToIndex[groupId][account];
+        uint256 index = adminAddresToIndex[groupId][account];
         adminEnabled[groupId][index] = false;
 
         emit AdminRemoved(groupId);
@@ -127,6 +162,8 @@ contract AdminsManager is ContributorManager {
         listOfGroupIds.push(newGroupId);
         listOfGroupNames.push(groupName);
 
+        adminAddressNextIndex3[newGroupId] = 1;
+
         emit GroupCreated(groupName, newGroupId);
     }
 
@@ -146,9 +183,11 @@ contract AdminsManager is ContributorManager {
         onlyAdmins(groupId)
         whenNotPaused
     {
-        require(currentEvents[groupId].registeredRecipientsCount >= 1,
-        "Can't end registration with zero registrants!");
-        
+        require(
+            currentEvents[groupId].registeredRecipientsCount >= 1,
+            "Can't end registration with zero registrants!"
+        );
+
         currentEvents[groupId].registrationEndTime = block.timestamp;
 
         uint256 devCutWei = (currentEvents[groupId].totalAmountContributed *
@@ -241,5 +280,4 @@ contract AdminsManager is ContributorManager {
     {
         _changeContributor(account, groupId);
     }
-
 }

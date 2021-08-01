@@ -79,19 +79,19 @@ function GroupEventPage(props) {
    *  Handler Functions
    */
 
-  async function getAdminData(ethDropCoreInstance, currentAccount, groupId) {
-    const adminsForGroup = await ethDropCoreInstance.methods
-      .getAdminsForGroup(groupId)
-      .call({ from: currentAccount })
-    console.log('adminsForGroup ', adminsForGroup)
-    setAdminsForGroup(adminsForGroup)
+  // async function getAdminData(ethDropCoreInstance, currentAccount, groupId) {
+  //   const adminsForGroup = await ethDropCoreInstance.methods
+  //     .getAdminsForGroup(groupId)
+  //     .call({ from: currentAccount })
+  //   console.log('adminsForGroup ', adminsForGroup)
+  //   setAdminsForGroup(adminsForGroup)
 
-    const isAdmin = await ethDropCoreInstance.methods
-      .amIAdmin(groupId)
-      .call({ from: currentAccount })
-    console.log('isAdmin ', isAdmin)
-    setIsAdmin(isAdmin)
-  }
+  //   const isAdmin = await ethDropCoreInstance.methods
+  //     .amIAdmin(groupId)
+  //     .call({ from: currentAccount })
+  //   console.log('isAdmin ', isAdmin)
+  //   setIsAdmin(isAdmin)
+  // }
 
   async function fetchData() {
     try {
@@ -304,6 +304,13 @@ function GroupEventPage(props) {
     console.log('checking if admin...')
 
     console.log('am I an admin of group: ', groupId)
+
+    const nextAdminIndex = await ethDropCoreInstance.methods.getAddressNextAdminIndex(groupId).call({ from: accounts[0] })
+    console.log('nextAdminIndex ', nextAdminIndex)
+
+    const myAdminIndex = await ethDropCoreInstance.methods.getMyAdminIndex(groupId).call({ from: accounts[0] })
+    console.log('myAdminIndex ', myAdminIndex)
+    // setIsAdmin(myAdminIndex)
 
     const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] })
     console.log('isAdmin ', isAdmin)
@@ -522,7 +529,7 @@ function GroupEventPage(props) {
           <h1 className="break-all">{groupName}</h1>
         </div>
 
-        {((groupEventData && groupEventData[0] === '0') ||
+        {groupEventData && (groupEventData[0] === '0' ||
           groupEventData[0] === '3') && (
             <div className="my-10">
               <h2>There is no event currently in progress!</h2>
