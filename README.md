@@ -22,9 +22,9 @@ Open another terminal for the react frontend in the "client" directory of the re
 # Running The React App Locally
 cd into the client folder
 
-run `nvm use` to switch to the node version needed for the project
-
 install the node modules `npm i`
+
+run `nvm use` to switch to the node version needed for the project
 
 start the app `npm start`
 
@@ -129,7 +129,6 @@ You can do this by:
   6. Click "Reset Account".
   7. Click "Reset".
   8. Then close metamask and refresh the page.
-
 
 <br/>
 <br/>
