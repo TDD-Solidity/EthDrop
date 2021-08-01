@@ -135,7 +135,7 @@ class App extends Component {
         }}>
           {/* <li> */}
           <h4 >
-            <Link style={{ textDecoration: 'none' }} to="/">
+            <Link style={{ textDecoration: 'none' }} to="/EthDrop">
               <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
                 <h4>
                   Groups
