@@ -301,26 +301,50 @@ function GroupEventPage(props) {
   }
 
   const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
-    console.log('checking if admin...')
 
-    console.log('am I an admin of group: ', groupId)
+    try {
+      // const ok = await this.state.ethDropCoreInstance.methods.setString(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
+      // console.log('update string success!')
+      // console.log('ok: ', ok)
 
-    const nextAdminIndex = await ethDropCoreInstance.methods.getAddressNextAdminIndex(groupId).call({ from: accounts[0] })
-    console.log('nextAdminIndex ', nextAdminIndex)
+      // const currentString = await this.state.ethDropCoreInstance.methods.getString().call();
+      // console.log('string: ', currentString)
+      // this.setState({ currentString });
 
-    const myAdminIndex = await ethDropCoreInstance.methods.getMyAdminIndex(groupId).call({ from: accounts[0] })
-    console.log('myAdminIndex ', myAdminIndex)
-    // setIsAdmin(myAdminIndex)
+      // await this.state.ethDropCoreInstance.methods.setCOO(this.state.newCOOInputValue).send({ from: this.state.accounts[0] });
+      // console.log('update COO success!')
 
-    const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] })
-    console.log('isAdmin ', isAdmin)
-    setIsAdmin(isAdmin)
+      // const currentCOO = await this.state.ethDropCoreInstance.methods.getCOO().call({ from: this.state.accounts[0] });
+      // console.log('currentCOO ', currentCOO)
+      // this.setState({ currentCOO, newCOOInputValue: '' });
+      console.log('checking if admin...')
+  
+      console.log('am I an admin of group: ', groupId)
+  
+      const nextAdminIndex = await ethDropCoreInstance.methods.getAddressNextAdminIndex(groupId).call({ from: accounts[0] })
+      console.log('nextAdminIndex ', nextAdminIndex)
+  
+      const myAdminIndex = await ethDropCoreInstance.methods.getMyAdminIndex(groupId).call({ from: accounts[0] })
+      console.log('myAdminIndex ', myAdminIndex)
+      // setIsAdmin(myAdminIndex)
+  
+      const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] })
+      console.log('isAdmin ', isAdmin)
+      setIsAdmin(isAdmin)
+  
+      const adminsForGroup = await ethDropCoreInstance.methods
+        .getAdminsForGroup(groupId)
+        .call({ from: accounts[0] })
+      console.log('adminsForGroup ', adminsForGroup)
+      setAdminsForGroup(adminsForGroup)
+    }
+    catch (err) {
 
-    const adminsForGroup = await ethDropCoreInstance.methods
-      .getAdminsForGroup(groupId)
-      .call({ from: accounts[0] })
-    console.log('adminsForGroup ', adminsForGroup)
-    setAdminsForGroup(adminsForGroup)
+      console.log('checking admins failed...', err);
+
+      this.setState({ errorToDisplay: err });
+    }
+
   }
 
   async function removeAdmin(address) {
@@ -417,9 +441,13 @@ function GroupEventPage(props) {
   async function newAdminSubmit(event) {
     event.preventDefault()
 
+    const newAdminAddress = newAdminInputValue.trim();
+
+    console.log('newAdminAddress ', newAdminAddress)
+
     try {
       const createdGroup = await ethDropCoreInstance.methods
-        .addAdmin(newAdminInputValue, groupId)
+        .addAdmin(newAdminAddress, groupId)
         .send({ from: accounts[0] })
 
       console.log('added admin! ')

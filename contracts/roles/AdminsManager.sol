@@ -93,7 +93,8 @@ contract AdminsManager is ContributorManager {
 
         // if first user, use index 1 and push some garbage things at the 0 index
         if (adminAddressNextIndex3[groupId] == 0) {
-            adminAddressNextIndex3[groupId] = 1;
+            adminAddressNextIndex3[groupId]++;
+            
             adminAddresses[groupId].push(address(0));
             adminEnabled[groupId].push(false);
         }
@@ -102,7 +103,6 @@ contract AdminsManager is ContributorManager {
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
 
-        adminAddressNextIndex3[groupId]++;
 
         emit AdminAdded(groupId);
     }
