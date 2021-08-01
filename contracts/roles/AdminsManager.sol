@@ -35,16 +35,12 @@ contract AdminsManager is ContributorManager {
             return false;
         }
 
-        // // make sure their "adminship" is still enabled
-        // return adminEnabled[groupId][adminIndex] == true;
-
         if (!adminEnabled[groupId][adminIndex]) {
             return false;
         }
 
         return adminEnabled[groupId][adminIndex] == true;
 
-        // return true;
     }
 
     // debug
@@ -93,25 +89,20 @@ contract AdminsManager is ContributorManager {
         _removeAdmin(msg.sender, groupId);
     }
 
-    function _addAdmin(address account, uint256 groupId) internal {
-        adminAddresses[groupId].push(account);
-        adminEnabled[groupId].push(true);
-        // TODO - give admins human readable names
+    function _addAdmin(address account, uint256 groupId) internal {   
 
-        // push twice to make the index actually true for the first admin...
-        if (adminAddressNextIndex3[groupId] < 1) {
-            adminAddresses[groupId].push(account);
-            adminEnabled[groupId].push(true);
-
+        // if first user, use index 1 and push some garbage things at the 0 index
+        if (adminAddressNextIndex3[groupId] == 0) {
             adminAddressNextIndex3[groupId] = 1;
-            adminAddresToIndex[groupId][account] = 1;
-        } else {
-            adminAddresToIndex[groupId][account] =
-                adminAddressNextIndex3[groupId] +
-                1;
+            adminAddresses[groupId].push(address(0));
+            adminEnabled[groupId].push(false);
         }
 
-        adminAddressNextIndex3[groupId] = adminAddressNextIndex3[groupId] + 1;
+        adminAddresToIndex[groupId][account] = adminAddressNextIndex3[groupId];
+        adminAddresses[groupId].push(account);
+        adminEnabled[groupId].push(true);
+
+        adminAddressNextIndex3[groupId]++;
 
         emit AdminAdded(groupId);
     }
@@ -161,8 +152,6 @@ contract AdminsManager is ContributorManager {
 
         listOfGroupIds.push(newGroupId);
         listOfGroupNames.push(groupName);
-
-        adminAddressNextIndex3[newGroupId] = 1;
 
         emit GroupCreated(groupName, newGroupId);
     }
