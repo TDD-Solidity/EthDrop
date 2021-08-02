@@ -479,7 +479,7 @@ class Home extends Component {
           Looks like you are connected to Mainnet.
         </p>
         <p>
-          Please go to your wallet and change the network to ropsten!
+          Please go to your wallet and change the network to rinkeby!
         </p>
       </div>;
     }
