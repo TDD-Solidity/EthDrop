@@ -301,7 +301,6 @@ function GroupEventPage(props) {
   }
 
   const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
-
     try {
       // const ok = await this.state.ethDropCoreInstance.methods.setString(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
       // console.log('update string success!')
@@ -318,33 +317,36 @@ function GroupEventPage(props) {
       // console.log('currentCOO ', currentCOO)
       // this.setState({ currentCOO, newCOOInputValue: '' });
       console.log('checking if admin...')
-  
+
       console.log('am I an admin of group: ', groupId)
-  
-      const nextAdminIndex = await ethDropCoreInstance.methods.getAddressNextAdminIndex(groupId).call({ from: accounts[0] })
+
+      const nextAdminIndex = await ethDropCoreInstance.methods
+        .getAddressNextAdminIndex(groupId)
+        .call({ from: accounts[0] })
       console.log('nextAdminIndex ', nextAdminIndex)
-  
-      const myAdminIndex = await ethDropCoreInstance.methods.getMyAdminIndex(groupId).call({ from: accounts[0] })
+
+      const myAdminIndex = await ethDropCoreInstance.methods
+        .getMyAdminIndex(groupId)
+        .call({ from: accounts[0] })
       console.log('myAdminIndex ', myAdminIndex)
       // setIsAdmin(myAdminIndex)
-  
-      const isAdmin = await ethDropCoreInstance.methods.amIAdmin(groupId).call({ from: accounts[0] })
+
+      const isAdmin = await ethDropCoreInstance.methods
+        .amIAdmin(groupId)
+        .call({ from: accounts[0] })
       console.log('isAdmin ', isAdmin)
       setIsAdmin(isAdmin)
-  
+
       const adminsForGroup = await ethDropCoreInstance.methods
         .getAdminsForGroup(groupId)
         .call({ from: accounts[0] })
       console.log('adminsForGroup ', adminsForGroup)
       setAdminsForGroup(adminsForGroup)
+    } catch (err) {
+      console.log('checking admins failed...', err)
+
+      this.setState({ errorToDisplay: err })
     }
-    catch (err) {
-
-      console.log('checking admins failed...', err);
-
-      this.setState({ errorToDisplay: err });
-    }
-
   }
 
   async function removeAdmin(address) {
@@ -441,7 +443,7 @@ function GroupEventPage(props) {
   async function newAdminSubmit(event) {
     event.preventDefault()
 
-    const newAdminAddress = newAdminInputValue.trim();
+    const newAdminAddress = newAdminInputValue.trim()
 
     console.log('newAdminAddress ', newAdminAddress)
 
@@ -557,8 +559,8 @@ function GroupEventPage(props) {
           <h1 className="break-all">{groupName}</h1>
         </div>
 
-        {groupEventData && (groupEventData[0] === '0' ||
-          groupEventData[0] === '3') && (
+        {groupEventData &&
+          (groupEventData[0] === '0' || groupEventData[0] === '3') && (
             <div className="my-10">
               <h2>There is no event currently in progress!</h2>
 
@@ -657,35 +659,35 @@ function GroupEventPage(props) {
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-            <div>
-              {isEligibleRecipient && (
-                <div>
-                  <p>You are an eligible recipient for airdrops by this group!</p>
-                </div>
-              )}
+          <div>
+            {isEligibleRecipient && (
+              <div className="m-5">
+                <p>You are an eligible recipient for airdrops by this group!</p>
+              </div>
+            )}
 
-              {isAdmin && (
-                <div className="m-3 mb-10">
-                  <p>
-                    Since you are an admin, you can start the event by opening
-                    registration!
-                  </p>
-                  <button
-                    onClick={() => startAirdropEvent(groupId)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  >
-                    Open AirDrop Registration
-                  </button>
-                </div>
-              )}
+            {isAdmin && (
+              <div className="m-3 mb-10">
+                <p>
+                  Since you are an admin, you can start the event by opening
+                  registration!
+                </p>
+                <button
+                  onClick={() => startAirdropEvent(groupId)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Open AirDrop Registration
+                </button>
+              </div>
+            )}
 
-              {!isAdmin && (
-                <div>
-                  <p>Waiting for a group admin to open registration...</p>
-                </div>
-              )}
-            </div>
-          )}
+            {!isAdmin && (
+              <div>
+                <p>Waiting for a group admin to open registration...</p>
+              </div>
+            )}
+          </div>
+        )}
         {/* Phase 1 - Registration */}
         {groupEventData && groupEventData[0] === '1' && (
           <div>
@@ -696,37 +698,6 @@ function GroupEventPage(props) {
             </div>
 
             <br />
-            {isEligibleRecipient && (
-              <div>
-                {isRegisteredRecipient && (
-                  <div>
-                    <p>You are registered for this event!</p>
-                  </div>
-                )}
-
-                <div>
-                  {!isRegisteredRecipient && (
-                    <div>
-                      <p>You are an eligible recipient for this event!</p>
-                      <p>Click the button to register!</p>
-                    </div>
-                  )}
-                  <button
-                    onClick={() => registerForEvent(groupId)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
-                    disabled={isRegisteredRecipient === true}
-                  >
-                    Register!
-                  </button>
-                </div>
-              </div>
-            )}
-            {!isEligibleRecipient && (
-              <div>
-                You are not an eligible recipient for this airdrop! Get in touch
-                with the group admins to be added!
-              </div>
-            )}
 
             {isAdmin && (
               <div className="m-5">
@@ -742,6 +713,41 @@ function GroupEventPage(props) {
                 </button>
               </div>
             )}
+          </div>
+        )}
+
+        {isEligibleRecipient && (
+          <div>
+            {isRegisteredRecipient && (
+              <div>
+                <p>You are registered for this event!</p>
+              </div>
+            )}
+
+            <div>
+              {!isRegisteredRecipient && (
+                <div>
+                  <p>You are an eligible recipient for this event!</p>
+                  <p>Click the button to register!</p>
+                </div>
+              )}
+              <button
+                onClick={() => registerForEvent(groupId)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                disabled={isRegisteredRecipient === true}
+              >
+                Register!
+              </button>
+            </div>
+          </div>
+        )}
+        {!isEligibleRecipient && (
+          <div>
+            <p className="m-5">
+
+            You are not an eligible recipient for this airdrop! Get in touch
+            with the group admins to be added!
+            </p>
           </div>
         )}
 
@@ -1139,7 +1145,6 @@ function GroupEventPage(props) {
                   // </div>
                 )
               })} */}
-
             {eligibleRecipients &&
               eligibleRecipients[0] &&
               eligibleRecipients.length !== null && (
@@ -1165,21 +1170,17 @@ function GroupEventPage(props) {
                           return (
                             <tr key={recipient + i}>
                               <td className="border-4 border-blue-200 break-all p-5">
-
                                 {`${shortenedAddress(recipient)}`}
-
                               </td>
 
                               <td className="border-4 border-blue-200 p-5">
-
                                 {eligibleRecipientNames[i]}
-
                               </td>
 
                               <td className="border-4 border-blue-200 p-5">
-
-                                {JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
-
+                                {JSON.stringify(
+                                  eligibleRecipientsEligibilityEnabled[i],
+                                )}
                               </td>
                             </tr>
                           )
