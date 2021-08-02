@@ -19,6 +19,15 @@ Open another terminal for the react frontend in the "client" directory of the re
 
 <br/>
 
+# Running The React App Locally
+cd into the client folder
+
+install the node modules `npm i`
+
+run `nvm use` to switch to the node version needed for the project
+
+start the app `npm start`
+
 # Running Smart Contracts Locally
 
 Note the port you have set in your `truffle.config.js` file. By default it is `8545`.
@@ -120,7 +129,6 @@ You can do this by:
   6. Click "Reset Account".
   7. Click "Reset".
   8. Then close metamask and refresh the page.
-  
 
 <br/>
 <br/>
@@ -131,7 +139,7 @@ You can do this by:
 
 - Come out to one of our [remote meetup events](https://www.meetup.com/ethbuilders/) and ask about EthDrop!
 
-- Start up the smart contracts and react frontend running locally on your computer. 
+- Start up the smart contracts and react frontend running locally on your computer.
 
 - Look through the [issues for this repo](https://github.com/TDD-Solidity/EthDrop/issues) and work with Jim to find a good thing to work on.
 
