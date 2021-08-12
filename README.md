@@ -57,6 +57,23 @@ migrate
 ```
 
 <br/>
+<br/>
+
+## Running Unit Tests (Smart Contracts)
+
+Run tests once:
+```
+npm test
+``
+
+Run tests in watch mode:
+```
+npm run test:watch
+```
+
+
+<br/>
+<br/>
 
 ## Configuring MetaMask
 
