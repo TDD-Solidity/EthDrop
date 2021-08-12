@@ -4,6 +4,11 @@ pragma solidity ^0.8.0;
 import "./ContributorManager.sol";
 
 contract AdminsManager is ContributorManager {
+
+
+    string public foo = 'heyyy';
+
+
     event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
@@ -102,7 +107,6 @@ contract AdminsManager is ContributorManager {
         adminAddresToIndex[groupId][account] = adminAddressNextIndex3[groupId];
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
-
 
         emit AdminAdded(groupId);
     }

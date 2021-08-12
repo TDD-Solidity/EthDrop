@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "truffle test",
+    "test:watch": "nodemon --ext 'js,sol' --exec 'truffle test --compile-all'",
     "deploy-rinkeby": "truffle migrate --reset --network rinkeby"
   },
   "repository": {
@@ -24,5 +25,8 @@
     "dotenv": "^10.0.0",
     "truffle": "^5.4.3",
     "truffle-hdwallet-provider": "^1.0.17"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
