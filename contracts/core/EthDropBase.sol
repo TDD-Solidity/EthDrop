@@ -6,6 +6,8 @@ import "../roles/ExecutivesAccessControl.sol";
 contract EthDropBase is ExecutivesAccessControl {
     /*** EVENTS ***/
 
+    uint foo;
+
     /// @dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering.
     event RegistrationOpen();
 
@@ -85,10 +87,12 @@ contract EthDropBase is ExecutivesAccessControl {
 
     // Deprecated: Holds ALL admins for all groups
     // groupId => Role
+
+
     // mapping(uint256 => mapping(address => bool)) admins;
 
     // groupId => index in arrays for this specific address
-    mapping(uint256 => mapping(address => uint256)) adminAddresToIndex;
+    mapping(uint256 => mapping(address => uint256)) adminAddressToIndex;
     
     // groupId => nextAvailableIndex
     mapping(uint256 => uint256) adminAddressNextIndex3;

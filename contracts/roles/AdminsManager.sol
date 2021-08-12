@@ -28,14 +28,10 @@ contract AdminsManager is ContributorManager {
         view
         returns (bool)
     {
-        uint256 adminIndex = adminAddresToIndex[groupId][account];
+        uint256 adminIndex = adminAddressToIndex[groupId][account];
 
         // if user was never an admin, return false
         if (adminIndex == 0) {
-            return false;
-        }
-
-        if (!adminEnabled[groupId][adminIndex]) {
             return false;
         }
 
@@ -45,7 +41,7 @@ contract AdminsManager is ContributorManager {
 
     // debug
     function getMyAdminIndex(uint256 groupId) external view returns (uint256) {
-        return adminAddresToIndex[groupId][msg.sender];
+        return adminAddressToIndex[groupId][msg.sender];
     }
 
     // debug
@@ -99,16 +95,15 @@ contract AdminsManager is ContributorManager {
             adminEnabled[groupId].push(false);
         }
 
-        adminAddresToIndex[groupId][account] = adminAddressNextIndex3[groupId];
+        adminAddressToIndex[groupId][account] = adminAddressNextIndex3[groupId];
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
-
 
         emit AdminAdded(groupId);
     }
 
     function _removeAdmin(address account, uint256 groupId) internal {
-        uint256 index = adminAddresToIndex[groupId][account];
+        uint256 index = adminAddressToIndex[groupId][account];
         adminEnabled[groupId][index] = false;
 
         emit AdminRemoved(groupId);

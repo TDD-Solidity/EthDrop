@@ -25,15 +25,30 @@ module.exports = {
       gasPrice: 10000000000,
     },
 
+    goerli: {
+      provider: () => {
+        return new HDWalletProvider(process.env.MNEMONIC, process.env.GOERLI_INFURA_URL)
+      },
+      network_id: 5, // eslint-disable-line camelcase
+      gas: 28899972,
+      gasPrice: 10000000000,
+    },
+
+    ropsten: {
+      provider: function () {
+        return new HDWalletProvider(process.env.MNEMONIC, process.env.ROPSTEN_INFURA_URL)
+      },
+      network_id: 3,
+      gas: 8000000      //make sure this gas allocation isn't over 4M, which is the max
+    },
+
     matic: {
-      provider: () => new HDWalletProvider(process.env.MNEMONIC, process.env.MATIC_MUMBAI_URL),
+      provider: () => new HDWalletProvider(process.env.MNEMONIC, 'https://polygon-mumbai.infura.io/v3/2ac4f890584b4040aa86927476d56b46'),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true
     },
-
-
 
 
   },
