@@ -8,12 +8,9 @@ contract('AdminsManager', (accounts) => {
 
   beforeEach( async () => {
 
+    adminsManager = await AdminsManager.new();
 
-    // let [ ceo, coo, admin1_group1, recipient1_group1 ] = accounts;
-
-    adminsManager = await AdminsManager.deployed();
-
-    // await adminsManager.setCOO(coo);
+    await adminsManager.setCOO(coo);
 
   })
   
@@ -49,7 +46,7 @@ contract('AdminsManager', (accounts) => {
 
     const mockGroupId = 123;
 
-    // adminsManager.addAdmin(admin1_group1, mockGroupId, { from: coo });
+    await adminsManager.addAdmin(admin1_group1, mockGroupId, { from: coo });
 
     // ** assert
     // expect that the user was added to mapping
@@ -57,14 +54,14 @@ contract('AdminsManager', (accounts) => {
 
     const expectedAdminIndex = 1;
 
-    // const actualAdminIndex = await adminsManager.adminAddresToIndex.call();
+    const actualAdminIndexBn = await adminsManager.getMyAdminIndex(mockGroupId, { from: admin1_group1 });
+    // const actualAdminIndexBn = await adminsManager.getMyAdminIndex(mockGroupId, { from: admin1_group1 });
     
-    // console.log(actualAdminIndex);
+    console.log(actualAdminIndexBn.toNumber());
 
     // [mockGroupId][admin1_group1];
 
-    // expect(actualAdminIndex).toEqual(expectedAdminIndex);
-
+    expect(actualAdminIndexBn.toNumber()).to.equal(expectedAdminIndex);
 
   })
 

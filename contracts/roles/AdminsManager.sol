@@ -5,10 +5,6 @@ import "./ContributorManager.sol";
 
 contract AdminsManager is ContributorManager {
 
-
-    string public foo = 'heyyy';
-
-
     event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
@@ -49,6 +45,15 @@ contract AdminsManager is ContributorManager {
         return adminAddressToIndex[groupId][msg.sender];
     }
 
+    // TODO - allow COO to give "admin-granting power" to other admins
+    function addAdmin(address account, uint256 groupId) external onlyCOO {
+        
+      
+        _addAdmin(account, groupId);
+
+        emit AdminAdded(groupId);
+    }
+
     // debug
     function getAddressNextAdminIndex(uint256 groupId)
         external
@@ -75,12 +80,6 @@ contract AdminsManager is ContributorManager {
         _;
     }
 
-    // TODO - allow COO to give "admin-granting power" to other admins
-    function addAdmin(address account, uint256 groupId) external onlyCOO {
-        _addAdmin(account, groupId);
-
-        emit AdminAdded(groupId);
-    }
 
     function removeAdmin(address account, uint256 groupId) external onlyCOO {
         _removeAdmin(account, groupId);
@@ -93,18 +92,20 @@ contract AdminsManager is ContributorManager {
     function _addAdmin(address account, uint256 groupId) internal {   
 
         // if first user, use index 1 and push some garbage things at the 0 index
-        if (adminAddressNextIndex3[groupId] == 0) {
-            adminAddressNextIndex3[groupId]++;
+        // if (adminAddressNextIndex3[groupId] == 0) {
+        //     adminAddressNextIndex3[groupId]++;
             
-            adminAddresses[groupId].push(address(0));
-            adminEnabled[groupId].push(false);
-        }
+        //     adminAddresses[groupId].push(address(0));
+        //     adminEnabled[groupId].push(false);
+        // }
 
-        adminAddressToIndex[groupId][account] = adminAddressNextIndex3[groupId];
-        adminAddresses[groupId].push(account);
-        adminEnabled[groupId].push(true);
+        adminAddressToIndex[groupId][account] = 1;
 
-        emit AdminAdded(groupId);
+        // adminAddressToIndex[groupId][account] = adminAddressNextIndex3[groupId];
+        // adminAddresses[groupId].push(account);
+        // adminEnabled[groupId].push(true);
+
+        // emit AdminAdded(groupId);
     }
 
     function _removeAdmin(address account, uint256 groupId) internal {

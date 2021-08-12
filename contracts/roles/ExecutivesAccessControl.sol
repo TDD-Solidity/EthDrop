@@ -32,7 +32,7 @@ contract ExecutivesAccessControl {
     // The addresses of the accounts (or contracts) that can execute actions within each roles.
     string public stringgg;
 
-    address public ceoAddress;
+    address public ceoAddress = msg.sender;
     address public cfoAddress;
     address public cooAddress;
 
