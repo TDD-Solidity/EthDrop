@@ -95,7 +95,7 @@ contract EthDropBase is ExecutivesAccessControl {
     mapping(uint256 => mapping(address => uint256)) adminAddressToIndex;
     
     // groupId => nextAvailableIndex
-    mapping(uint256 => uint256) adminAddressNextIndex3;
+    mapping(uint256 => uint256) nextAdminAddressForGroup;
     
     mapping(uint256 => mapping(address => bool)) winningsCollected;
 
