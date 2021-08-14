@@ -85,6 +85,7 @@ contract AdminsManager is ContributorManager {
     }
 
     function _addAdmin(address account, uint256 groupId) internal {
+        
         // if first user, use index 1 and push some garbage things at the 0 index
         if (nextAdminAddressForGroup[groupId] == 0) {
             nextAdminAddressForGroup[groupId]++;
@@ -94,8 +95,6 @@ contract AdminsManager is ContributorManager {
             adminNames[groupId].push("zero address");
         }
 
-        // adminAddressToIndex[groupId][account] = 1;
-
         adminAddressToIndex[groupId][account] = nextAdminAddressForGroup[groupId];
         
         adminAddresses[groupId].push(account);
@@ -103,7 +102,8 @@ contract AdminsManager is ContributorManager {
         adminNames[groupId].push("new user");
 
         nextAdminAddressForGroup[groupId]++;
-        emit AdminAdded(groupId);
+
+        // emit AdminAdded(groupId);
     }
 
     function _removeAdmin(address account, uint256 groupId) internal {

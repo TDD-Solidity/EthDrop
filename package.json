@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "start": "truffle develop",
     "test": "truffle test",
     "test:watch": "nodemon --ext 'js,sol' --exec 'truffle test --compile-all'",
     "deploy-rinkeby": "truffle migrate --reset --network rinkeby",

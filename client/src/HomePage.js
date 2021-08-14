@@ -173,7 +173,6 @@ class Home extends Component {
     console.log('groupNames: ', groupNames)
     this.setState({ groupNames });
 
-
   }
 
   runExample = async () => {
