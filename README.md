@@ -2,14 +2,12 @@
 An webapp &amp; smart contracts for airdropping ether
 
 <br/>
-<br/>
 
 ## Inheritance Diagram
 (Created with the "Solidity visual Developer" Visual Studio Code extension)
 
 <img src="./ethdrop-inheritance-diagram.svg"/>
 
-<br/>
 <br/>
 
 Live Demo: [https://tdd-solidity.github.io/EthDrop/](https://tdd-solidity.github.io/EthDrop/)
