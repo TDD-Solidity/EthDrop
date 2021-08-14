@@ -1,4 +1,5 @@
 const ExecutivesAccessControl = artifacts.require('./ExecutivesAccessControl.sol')
+const truffleAssert = require('truffle-assertions');
 
 contract('ExecutivesAccessControl', (accounts) => {
 
@@ -37,6 +38,20 @@ contract('ExecutivesAccessControl', (accounts) => {
         expect(await contract.isCFO({ from: ceo })).to.equal(false);
         expect(await contract.isCFO({ from: coo })).to.equal(false);
         expect(await contract.isCFO({ from: cfo })).to.equal(true);
+
+    })
+    
+    it('can\'t assign CFO to zero address', async () => {
+        
+        const result = contract.setCFO("0x0000000000000000000000000000000000000000", { from: ceo });
+        await truffleAssert.reverts(result);
+
+    })
+
+    it('can\'t set CFO with COO', async () => {
+                
+        const result = contract.setCFO("0x0000000000000000000000000000000000000001", { from: coo });
+        await truffleAssert.reverts(result);
 
     })
 

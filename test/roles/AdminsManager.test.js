@@ -4,7 +4,7 @@ contract('AdminsManager', (accounts) => {
 
   let adminsManager;
 
-  let [ ceo, coo, admin1_group1, recipient1_group1 ] = accounts;
+  let [ ceo, coo, foobarJeffery, admin, recipient1_group1 ] = accounts;
 
   beforeEach( async () => {
 
@@ -35,18 +35,9 @@ contract('AdminsManager', (accounts) => {
 
   it('adds an admin', async () => {
 
-    // TODO
-
-    // ** setup
-    // assign a user as COO
-    //  
-
-    // ** act
-    // call addAdmin with COO
-
     const mockGroupId = 123;
 
-    await adminsManager.addAdmin(admin1_group1, mockGroupId, { from: coo });
+    await adminsManager.addAdmin(admin, mockGroupId, { from: coo });
 
     // ** assert
     // expect that the user was added to mapping
@@ -54,14 +45,13 @@ contract('AdminsManager', (accounts) => {
 
     const expectedAdminIndex = 1;
 
-    const actualAdminIndexBn = await adminsManager.getMyAdminIndex(mockGroupId, { from: admin1_group1 });
-    // const actualAdminIndexBn = await adminsManager.getMyAdminIndex(mockGroupId, { from: admin1_group1 });
-    
+    const actualAdminIndexBn = await adminsManager.getMyAdminIndex(mockGroupId, { from: admin });
+    const jefferysAdminIndexBn = await adminsManager.getMyAdminIndex(mockGroupId, { from: foobarJeffery });
+
     console.log(actualAdminIndexBn.toNumber());
 
-    // [mockGroupId][admin1_group1];
-
     expect(actualAdminIndexBn.toNumber()).to.equal(expectedAdminIndex);
+    expect(jefferysAdminIndexBn.toNumber()).to.equal(0);
 
   })
 

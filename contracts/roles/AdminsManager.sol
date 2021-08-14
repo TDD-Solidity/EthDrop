@@ -48,7 +48,6 @@ contract AdminsManager is ContributorManager {
     // TODO - allow COO to give "admin-granting power" to other admins
     function addAdmin(address account, uint256 groupId) external onlyCOO {
         
-      
         _addAdmin(account, groupId);
 
         emit AdminAdded(groupId);
