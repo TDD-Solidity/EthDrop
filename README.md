@@ -73,7 +73,7 @@ migrate
 Run tests once:
 ```
 npm test
-``
+```
 
 Run tests in watch mode:
 ```
@@ -177,3 +177,12 @@ You can do this by:
 
 # Scaffolded from the [react truffle box](https://www.trufflesuite.com/boxes/react).
 
+
+## troubleshooting: 
+if you see this error:
+```
+npm ERR! code ENOLOCAL
+npm ERR! Could not install from "node_modules\web3-providers-ws\websocket@github:web3-js\WebSocket-Node#polyfill\globalThis" as it does not contain a package.json file.
+```
+
+Delete package-lock.json
