@@ -5,6 +5,9 @@ contract('AdminsManager', (accounts) => {
   let adminsManager;
 
   let [ ceo, coo, nonAdmin, admin1, admin2, recipient1_group1 ] = accounts;
+  const mockGroupId = 123;
+
+  const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
   beforeEach( async () => {
 
@@ -16,10 +19,9 @@ contract('AdminsManager', (accounts) => {
 
   it('adds two admins to a group', async () => {
 
-    const mockGroupId = 123;
 
-    await adminsManager.addAdmin(admin1, mockGroupId, { from: coo });
-    await adminsManager.addAdmin(admin2, mockGroupId, { from: coo });
+    await adminsManager.addAdmin(mockGroupId, admin1, 'admin1',  { from: coo });
+    await adminsManager.addAdmin(mockGroupId, admin2, 'admin2',  { from: coo });
 
     const admin1Index = (await adminsManager.getMyAdminIndex(mockGroupId, { from: admin1 })).toNumber();
     const admin2Index = (await adminsManager.getMyAdminIndex(mockGroupId, { from: admin2 })).toNumber();
@@ -37,8 +39,22 @@ contract('AdminsManager', (accounts) => {
     expect(isAdmin_admin2).to.equal(true);
     expect(isAdmin_nonAdmin).to.equal(false);
 
-    // TODO - call something like "getAdminsForGroup(mockGroupId)"
+    const adminsInfo = await adminsManager.getAdminsForGroup(mockGroupId, { from: recipient1_group1 });
 
+    expect(adminsInfo[0]).to.deep.equal([ZERO_ADDRESS, admin1, admin2]);
+
+  })
+
+  it('removes an admin', async () => {
+
+    await adminsManager.addAdmin(mockGroupId, admin1, 'admin1',  { from: coo });
+    const isAdmin_admin1_before_removal = (await adminsManager.amIAdmin(mockGroupId, { from: admin1 }));
+    expect(isAdmin_admin1_before_removal).to.equal(true);
+
+    await adminsManager.removeAdmin(mockGroupId, admin1, { from: coo });
+    
+    const isAdmin_admin1_after_removal = (await adminsManager.amIAdmin(mockGroupId, { from: admin1 }));
+    expect(isAdmin_admin1_after_removal).to.equal(false);
   })
 
 })

@@ -8,8 +8,9 @@ contract AdminsManager is ContributorManager {
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
-    event AdminAdded(uint256 groupId);
-    event AdminRemoved(uint256 groupId);
+    event AdminAdded(uint256 groupId, string name);
+    event AdminRemoved(uint256 groupId, string name);
+    event AdminReEnabled(uint256 groupId, string name);
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
@@ -20,6 +21,11 @@ contract AdminsManager is ContributorManager {
 
     modifier onlyAdmins(uint256 groupId) {
         require(isAdmin(msg.sender, groupId));
+        _;
+    }
+
+    modifier wasntAlreadyAnAdmin(uint256 groupId, address account) {
+        require(adminAddressToIndex[groupId][account] == 0);
         _;
     }
 
@@ -44,10 +50,11 @@ contract AdminsManager is ContributorManager {
     }
 
     // TODO - allow COO to give "admin-granting power" to other admins
-    function addAdmin(address account, uint256 groupId) external onlyCOO {
-        _addAdmin(account, groupId);
+    function addAdmin(uint256 groupId, address account, string memory name) external 
+        wasntAlreadyAnAdmin(groupId, account) onlyCOO {
+        _addAdmin(groupId, account, name);
 
-        emit AdminAdded(groupId);
+        emit AdminAdded(groupId, name);
     }
 
     // debug
@@ -66,9 +73,9 @@ contract AdminsManager is ContributorManager {
     function getAdminsForGroup(uint256 groupId)
         external
         view
-        returns (address[] memory, bool[] memory)
+        returns (address[] memory, bool[] memory, string[] memory)
     {
-        return (adminAddresses[groupId], adminEnabled[groupId]);
+        return (adminAddresses[groupId], adminEnabled[groupId], adminNames[groupId]);
     }
 
     modifier onlyAdminsOrCOO(uint256 groupId) {
@@ -76,15 +83,21 @@ contract AdminsManager is ContributorManager {
         _;
     }
 
-    function removeAdmin(address account, uint256 groupId) external onlyCOO {
-        _removeAdmin(account, groupId);
+    function reEnableAdmin(uint256 groupId, address account) external onlyCOO {
+        uint256 index = adminAddressToIndex[groupId][account];
+        adminEnabled[groupId][index] = true;
+        emit AdminReEnabled(groupId, adminNames[groupId][index]);
+    }
+
+    function removeAdmin(uint256 groupId, address account) external onlyCOO {
+        _removeAdmin(groupId, account);
     }
 
     function renounceAdmin(uint256 groupId) public onlyAdmins(groupId) {
-        _removeAdmin(msg.sender, groupId);
+        _removeAdmin(groupId, msg.sender);
     }
 
-    function _addAdmin(address account, uint256 groupId) internal {
+    function _addAdmin(uint256 groupId, address account, string memory name) internal {
         
         // if first user, use index 1 and push some garbage things at the 0 index
         if (nextAdminAddressForGroup[groupId] == 0) {
@@ -99,18 +112,22 @@ contract AdminsManager is ContributorManager {
         
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
-        adminNames[groupId].push("new user");
+        adminNames[groupId].push(name);
 
         nextAdminAddressForGroup[groupId]++;
 
-        // emit AdminAdded(groupId);
+        emit AdminAdded(groupId, name);
     }
 
-    function _removeAdmin(address account, uint256 groupId) internal {
+    
+
+    function _removeAdmin(uint256 groupId, address account) internal {
+        
         uint256 index = adminAddressToIndex[groupId][account];
+        
         adminEnabled[groupId][index] = false;
 
-        emit AdminRemoved(groupId);
+        emit AdminRemoved(groupId, adminNames[groupId][index]);
     }
 
     function readEventInfo(uint256 groupId)
