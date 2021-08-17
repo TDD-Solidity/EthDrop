@@ -21,10 +21,15 @@ function GroupEventPage(props) {
   const [isCOO, setIsCOO] = useState(null)
   const [isAdmin, setIsAdmin] = useState(null)
   const [isContributor, setIsContributor] = useState(null)
-  const [adminsForGroup, setAdminsForGroup] = useState([])
+  const [adminAddressesForGroup, setAdminAddressesForGroup] = useState([])
+  const [adminsEnabledForGroup, setAdminsEnabledForGroup] = useState([])
+  const [adminNamesForGroup, setAdminNamesForGroup] = useState([])
   const [isEligibleRecipient, setIsEligibleRecipient] = useState('')
   const [groupEventData, setGroupEventData] = useState('')
-  const [newAdminInputValue, setNewAdminInputValue] = useState('')
+
+  const [newAdminAddressInputValue, setNewAdminAddressInputValue] = useState('')
+  const [newAdminNameInputValue, setNewAdminNameInputValue] = useState('')
+
   const [eligibleRecipients, setEligibleRecipients] = useState('')
   const [eligibleRecipientNames, setEligibleRecipientNames] = useState('')
   const [registeredRecipients, setRegisteredRecipients] = useState('')
@@ -181,6 +186,7 @@ function GroupEventPage(props) {
               break
 
             case 'AdminAdded':
+            case 'AdminReEnabled':
             case 'AdminRemoved':
               await checkAdminStuff(groupId, ethDropCoreInstance)
               break
@@ -302,20 +308,7 @@ function GroupEventPage(props) {
 
   const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
     try {
-      // const ok = await this.state.ethDropCoreInstance.methods.setString(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
-      // console.log('update string success!')
-      // console.log('ok: ', ok)
 
-      // const currentString = await this.state.ethDropCoreInstance.methods.getString().call();
-      // console.log('string: ', currentString)
-      // this.setState({ currentString });
-
-      // await this.state.ethDropCoreInstance.methods.setCOO(this.state.newCOOInputValue).send({ from: this.state.accounts[0] });
-      // console.log('update COO success!')
-
-      // const currentCOO = await this.state.ethDropCoreInstance.methods.getCOO().call({ from: this.state.accounts[0] });
-      // console.log('currentCOO ', currentCOO)
-      // this.setState({ currentCOO, newCOOInputValue: '' });
       console.log('checking if admin...')
 
       console.log('am I an admin of group: ', groupId)
@@ -337,22 +330,26 @@ function GroupEventPage(props) {
       console.log('isAdmin ', isAdmin)
       setIsAdmin(isAdmin)
 
-      const adminsForGroup = await ethDropCoreInstance.methods
+      const adminInfoForGroup = await ethDropCoreInstance.methods
         .getAdminsForGroup(groupId)
         .call({ from: accounts[0] })
-      console.log('adminsForGroup ', adminsForGroup)
-      setAdminsForGroup(adminsForGroup)
+      console.log('adminsForGroup ', adminAddressesForGroup)
+
+      setAdminAddressesForGroup(adminInfoForGroup[0])
+      setAdminsEnabledForGroup(adminInfoForGroup[1])
+      setAdminNamesForGroup(adminInfoForGroup[2])
+
     } catch (err) {
       console.log('checking admins failed...', err)
-
-      this.setState({ errorToDisplay: err })
     }
   }
 
-  async function removeAdmin(address) {
+  async function removeAdmin(groupId, account) {
+
+    console.log('removing admin with address: ', account)
     try {
       const isAdmin = await ethDropCoreInstance.methods
-        .removeAdmin()
+        .removeAdmin(groupId, account)
         .send({ from: accounts[0] })
 
       console.log('admin removed!')
@@ -360,6 +357,21 @@ function GroupEventPage(props) {
       setIsAdmin(isAdmin)
     } catch (error) {
       alert(`Failed to remove admin...` + error)
+    }
+  }
+
+  async function reEnableAdmin(groupId, account) {
+
+    console.log('reEnableing admin with address: ', account)
+    try {
+      await ethDropCoreInstance.methods
+        .reEnableAdmin(groupId, account)
+        .send({ from: accounts[0] })
+
+      console.log('admin reenabled!')
+
+    } catch (error) {
+      alert(`Failed to reenable admin...` + error)
     }
   }
 
@@ -443,18 +455,19 @@ function GroupEventPage(props) {
   async function newAdminSubmit(event) {
     event.preventDefault()
 
-    const newAdminAddress = newAdminInputValue.trim()
+    const newAdminAddress = newAdminAddressInputValue.trim()
+    const newAdminName = newAdminNameInputValue.trim()
 
-    console.log('newAdminAddress ', newAdminAddress)
+    console.log('newAdminAddress ', newAdminAddress, newAdminName)
 
     try {
       const createdGroup = await ethDropCoreInstance.methods
-        .addAdmin(newAdminAddress, groupId)
+        .addAdmin(groupId, newAdminAddress, newAdminName)
         .send({ from: accounts[0] })
 
-      console.log('added admin! ')
+      console.log(`added admin ${newAdminName} succeeded!`)
 
-      setNewAdminInputValue('')
+      setNewAdminAddressInputValue('')
     } catch (err) {
       console.log('adding admin failed...', err)
     }
@@ -516,10 +529,13 @@ function GroupEventPage(props) {
     }
   }
 
-  function newAdminHandleChange(event) {
-    setNewAdminInputValue(event.target.value)
+  function newAdminAddressHandleChange(event) {
+    setNewAdminAddressInputValue(event.target.value)
   }
 
+  function newAdminNameHandleChange(event) {
+    setNewAdminNameInputValue(event.target.value)
+  }
   function newEligibleRecipientAddressHandleChange(event) {
     setEligibleRecipientAddressInputValue(event.target.value)
   }
@@ -659,35 +675,35 @@ function GroupEventPage(props) {
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
-          <div>
-            {isEligibleRecipient && (
-              <div className="m-5">
-                <p>You are an eligible recipient for airdrops by this group!</p>
-              </div>
-            )}
+            <div>
+              {isEligibleRecipient && (
+                <div className="m-5">
+                  <p>You are an eligible recipient for airdrops by this group!</p>
+                </div>
+              )}
 
-            {isAdmin && (
-              <div className="m-3 mb-10">
-                <p>
-                  Since you are an admin, you can start the event by opening
-                  registration!
-                </p>
-                <button
-                  onClick={() => startAirdropEvent(groupId)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Open AirDrop Registration
-                </button>
-              </div>
-            )}
+              {isAdmin && (
+                <div className="m-3 mb-10">
+                  <p>
+                    Since you are an admin, you can start the event by opening
+                    registration!
+                  </p>
+                  <button
+                    onClick={() => startAirdropEvent(groupId)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Open AirDrop Registration
+                  </button>
+                </div>
+              )}
 
-            {!isAdmin && (
-              <div>
-                <p>Waiting for a group admin to open registration...</p>
-              </div>
-            )}
-          </div>
-        )}
+              {!isAdmin && (
+                <div>
+                  <p>Waiting for a group admin to open registration...</p>
+                </div>
+              )}
+            </div>
+          )}
         {/* Phase 1 - Registration */}
         {groupEventData && groupEventData[0] === '1' && (
           <div>
@@ -728,16 +744,22 @@ function GroupEventPage(props) {
               {!isRegisteredRecipient && (
                 <div>
                   <p>You are an eligible recipient for this event!</p>
-                  <p>Click the button to register!</p>
                 </div>
               )}
-              <button
-                onClick={() => registerForEvent(groupId)}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
-                disabled={isRegisteredRecipient === true}
-              >
-                Register!
-              </button>
+
+              {
+                // only show when registration is open!
+                groupEventData[0] === '1' && <div>
+                  <p>Click the button to register!</p>
+                  <button
+                    onClick={() => registerForEvent(groupId)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                    disabled={isRegisteredRecipient === true}
+                  >
+                    Register!
+                  </button>
+                </div>
+              }
             </div>
           </div>
         )}
@@ -745,8 +767,8 @@ function GroupEventPage(props) {
           <div>
             <p className="m-5">
 
-            You are not an eligible recipient for this airdrop! Get in touch
-            with the group admins to be added!
+              You are not an eligible recipient for this airdrop! Get in touch
+              with the group admins to be added!
             </p>
           </div>
         )}
@@ -963,42 +985,66 @@ function GroupEventPage(props) {
             <p>Since you are the COO, you can add and remove admins.</p>
             <h2>Admins</h2>
             {/* {adminsForGroup[0] && +adminsForGroup[0].length} */}
-            {adminsForGroup &&
-              adminsForGroup[0] &&
-              adminsForGroup[0].length !== null && (
+            {adminAddressesForGroup &&
+              adminAddressesForGroup &&
+              adminAddressesForGroup.length !== null && (
                 <div>
-                  {+adminsForGroup[0].length > 0 && (
+                  {+adminAddressesForGroup.length > 0 && (
                     <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
                       <thead>
                         <tr>
-                          <th className="w-3/4 p-2 border-4 border-blue-200">
+                          <th className="w-1/3 p-2 border-4 border-blue-200">
                             Address
                           </th>
-                          <th className="w-1/4 p-2 border-4 border-blue-200">
+                          <th className="w-1/3 p-2 border-4 border-blue-200">
+                            Name
+                          </th>
+                          <th className="w-1/3 p-2 border-4 border-blue-200">
                             Manage
                           </th>
                         </tr>
                       </thead>
 
                       <tbody>
-                        {adminsForGroup[0].map((adminAddress, i) => {
+                        {adminAddressesForGroup.map((adminAddress, i) => {
                           return (
+                            i !== 0 &&
                             <tr key={adminAddress + i}>
                               <td className="border-4 border-blue-200 break-all p-2">{`${adminAddress}`}</td>
 
+                              {adminsEnabledForGroup[i] === true &&
+                                <td className="border-4 border-blue-200 break-all p-2">{`${adminNamesForGroup[i]}`}</td>
+                              }
+
+                              {adminsEnabledForGroup[i] === false &&
+                                <td className="border-4 border-blue-200 break-all p-2">
+                                  <strike>
+                                    {`${adminNamesForGroup[i]}`}
+                                  </strike>
+                                </td>
+                              }
+
                               <td className="border-4 border-blue-200 p-2">
-                                <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded">
-                                  <h4>
-                                    <a
-                                      style={{ textDecoration: 'none' }}
-                                      onClick={() =>
-                                        alert('this button does nothing yet...')
-                                      }
-                                    >
+
+                                {adminsEnabledForGroup[i] === true &&
+                                  <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded"
+                                    disabled={adminsEnabledForGroup[i] === false}
+                                    onClick={async () => {
+                                      if (adminsEnabledForGroup[i] === true)
+                                        await removeAdmin(groupId, adminAddress)
+                                    }}>
+                                    <h4>
                                       x
-                                    </a>
-                                  </h4>
-                                </FillButton>
+                                    </h4>
+                                  </FillButton>}
+
+                                {adminsEnabledForGroup[i] === false &&
+                                  <FillButton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 my-4 rounded"
+                                    onClick={async () => await reEnableAdmin(groupId, adminAddress)}
+                                  >
+                                    Re-enable
+                                  </FillButton>}
+
                               </td>
                             </tr>
                           )
@@ -1008,13 +1054,7 @@ function GroupEventPage(props) {
                   )}
                 </div>
               )}
-            {/* <form onSubmit={newAdminSubmit}>
-            <label>
-              New Admin Address:
-              <input type="text" value={newAdminInputValue} onChange={newAdminHandleChange} />
-            </label>
-            <input type="submit" value="Submit" />
-          </form> */}
+
             <div className="w-full max-w-m">
               <form
                 className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -1029,13 +1069,28 @@ function GroupEventPage(props) {
                   </label>
                   <input
                     className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
+                    id="new-admin-address"
                     type="text"
                     placeholder="0x1234..."
-                    value={newAdminInputValue}
-                    onChange={newAdminHandleChange}
+                    value={newAdminAddressInputValue}
+                    onChange={newAdminAddressHandleChange}
                   />
-                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                </div>
+                <div className="mb-6">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                    htmlFor="new-ceo"
+                  >
+                    <div className="my-4">New Admin Name:</div>
+                  </label>
+                  <input
+                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="new-admin-name"
+                    type="text"
+                    placeholder="Bob"
+                    value={newAdminNameInputValue}
+                    onChange={newAdminNameHandleChange}
+                  />
                 </div>
                 <div className="flex items-center justify-center">
                   <button
@@ -1053,207 +1108,176 @@ function GroupEventPage(props) {
             <br />
             <br />
           </div>
-        )}
-        {isAdmin && (
-          <div
-            style={{
-              margin: '2vw',
-              padding: '20px',
-              border: 'solid black 2px',
-              borderRadius: '20px',
-            }}
-          >
-            <h1>You are an Admin!</h1>
-            <br />
-            <p>That means you can change the address of the current sponsor!</p>
-            <br />
-            <br />
-            The current sponsor is: {currentSponsorAddress}
-            <br />
-            <br />
-            <br />
-            {/* <form onSubmit={newSponsorSubmit}>
-              <label>
-                New Sponsor Address:
-                <input type="text" value={newSponsorInputValue} onChange={newSponsorHandleChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form> */}
-            <div className="w-full max-w-m">
-              <form
-                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                onSubmit={newSponsorSubmit}
-              >
-                <div className="mb-6">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
-                  >
-                    <div className="my-4">New Sponsor Address:</div>
-                  </label>
-                  <input
-                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
-                    type="text"
-                    placeholder="0x1234..."
-                    value={newSponsorInputValue}
-                    onChange={newSponsorHandleChange}
-                  />
-                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
-                </div>
-                <div className="flex items-center justify-center">
-                  <button
-                    onClick={newSponsorSubmit}
-                    type="submit"
-                    value="Submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                  >
-                    Update Sponsor
-                  </button>
-                </div>
-              </form>
+        )
+        }
+        {
+          isAdmin && (
+            <div
+              style={{
+                margin: '2vw',
+                padding: '20px',
+                border: 'solid black 2px',
+                borderRadius: '20px',
+              }}
+            >
+              <h1>You are an Admin!</h1>
+              <br />
+              <p>That means you can change the address of the current sponsor!</p>
+              <br />
+              <br />
+              The current sponsor is: {currentSponsorAddress}
+              <br />
+              <br />
+              <br />
+
+              <div className="w-full max-w-m">
+                <form
+                  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                  onSubmit={newSponsorSubmit}
+                >
+                  <div className="mb-6">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                      htmlFor="new-ceo"
+                    >
+                      <div className="my-4">New Sponsor Address:</div>
+                    </label>
+                    <input
+                      className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                      id="new-cfo"
+                      type="text"
+                      placeholder="0x1234..."
+                      value={newSponsorInputValue}
+                      onChange={newSponsorHandleChange}
+                    />
+                    {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <button
+                      onClick={newSponsorSubmit}
+                      type="submit"
+                      value="Submit"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="button"
+                    >
+                      Update Sponsor
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <br />
+              <br />
+              <p>
+                Since you are an admin you can add and remove{' '}
+                <i>eligible recipients.</i>
+              </p>
+              <br />
+              <h1>Eligible Recipients</h1>
+              <br />
+              <br />
+
+              {eligibleRecipients &&
+                eligibleRecipients[0] &&
+                eligibleRecipients.length !== null && (
+                  <div>
+                    {+eligibleRecipients.length > 0 && (
+                      <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
+                        <thead>
+                          <tr>
+                            <th className="w-1/2 p-2 border-4 border-blue-200">
+                              Address
+                            </th>
+                            <th className="w-1/4 p-2 border-4 border-blue-200">
+                              Name
+                            </th>
+                            <th className="w-1/4 p-2 border-4 border-blue-200">
+                              Eligible
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {eligibleRecipients.map((recipient, i) => {
+                            return (
+                              <tr key={recipient + i}>
+                                <td className="border-4 border-blue-200 break-all p-5">
+                                  {`${shortenedAddress(recipient)}`}
+                                </td>
+
+                                <td className="border-4 border-blue-200 p-5">
+                                  {eligibleRecipientNames[i]}
+                                </td>
+
+                                <td className="border-4 border-blue-200 p-5">
+                                  {JSON.stringify(
+                                    eligibleRecipientsEligibilityEnabled[i],
+                                  )}
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
+              <br />
+              <br />
+
+              <div className="w-full max-w-m">
+                <form
+                  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                  onSubmit={newEligibleRecipientSubmit}
+                >
+                  <div className="mb-6">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                      htmlFor="new-recipient-address"
+                    >
+                      <div className="my-4">New Eligible Recipient Address:</div>
+                    </label>
+                    <input
+                      className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                      id="new-recipient-address"
+                      type="text"
+                      placeholder="0x1234..."
+                      value={newEligibleRecipientAddressInputValue}
+                      onChange={newEligibleRecipientAddressHandleChange}
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                      htmlFor="new-ceo"
+                    >
+                      <div className="my-4">New Eligible Recipient Name:</div>
+                    </label>
+                    <input
+                      className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                      id="new-cfo"
+                      type="text"
+                      placeholder="Bob"
+                      value={newEligibleRecipientNameInputValue}
+                      onChange={newEligibleRecipientNameHandleChange}
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <button
+                      onClick={newEligibleRecipientSubmit}
+                      type="submit"
+                      value="Submit"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="button"
+                    >
+                      Set New Eligible Recipient
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-            <br />
-            <br />
-            <p>
-              Since you are an admin you can add and remove{' '}
-              <i>eligible recipients.</i>
-            </p>
-            <br />
-            <h1>Eligible Recipients</h1>
-            <br />
-            <br />
-            {/* {eligibleRecipients[0] &&
-              eligibleRecipients.map((eligibleRecipient, i) => {
-                return (
-                  // <div >
-                  <li className="has-tooltip" key={'eligibleRecipient' + i}>
-                    <div className="tooltip rounded shadow-lg p-1 pb-5 bg-gray-100 text-red-500 m-2 mb-6 h-4">
-                      {eligibleRecipient}
-                    </div>
-                    <p>
-                      {i +
-                        ') ' +
-                        shortenedAddress(eligibleRecipient) +
-                        ' - ' +
-                        eligibleRecipientNames[i] +
-                        ' - ' +
-                        JSON.stringify(eligibleRecipientsEligibilityEnabled[i])}
-                    </p>
-                  </li>
-                  // </div>
-                )
-              })} */}
-            {eligibleRecipients &&
-              eligibleRecipients[0] &&
-              eligibleRecipients.length !== null && (
-                <div>
-                  {+eligibleRecipients.length > 0 && (
-                    <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
-                      <thead>
-                        <tr>
-                          <th className="w-1/2 p-2 border-4 border-blue-200">
-                            Address
-                          </th>
-                          <th className="w-1/4 p-2 border-4 border-blue-200">
-                            Name
-                          </th>
-                          <th className="w-1/4 p-2 border-4 border-blue-200">
-                            Eligible
-                          </th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {eligibleRecipients.map((recipient, i) => {
-                          return (
-                            <tr key={recipient + i}>
-                              <td className="border-4 border-blue-200 break-all p-5">
-                                {`${shortenedAddress(recipient)}`}
-                              </td>
-
-                              <td className="border-4 border-blue-200 p-5">
-                                {eligibleRecipientNames[i]}
-                              </td>
-
-                              <td className="border-4 border-blue-200 p-5">
-                                {JSON.stringify(
-                                  eligibleRecipientsEligibilityEnabled[i],
-                                )}
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              )}
-            <br />
-            <br />
-            {/* <form onSubmit={newEligibleRecipientSubmit}>
-              <label>
-                New Eligible Recipient Address:
-                <input type="text" value={newEligibleRecipientAddressInputValue} onChange={newEligibleRecipientAddressHandleChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form> */}
-            <div className="w-full max-w-m">
-              <form
-                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                onSubmit={newEligibleRecipientSubmit}
-              >
-                <div className="mb-6">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-recipient-address"
-                  >
-                    <div className="my-4">New Eligible Recipient Address:</div>
-                  </label>
-                  <input
-                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-recipient-address"
-                    type="text"
-                    placeholder="0x1234..."
-                    value={newEligibleRecipientAddressInputValue}
-                    onChange={newEligibleRecipientAddressHandleChange}
-                  />
-                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
-                </div>
-                <div className="mb-6">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                    htmlFor="new-ceo"
-                  >
-                    <div className="my-4">New Eligible Recipient Name:</div>
-                  </label>
-                  <input
-                    className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="new-cfo"
-                    type="text"
-                    placeholder="Bob"
-                    value={newEligibleRecipientNameInputValue}
-                    onChange={newEligibleRecipientNameHandleChange}
-                  />
-                  {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
-                </div>
-                <div className="flex items-center justify-center">
-                  <button
-                    onClick={newEligibleRecipientSubmit}
-                    type="submit"
-                    value="Submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                  >
-                    Set New Eligible Recipient
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-      </div>
+          )
+        }
+      </div >
     )
 }
 
