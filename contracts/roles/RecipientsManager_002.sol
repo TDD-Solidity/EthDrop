@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../core/EthDropBase.sol";
+import "../core/EthDropBase_002.sol";
 
-contract RecipientsManager is EthDropBase {
+contract RecipientsManager_002 is EthDropBase_002 {
     event EligibleRecipientAdded(address indexed account, uint256 groupId);
     event EligibleRecipientRemoved(address indexed account, uint256 groupId);
 

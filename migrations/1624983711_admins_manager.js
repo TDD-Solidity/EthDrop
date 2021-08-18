@@ -1,5 +1,5 @@
-const AdminsManager = artifacts.require("AdminsManager");
+const AdminsManager_002 = artifacts.require("AdminsManager_002");
 
 module.exports = function (deployer) {
-  deployer.deploy(AdminsManager);
+  deployer.deploy(AdminsManager_002);
 };

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ContributorManager.sol";
+import "./ContributorManager_002.sol";
 
-contract AdminsManager is ContributorManager {
+contract AdminsManager_002 is ContributorManager_002 {
     event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
-    event AdminAdded(uint256 groupId, string name);
+    event AdminAdded(uint256 groupId, address account, uint index);
     event AdminRemoved(uint256 groupId, string name);
     event AdminReEnabled(uint256 groupId, string name);
 
@@ -44,7 +44,6 @@ contract AdminsManager is ContributorManager {
         return adminEnabled[groupId][adminIndex] == true;
     }
 
-    // debug
     function getMyAdminIndex(uint256 groupId) external view returns (uint256) {
         return adminAddressToIndex[groupId][msg.sender];
     }
@@ -53,8 +52,6 @@ contract AdminsManager is ContributorManager {
     function addAdmin(uint256 groupId, address account, string memory name) external 
         wasntAlreadyAnAdmin(groupId, account) onlyCOO {
         _addAdmin(groupId, account, name);
-
-        emit AdminAdded(groupId, name);
     }
 
     // debug
@@ -63,7 +60,7 @@ contract AdminsManager is ContributorManager {
         view
         returns (uint256)
     {
-        return nextAdminAddressForGroup[groupId];
+        return nextAdminIndexForGroup[groupId];
     }
 
     function amIAdmin(uint256 groupId) external view returns (bool) {
@@ -100,23 +97,25 @@ contract AdminsManager is ContributorManager {
     function _addAdmin(uint256 groupId, address account, string memory name) internal {
         
         // if first user, use index 1 and push some garbage things at the 0 index
-        if (nextAdminAddressForGroup[groupId] == 0) {
-            nextAdminAddressForGroup[groupId]++;
+        if (nextAdminIndexForGroup[groupId] == 0) {
+            nextAdminIndexForGroup[groupId]++;
 
             adminAddresses[groupId].push(address(0));
             adminEnabled[groupId].push(false);
             adminNames[groupId].push("zero address");
         }
 
-        adminAddressToIndex[groupId][account] = nextAdminAddressForGroup[groupId];
+        uint index = nextAdminIndexForGroup[groupId];
+        adminAddressToIndex[groupId][account] = index;
         
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
         adminNames[groupId].push(name);
+        
+        emit AdminAdded(groupId, account, index);
 
-        nextAdminAddressForGroup[groupId]++;
+        nextAdminIndexForGroup[groupId]++;
 
-        emit AdminAdded(groupId, name);
     }
 
     

@@ -1,7 +1,7 @@
-const ExecutivesAccessControl = artifacts.require('./ExecutivesAccessControl.sol')
+const ExecutivesAccessControl_002 = artifacts.require('./ExecutivesAccessControl_002.sol')
 const truffleAssert = require('truffle-assertions');
 
-contract('ExecutivesAccessControl', (accounts) => {
+contract('ExecutivesAccessControl_002', (accounts) => {
 
     let contract;
 
@@ -9,7 +9,7 @@ contract('ExecutivesAccessControl', (accounts) => {
 
     beforeEach(async () => {
 
-        contract = await ExecutivesAccessControl.new();
+        contract = await ExecutivesAccessControl_002.new();
 
     })
 
@@ -50,7 +50,7 @@ contract('ExecutivesAccessControl', (accounts) => {
 
     it('can\'t set CFO with COO', async () => {
                 
-        const result = contract.setCFO("0x0000000000000000000000000000000000000001", { from: coo });
+        const result = contract.setCFO("0x0000000000000000000000000000000000000002", { from: coo });
         await truffleAssert.reverts(result);
 
     })

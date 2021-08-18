@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../roles/ExecutivesAccessControl.sol";
+import "../roles/ExecutivesAccessControl_002.sol";
 
-contract EthDropBase is ExecutivesAccessControl {
+contract EthDropBase_002 is ExecutivesAccessControl_002 {
     /*** EVENTS ***/
 
     uint foo;
@@ -95,7 +95,7 @@ contract EthDropBase is ExecutivesAccessControl {
     mapping(uint256 => mapping(address => uint256)) adminAddressToIndex;
     
     // groupId => nextAvailableIndex
-    mapping(uint256 => uint256) nextAdminAddressForGroup;
+    mapping(uint256 => uint256) nextAdminIndexForGroup;
     
     mapping(uint256 => mapping(address => bool)) winningsCollected;
 

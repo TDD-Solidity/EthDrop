@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./RecipientsManager.sol";
+import "./RecipientsManager_002.sol";
 
-contract ContributorManager is RecipientsManager {
+contract ContributorManager_002 is RecipientsManager_002 {
     event ContributorAdded(address indexed account, uint256 groupId);
     event ContributorRemoved(address indexed account, uint256 groupId);
 

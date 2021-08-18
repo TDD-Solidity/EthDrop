@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-contract ExecutivesAccessControl {
+contract ExecutivesAccessControl_002 {
     //  This contract deals with highest level access control for EthDrop. There are three roles managed here:
     //
     //     - The CEO: The CEO can reassign other roles and change the addresses of our dependent smart
