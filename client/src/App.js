@@ -7,6 +7,7 @@ import {
   Switch,
   Route,
   Link,
+  Redirect,
   useRouteMatch,
   useParams
 } from "react-router-dom";
@@ -145,6 +146,8 @@ class App extends Component {
           <Route key={document.location.href} path='/EthDrop/g/:groupName/:groupId' >
             <GroupEventPage />
           </Route>
+
+          <Redirect exact from="/" to="/EthDrop" />
 
           <Route path='/EthDrop' key={document.location.href} >
             <Home />
