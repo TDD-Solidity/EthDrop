@@ -34,7 +34,6 @@ class Home extends Component {
     web3: null,
     accounts: null,
     contract: null,
-    simpleStorageInstance: null,
     ethDropCoreInstance: null,
     isCEO: null,
     isCFO: null,
@@ -346,7 +345,7 @@ class Home extends Component {
       </div>;
     }
     if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and simpleStorageInstance...</div>;
+      return <div>Loading Web3 and accounts...</div>;
     }
     return (
       <div className="App">

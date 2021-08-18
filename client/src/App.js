@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import EthDropCore from "./contracts/EthDropCore.json";
 import getWeb3 from "./getWeb3";
 import env from "react-dotenv";
@@ -40,7 +39,6 @@ class App extends Component {
     web3: null,
     accounts: null,
     contract: null,
-    simpleStorageInstance: null,
     ethDropCoreInstance: null,
     isCEO: null,
     isCFO: null,
@@ -84,20 +82,11 @@ class App extends Component {
 
       console.log('network is: ', networkId);
 
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = EthDropCore.networks[networkId];
       console.log('address: ', deployedNetwork.address);
-
-      // const simpleStorageInstance = new web3.eth.Contract(
-      //   SimpleStorageContract.abi,
-      //   // env.SIMPLE_STORAGE_CONTRACT_ADDRESS
-      //   // ,
-      //   deployedNetwork && deployedNetwork.address,
-      // );
 
       const ethDropCoreInstance = new web3.eth.Contract(
         EthDropCore.abi,
-        // env.ETHDROP_CORE_CONTRACT_ADDRESS
-        // ,
         deployedNetwork && deployedNetwork.address,
       );
 
