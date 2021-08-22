@@ -1,22 +1,7 @@
 {
-  "files": {
-    "main.css": "https://tdd-solidity.github.io/EthDrop/static/css/main.5335588d.chunk.css",
-    "main.js": "https://tdd-solidity.github.io/EthDrop/static/js/main.6641f70c.chunk.js",
-    "main.js.map": "https://tdd-solidity.github.io/EthDrop/static/js/main.6641f70c.chunk.js.map",
-    "runtime-main.js": "https://tdd-solidity.github.io/EthDrop/static/js/runtime-main.a6b4bbdf.js",
-    "runtime-main.js.map": "https://tdd-solidity.github.io/EthDrop/static/js/runtime-main.a6b4bbdf.js.map",
-    "static/js/2.9c8c32fe.chunk.js": "https://tdd-solidity.github.io/EthDrop/static/js/2.9c8c32fe.chunk.js",
-    "static/js/2.9c8c32fe.chunk.js.map": "https://tdd-solidity.github.io/EthDrop/static/js/2.9c8c32fe.chunk.js.map",
-    "index.html": "https://tdd-solidity.github.io/EthDrop/index.html",
-    "precache-manifest.3c0afb56a849e88af58f9049496328b1.js": "https://tdd-solidity.github.io/EthDrop/precache-manifest.3c0afb56a849e88af58f9049496328b1.js",
-    "service-worker.js": "https://tdd-solidity.github.io/EthDrop/service-worker.js",
-    "static/css/main.5335588d.chunk.css.map": "https://tdd-solidity.github.io/EthDrop/static/css/main.5335588d.chunk.css.map",
-    "static/media/pot-of-gold-full.png": "https://tdd-solidity.github.io/EthDrop/static/media/pot-of-gold-full.6cc0f846.png"
-  },
-  "entrypoints": [
-    "static/js/runtime-main.a6b4bbdf.js",
-    "static/js/2.9c8c32fe.chunk.js",
-    "static/css/main.5335588d.chunk.css",
-    "static/js/main.6641f70c.chunk.js"
-  ]
+  "main.css": "static/css/main.66f59c5c.css",
+  "main.css.map": "static/css/main.66f59c5c.css.map",
+  "main.js": "static/js/main.b613cc04.js",
+  "main.js.map": "static/js/main.b613cc04.js.map",
+  "static/media/pot-of-gold-full.png": "static/media/pot-of-gold-full.6cc0f846.png"
 }
