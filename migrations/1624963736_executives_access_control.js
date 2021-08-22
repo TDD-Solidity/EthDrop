@@ -1,5 +1,5 @@
-const ExecutivesAccessControl_002 = artifacts.require("ExecutivesAccessControl_002");
+const ExecutivesAccessControl = artifacts.require("ExecutivesAccessControl");
 
 module.exports = function (deployer) {
-  deployer.deploy(ExecutivesAccessControl_002);
+  deployer.deploy(ExecutivesAccessControl);
 };

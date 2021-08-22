@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../roles/AdminsManager_002.sol";
+import "../roles/AdminsManager.sol";
 
-contract EthDropCore_002 is AdminsManager_002 {
+contract EthDropCore is AdminsManager {
     // Set in case the core contract is broken and an upgrade is required
     address public newContractAddress;
 

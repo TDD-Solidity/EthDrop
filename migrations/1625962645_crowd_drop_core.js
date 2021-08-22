@@ -1,5 +1,5 @@
-const EthDropCore_002 = artifacts.require("EthDropCore_002");
+const EthDropCore = artifacts.require("EthDropCore");
 
 module.exports = function (deployer) {
-  deployer.deploy(EthDropCore_002);
+  deployer.deploy(EthDropCore);
 };

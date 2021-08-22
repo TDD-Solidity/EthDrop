@@ -1,6 +1,6 @@
-const AdminsManager_002 = artifacts.require('./AdminsManager_002.sol')
+const AdminsManager = artifacts.require('./AdminsManager.sol')
 
-contract('AdminsManager_002', (accounts) => {
+contract('AdminsManager', (accounts) => {
 
   let adminsManager;
 
@@ -11,7 +11,7 @@ contract('AdminsManager_002', (accounts) => {
 
   beforeEach( async () => {
 
-    adminsManager = await AdminsManager_002.new();
+    adminsManager = await AdminsManager.new();
 
     await adminsManager.setCOO(coo);
 
