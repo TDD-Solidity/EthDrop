@@ -1,7 +1,7 @@
-const ExecutivesAccessControl_002 = artifacts.require('./ExecutivesAccessControl_002.sol')
+const ExecutivesAccessControl = artifacts.require('./ExecutivesAccessControl.sol')
 const truffleAssert = require('truffle-assertions');
 
-contract('ExecutivesAccessControl_002', (accounts) => {
+contract('ExecutivesAccessControl', (accounts) => {
 
     let contract;
 
@@ -9,7 +9,7 @@ contract('ExecutivesAccessControl_002', (accounts) => {
 
     beforeEach(async () => {
 
-        contract = await ExecutivesAccessControl_002.new();
+        contract = await ExecutivesAccessControl.new();
 
     })
 

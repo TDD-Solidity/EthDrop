@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ContributorManager_002.sol";
+import "./ContributorManager.sol";
 
-contract AdminsManager_002 is ContributorManager_002 {
+contract AdminsManager is ContributorManager {
     event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);

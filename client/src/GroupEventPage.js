@@ -10,7 +10,10 @@ import { useParams, withRouter } from 'react-router-dom'
 import { FillButton } from 'tailwind-react-ui'
 import { shortenedAddress } from './shortened-address'
 
+const util = require('util');
+
 function GroupEventPage(props) {
+  
   /**
    *  State Variables
    */
@@ -72,31 +75,10 @@ function GroupEventPage(props) {
   const groupName = useParams().groupName
   const groupId = useParams().groupId
 
-  /**
-   *  Fetch initial data
-   */
-
   React.useEffect(() => {
     fetchData()
   }, [])
 
-  /**
-   *  Handler Functions
-   */
-
-  // async function getAdminData(ethDropCoreInstance, currentAccount, groupId) {
-  //   const adminsForGroup = await ethDropCoreInstance.methods
-  //     .getAdminsForGroup(groupId)
-  //     .call({ from: currentAccount })
-  //   console.log('adminsForGroup ', adminsForGroup)
-  //   setAdminsForGroup(adminsForGroup)
-
-  //   const isAdmin = await ethDropCoreInstance.methods
-  //     .amIAdmin(groupId)
-  //     .call({ from: currentAccount })
-  //   console.log('isAdmin ', isAdmin)
-  //   setIsAdmin(isAdmin)
-  // }
 
   async function fetchData() {
     try {
@@ -106,7 +88,7 @@ function GroupEventPage(props) {
       console.log('web3 ', web3)
       setWeb3(web3)
 
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await util.promisify(web3.eth.getAccounts)()
 
       const networkId = await web3.eth.net.getId()
       const deployedNetwork = EthDropCore.networks[networkId]
@@ -120,7 +102,7 @@ function GroupEventPage(props) {
 
       setAccounts(accounts)
 
-      await checkAdminStuff(groupId, ethDropCoreInstance)
+      await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
 
       const isCOO = await ethDropCoreInstance.methods
         .isCOO()
@@ -188,7 +170,7 @@ function GroupEventPage(props) {
             case 'AdminAdded':
             case 'AdminReEnabled':
             case 'AdminRemoved':
-              await checkAdminStuff(groupId, ethDropCoreInstance)
+              await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
               break
 
             case 'ContributorAdded':
@@ -223,11 +205,7 @@ function GroupEventPage(props) {
 
             case 'EligibleRecipientAdded':
             case 'EligibleRecipientRemoved':
-              // const isEligibleRecipient = await ethDropCoreInstance.methods
-              //   .amIEligibleRecipient(groupId)
-              //   .call({ from: accounts[0] })
-              // console.log('isEligibleRecipient ', isEligibleRecipient)
-              // setIsEligibleRecipient(isEligibleRecipient)
+             
               await checkEligibleRecipients(groupId, ethDropCoreInstance)
 
               break
@@ -306,33 +284,33 @@ function GroupEventPage(props) {
     setRegisteredRecipients(registeredRecipients)
   }
 
-  const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
+  async function checkAdminStuff(groupId, account, ethDropCoreInstance) {
     try {
 
       console.log('checking if admin...')
 
-      console.log('am I an admin of group: ', groupId)
+      console.log('am I an admin of group: ', groupId, ' for admin: ', account)
 
       const nextAdminIndex = await ethDropCoreInstance.methods
         .getAddressNextAdminIndex(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account })
       console.log('nextAdminIndex ', nextAdminIndex)
 
       const myAdminIndex = await ethDropCoreInstance.methods
         .getMyAdminIndex(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account })
       console.log('myAdminIndex ', myAdminIndex)
       // setIsAdmin(myAdminIndex)
 
       const isAdmin = await ethDropCoreInstance.methods
         .amIAdmin(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account })
       console.log('isAdmin ', isAdmin)
       setIsAdmin(isAdmin)
 
       const adminInfoForGroup = await ethDropCoreInstance.methods
         .getAdminsForGroup(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account })
       console.log('adminsForGroup ', adminAddressesForGroup)
 
       setAdminAddressesForGroup(adminInfoForGroup[0])
@@ -458,7 +436,7 @@ function GroupEventPage(props) {
     const newAdminAddress = newAdminAddressInputValue.trim()
     const newAdminName = newAdminNameInputValue.trim()
 
-    console.log('newAdminAddress ', newAdminAddress, newAdminName)
+    console.log('new admin: ', groupId, newAdminAddress, newAdminName, 'from ', accounts[0])
 
     try {
       const createdGroup = await ethDropCoreInstance.methods

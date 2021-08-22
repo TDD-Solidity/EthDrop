@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../roles/ExecutivesAccessControl_002.sol";
+import "../roles/ExecutivesAccessControl.sol";
 
-contract EthDropBase_002 is ExecutivesAccessControl_002 {
+contract EthDropBase is ExecutivesAccessControl {
     /*** EVENTS ***/
 
     uint foo;
