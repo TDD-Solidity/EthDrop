@@ -1,0 +1,26 @@
+{
+    "homepage": {
+        "show_call_box": true
+    },
+    "logo": {
+        "mobile": "/images/logo/EthDrop-Logo-v2.svg", 
+        "desktop": "/images/logo/EthDrop-Logo-v2.svg",
+        "desktop_height": "36px",
+        "alt": "Serif - A Gatsby Business Theme"
+    },
+    "homepage_meta_tags": {
+        "meta_description": "An awesome site for running and participating in Ether airdops!",
+        "meta_og_title": "EthDrop",
+        "meta_og_type": "website",
+        "meta_og_url": "https://gatsby-serif.netlify.app/",
+        "meta_og_image": "https://www.zerostatic.io/theme/gatsby-serif/gatsby-serif-screenshot.png",
+        "meta_og_description": "An awesome site for running and participating in Ether airdops!",
+        "meta_twitter_card": "summary",
+        "meta_twitter_site": "@zerostaticio",
+        "meta_twitter_creator": "@zerostaticio"
+    },
+    "footer": {
+        "copyright_text": "Free Gatsby theme by",
+        "copyright_link": "https://www.zerostatic.io"
+    }
+}
