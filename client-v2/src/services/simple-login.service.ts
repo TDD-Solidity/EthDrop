@@ -1,4 +1,4 @@
-import { asyncLoginFunction } from './async-login-function'
+import { asyncLoginFunction } from './async-login-function';
 
 export interface ILoginParams {
     name?: string;
