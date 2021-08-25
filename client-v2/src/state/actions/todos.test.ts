@@ -42,7 +42,7 @@ describe('todos actions', () => {
             payload: someError
         }
 
-        expect(todosFailed(someError)).toEqual(expectedResponse)
+        expect(todosFailed(someError)).toEqual(expectedResponse);
 
     })
 

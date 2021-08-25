@@ -10,7 +10,7 @@ export const initialState = {
   fetching: false,
   error: undefined,
   userId: undefined,
-};
+}
 
 interface IAction {
   type?: string;

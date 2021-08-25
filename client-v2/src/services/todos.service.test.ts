@@ -2,6 +2,10 @@ import todosService from './todos.service'
 
 describe("todosService", () => {
 
+    it('creates', () => {
+        expect(true).toEqual(true)
+    })
+
     it('should return a promise containing an object with a randomly generated number userId', async () => {
 
         /**

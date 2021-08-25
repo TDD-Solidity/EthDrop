@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql } from 'gatsby';
-import SEO from '../components/SEO';
-import Layout from '../components/Layout';
+import SEO from '../components-premade/SEO';
+import Layout from '../components-premade/Layout';
 
 const Basic = ({ data }) => {
   const { title } = data.markdownRemark.frontmatter;

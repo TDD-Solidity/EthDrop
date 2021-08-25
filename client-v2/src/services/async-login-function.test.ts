@@ -1,16 +1,16 @@
-// import { asyncLoginFunction } from './async-login-function'
-// import { ILoginSuccess } from './simple-login.service'
+import { asyncLoginFunction } from './async-login-function'
+import { ILoginSuccess } from './simple-login.service'
 
 describe("asyncLoginFunction", () => {
 
-    xit('should return a promise containing the id data with a random positive integer.', async () => {
+    it('should return a promise containing the id data with a random positive integer.', async () => {
 
-        // const result = await asyncLoginFunction() as ILoginSuccess
+        const result = await asyncLoginFunction() as ILoginSuccess
 
-        // const userId: number = result?.data?.id
+        const userId: number = result?.data?.id
 
-        // expect(userId).not.toBeNaN()
-        // expect(userId).toBeGreaterThanOrEqual(1)
+        expect(userId).not.toBeNaN()
+        expect(userId).toBeGreaterThanOrEqual(1)
 
     })
 

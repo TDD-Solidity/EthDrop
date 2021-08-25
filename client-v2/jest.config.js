@@ -13,9 +13,10 @@ module.exports = {
   },
   testURL: `http://localhost`,
   setupFiles: [`<rootDir>/loadershim.js`],
-  collectCoverageFrom: ['**/*.{ts,tsx}', '!**/node_modules/**'],
+  collectCoverageFrom: ['src/**/*.{js,ts,tsx}', '!**/node_modules/**'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
   preset: 'ts-jest',
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  rootDir: "./"
 }

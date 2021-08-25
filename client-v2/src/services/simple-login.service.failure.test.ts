@@ -4,19 +4,19 @@ const mockFailureResponse = "Something bad happened!"
  * Example of mocking a function that was imported into the system under test.
  * The mock must be declared before importing the SUT file, hence the two test fies.
  */
-// jest.mock('./async-login-function', () => {
-//     return {
-//         asyncLoginFunction: () => {
-//             return Promise.reject(mockFailureResponse)
-//         }
-//     }
-// })
+jest.mock('./async-login-function', () => {
+    return {
+        asyncLoginFunction: () => {
+            return Promise.reject(mockFailureResponse)
+        }
+    }
+})
 
 import loginService from './simple-login.service'
 
 describe("loginService", () => {
 
-    xit('should return a promise containing the id data.', async () => {
+    it('should return a rejected promise containing the error.', async () => {
 
         const fakeParams = {}
 

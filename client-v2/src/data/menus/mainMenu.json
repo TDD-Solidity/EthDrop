@@ -1,23 +1,18 @@
 [
     {
-        "name": "Airdrops",
-        "url": "/services/",
-        "weight": 2
-    },
-    {
         "name": "Groups",
-        "url": "/groups/",
+        "url": "/all-groups/",
         "weight": 2
     },
     {
-        "name": "Team",
-        "url": "/team/",
-        "weight": 3
+        "name": "Group",
+        "url": "/group/",
+        "weight": 2
     },
     {
         "name": "About",
         "url": "/about/",
-        "weight": 4
+        "weight": 2
     },
     {
         "name": "Help",

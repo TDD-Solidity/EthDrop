@@ -1,8 +1,8 @@
 import React from 'react';
 import { graphql } from 'gatsby';
-import SEO from '../components/SEO';
-import Layout from '../components/Layout';
-import Call from '../components/Call';
+import SEO from '../components-premade/SEO';
+import Layout from '../components-premade/Layout';
+import Call from '../components-premade/Call';
 
 const Team = props => {
   const team = props.data.team.edges;

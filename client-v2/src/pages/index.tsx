@@ -1,9 +1,9 @@
 import React from 'react';
 import { graphql, Link } from 'gatsby';
 import Helmet from 'react-helmet';
-import SEO from '../components/SEO';
-import Layout from '../components/Layout';
-import Call from '../components/Call';
+import SEO from '../components-premade/SEO';
+import Layout from '../components-premade/Layout';
+import Call from '../components-premade/Call';
 
 const Home = props => {
   const intro = props.data.intro;
