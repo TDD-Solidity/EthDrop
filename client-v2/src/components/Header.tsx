@@ -2,12 +2,15 @@ import React from 'react';
 import { graphql, Link, StaticQuery } from 'gatsby';
 import Menu from './Menu';
 import Hamburger from './Hamburger';
-// import logo from '../../static/images/logo/logo.svg';
-// import logoMobile from '../../static/images/logo/logo-mobile.svg';
 import MenuMobile from './MenuMobile';
 
-class Header extends React.Component {
-  constructor(props) {
+type Props = {
+  data: any
+};
+
+class Header extends React.Component<Props> {
+  
+  constructor(props: any) {
     super(props);
     this.state = {
       menuActive: false
@@ -15,13 +18,17 @@ class Header extends React.Component {
   }
 
   toggleMenu = menuActive => {
-    this.setState(prevState => ({
+
+    this.setState((prevState: any) => ({
       menuActive: !prevState.menuActive
     }));
+
   };
 
   render() {
-    const config = this.props.data.configJson;
+
+    const config = (this.props as any).data.configJson;
+
     return (
       <div className="header">
         <div className="container">
@@ -35,7 +42,7 @@ class Header extends React.Component {
               <img height={config.logo.desktop_height} alt={config.logo.alt} src={config.logo.mobile} />
             </Link>
           </div>
-          <MenuMobile active={this.state.menuActive} />
+          <MenuMobile active={(this.state as any).menuActive} />
           <Menu />
           <Hamburger toggleMenu={this.toggleMenu} />
         </div>

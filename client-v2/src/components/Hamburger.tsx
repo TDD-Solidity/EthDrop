@@ -1,7 +1,15 @@
 import React from 'react';
 
-class Hamburger extends React.Component {
-  constructor(props) {
+type Props = {
+  toggleMenu: any
+};
+
+type State = {
+  hamburgerActive: boolean
+};
+
+class Hamburger extends React.Component<Props> {
+  constructor(public props: Props) {
     super(props);
     this.state = {
       hamburgerActive: false
@@ -9,10 +17,10 @@ class Hamburger extends React.Component {
   }
 
   handleToggle = () => {
-    this.setState(prevState => ({
+    this.setState( (prevState: State) => ({
       hamburgerActive: !prevState.hamburgerActive
     }));
-    this.props.toggleMenu(this.state.hamburgerActive);
+    (this.props as any).toggleMenu((this.state as any).hamburgerActive);
   };
 
   render() {
@@ -20,7 +28,7 @@ class Hamburger extends React.Component {
       <button
         id="toggle-main-menu-mobile"
         className={`hamburger hamburger--slider ${
-          this.state.hamburgerActive ? 'is-active' : ''
+          (this.state as any).hamburgerActive ? 'is-active' : ''
         }`}
         type="button"
         onClick={this.handleToggle}
