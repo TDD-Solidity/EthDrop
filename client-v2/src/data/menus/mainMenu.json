@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Groups",
+        "url": "/all-groups/",
+        "weight": 2
+    },
+    {
+        "name": "Group",
+        "url": "/group/",
+        "weight": 2
+    },
+    {
+        "name": "About",
+        "url": "/about/",
+        "weight": 2
+    },
+    {
+        "name": "Help",
+        "url": "/contact/",
+        "weight": 5
+    }
+]

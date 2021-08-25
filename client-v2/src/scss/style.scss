@@ -1,0 +1,68 @@
+// Colors
+$primary: #8036ca;
+$secondary: #ffe55f;
+$black: #2f2f41;
+$white: #ffffff;
+$white-offset: #f6f7ff;
+$steel: #5C5A5A;
+
+// Links
+$link-color: $primary;
+$link-decoration: none;
+$link-hover-color: lighten($primary, 20%);
+$link-hover-decoration: underline;
+
+// Fonts
+$font-family-base: Helvetica, Arial, sans-serif, -apple-system;
+$font-family-heading: 'Raleway', serif, -apple-system;
+
+// Footer
+$footer-background-color: $primary;
+$footer-text-color: $white;
+$sub-footer-background-color: darken($primary, 10%);
+$sub-footer-text-color: $white;
+
+// Bootstrap
+@import 'bootstrap-variables';
+@import 'bootstrap/bootstrap-reboot';
+@import 'bootstrap/bootstrap-grid';
+// @import 'bootstrap/bootstrap'; // Uncomment this line to import the entire Bootstrap library
+
+
+// Libraries
+@import 'libraries/hamburgers/hamburgers';
+
+// Components
+@import 'components-premade/type';
+@import 'components-premade/page';
+@import 'components-premade/header';
+@import 'components-premade/footer';
+@import 'components-premade/sub-footer';
+@import 'components-premade/logo';
+@import 'components-premade/main-menu';
+@import 'components-premade/main-menu-mobile';
+@import 'components-premade/hamburger';
+@import 'components-premade/buttons';
+@import 'components-premade/call';
+@import 'components-premade/title';
+@import 'components-premade/content';
+@import 'components-premade/intro';
+@import 'components-premade/intro-image';
+@import 'components-premade/strip';
+@import 'components-premade/feature';
+@import 'components-premade/social';
+
+// Pages
+@import 'pages/home';
+@import 'pages/team/team-summary';
+@import 'pages/services/page-services-single';
+
+body {
+  font-size: 16px;
+  line-height: 1.2;
+  font-family: $font-family-base;
+  @include media-breakpoint-up(md) {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+}
