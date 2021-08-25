@@ -6,7 +6,7 @@
     },
     {
         "name": "Groups",
-        "url": "/services/",
+        "url": "/groups/",
         "weight": 2
     },
     {

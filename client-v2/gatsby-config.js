@@ -49,6 +49,7 @@ module.exports = {
         display: 'swap'
       }
     },
+    `gatsby-plugin-typescript`,
     {
       resolve: `gatsby-plugin-react-redux`,
       options: {
