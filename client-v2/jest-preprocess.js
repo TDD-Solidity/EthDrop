@@ -1,9 +1,7 @@
 const babelOptions = {
-    presets: ['babel-preset-gatsby', '@babel/preset-typescript'], 
-  }
-  
-  // module.exports = require('babel-jest').createTransformer(babelOptions)
-  
+  presets: ['babel-preset-gatsby', '@babel/preset-typescript'],
+}
+
 const babelJestMd = require('babel-jest');
 const babelJest = babelJestMd.__esModule ? babelJestMd.default : babelJestMd;
 

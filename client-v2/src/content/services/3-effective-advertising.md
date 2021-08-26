@@ -1,16 +1,13 @@
 ---
-title: "Business Sales"
+title: "Effective Advertising"
 date: 2018-11-28T15:15:26+10:00
 featured: true
 draft: false
 weight: 3
 ---
 
-Cyanee nec pedicis positi. Esse et diem forte quoque et ieiunia
-vixque dixit negari _ullis stamina_: trahit. Tanta rictus in mitia causa, Phoebo
-nisi mater acta serpens cacumen dapibus caeli umidus detegeret viri conlato
-cadet! [Ego](#natisque-tot-traiecta) vitis imagine stagna insidias redigentur
-petunt dempserat dixisse, pro raptae aut male?
+When you sponsor an EthDrop event, you have the unique opportunity to formally take center stage and pitch to a large, crypto-savvy audience.
+
 
 - Dente reponere dixere referre excessitque seque
 - Tacui si cui inde haec ubi trepidas
