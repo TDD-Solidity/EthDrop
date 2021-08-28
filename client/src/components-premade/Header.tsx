@@ -27,17 +27,17 @@ class Header extends React.Component<Props> {
   };
 
   async getBlockNumber() {
-    console.log('Init web3')
-    const web3 = new (window as any).Web3('https://cloudflare-eth.com')
-    const currentBlockNumber = await web3.eth.getBlockNumber()
+    // console.log('Init web3')
+    // const web3 = new (window as any).Web3('https://cloudflare-eth.com')
+    // const currentBlockNumber = await web3.eth.getBlockNumber()
     // setBlockNr(currentBlockNumber)
 
-    const deployedNetwork = await web3.eth.net.getNetworkType()
+    // const deployedNetwork = await web3.eth.net.getNetworkType()
 
-    const ethDropCoreInstance = new web3.eth.Contract(
-      (EthDropCore as any).abi,
-      deployedNetwork && deployedNetwork.address,
-    );
+    // const ethDropCoreInstance = new web3.eth.Contract(
+    //   (EthDropCore as any).abi,
+    //   deployedNetwork && deployedNetwork.address,
+    // );
 
     // const groupIds = await ethDropCoreInstance.methods.getGroupIds().call({ from: accounts[0] });
     // const groupIds = await ethDropCoreInstance.methods.getGroupIds().call({ from: accounts[0] });
@@ -45,8 +45,8 @@ class Header extends React.Component<Props> {
     // this.setState({ groupIds });
 
     // const groupNames = await ethDropCoreInstance.methods.getGroupNames().call({ from: accounts[0] });
-    const groupNames = await ethDropCoreInstance.methods.getGroupNames().call();
-    console.log('groupNames: ', groupNames)
+    // const groupNames = await ethDropCoreInstance.methods.getGroupNames().call();
+    // console.log('groupNames: ', groupNames)
     // this.setState({ groupNames });
 
 
@@ -60,7 +60,8 @@ class Header extends React.Component<Props> {
     //     // this.setState({ groupNames });
 
 
-    console.log('block num: ', currentBlockNumber)
+    // console.log('block num: ', currentBlockNumber)
+    console.log('block num...')
   }
 
   render() {

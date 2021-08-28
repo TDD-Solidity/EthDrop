@@ -2,28 +2,28 @@
 import { IGroupData } from "../../models/group-data";
 // import getWeb3 from "../web3/getWeb3";
 // import EthDropCore from "../../contracts/EthDropCore.json";
-const Web3 = require("web3");
+// const Web3 = require("web3");
 
 let connected = false;
 
 export const getGroupsData = async (): Promise<any> => {
     
-    await ethEnabled();
+    // await ethEnabled();
     
     return Promise.resolve('foo') 
 }
 
 async function ethEnabled () {
 
-    if ((window as any).ethereum) {
-        await (window as any).send('eth_requestAccounts');
-        (window as any).web3 = new Web3((window as any).ethereum);
+    // if ((window as any).ethereum) {
+    //     await (window as any).send('eth_requestAccounts');
+    //     (window as any).web3 = new Web3((window as any).ethereum);
         
-        connected = true;
+    //     connected = true;
 
-        return true;
-    }
-    return false;
+    //     return true;
+    // }
+    // return false;
 }
 
 
