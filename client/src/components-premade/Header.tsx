@@ -3,7 +3,7 @@ import { graphql, Link, StaticQuery } from 'gatsby';
 import Menu from './Menu';
 import Hamburger from './Hamburger';
 import MenuMobile from './MenuMobile';
-import EthDropCore from "../contracts/EthDropCore.json";
+import EthDropCore from "./../contracts/EthDropCore.json";
 
 type Props = {
   data: any
@@ -28,8 +28,68 @@ class Header extends React.Component<Props> {
 
   async getBlockNumber() {
     // console.log('Init web3')
+
+    console.log('1')
+    const web3 = new (window as any).Web3((window as any).ethereum)
+    console.log('2', web3)
     // const web3 = new (window as any).Web3('https://cloudflare-eth.com')
+    // await web3.eth.enable();
     // const currentBlockNumber = await web3.eth.getBlockNumber()
+    
+    const foo = await (window as any).ethereum.enable();
+    console.log('3')
+    
+    const def = await (window as any).ethereum.defaultAccount;
+    console.log('4')
+    
+    // Use web3 to get the user's accounts.
+    const accounts = await web3.eth.defaultAccount;
+    
+    
+    // const accounts = window.ethereum.request("eth_requestAccounts")
+    console.log('accounts are: ', foo);
+    // console.log('accounts are: ', def);
+    // console.log('accounts are: ', accounts);
+    // console.log('accounts are: ', web3.eth.accounts.wallet);
+    // console.log('accounts are: ', web3.eth.getAccounts());
+    
+    var account = web3.currentProvider.selectedAddress
+    console.log('account are: ', account);
+
+    if (account) {
+      
+      // const deployedNetwork = await web3.eth.net.getNetworkType()
+      
+      
+      const id = await web3.eth.net.getId();
+      const deployedNetwork = EthDropCore.networks[id];
+
+      console.log('current network: ', deployedNetwork);
+      console.log('current network: ', deployedNetwork.address);
+      
+      const ethDropCoreInstance = new web3.eth.Contract(
+        (EthDropCore as any).abi,
+        deployedNetwork && deployedNetwork.address,
+        );
+        
+        const groupIds = await ethDropCoreInstance.methods.getGroupIds().call({ from: account });
+        
+        console.log('groupIds: ', groupIds)
+    
+        const groupNames = await ethDropCoreInstance.methods.getGroupNames().call({ from: account });
+        
+        console.log('groupNames: ', groupNames)
+    }
+
+    // console.log('account are: ', web3.eth.accounts[0]);
+    
+    // const forks = await (window as any).ethereum.getAccounts();
+
+    
+        
+    // const accounts = web3.eth.getAccounts((accounts) => {
+    //   console.log('accounts: ', accounts)
+    // })
     // setBlockNr(currentBlockNumber)
 
     // const deployedNetwork = await web3.eth.net.getNetworkType()
@@ -97,7 +157,7 @@ class Header extends React.Component<Props> {
             &nbsp;&nbsp;
 
             {/* <a href='/' className="button" onClick={this.getBlockNumber}>Connect Wallet</a> */}
-            <button className="button" onClick={this.getBlockNumber}>Connect Wallet</button>
+            <button className="button" onClick={() => this.getBlockNumber()}>Connect Wallet</button>
           </div>
         </div>
       </div>

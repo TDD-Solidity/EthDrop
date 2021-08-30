@@ -13,12 +13,13 @@ const groupsDataMiddleware = () => {
     switch (action.type) {
       case GROUPS_DATA_REQUESTED:
 
-      console.log('here')
+      console.log('here', window)
 
         try {
-          const groupsData = await getGroupsData() as IGroupData[];
+          const groupsData = await getGroupsData(window) as IGroupData[];
           store.dispatch(groupsDataSuccess({ data: groupsData }));
         } catch (error) {
+          console.log('error: ', error)
           store.dispatch(groupsDataFailed(error));
         }
 

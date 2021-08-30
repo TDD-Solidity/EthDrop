@@ -1,24 +1,59 @@
 // import Web3 from "web3";
 import { IGroupData } from "../../models/group-data";
 // import getWeb3 from "../web3/getWeb3";
-// import EthDropCore from "../../contracts/EthDropCore.json";
+import EthDropCore from "../../contracts/EthDropCore.json";
 // const Web3 = require("web3");
 
 let connected = false;
 
-export const getGroupsData = async (): Promise<any> => {
-    
-    // await ethEnabled();
-    
-    return Promise.resolve('foo') 
+export const getGroupsData = async (window): Promise<any> => {
+
+    setTimeout(async () => {
+
+        console.log('window: ', window)
+
+        const web3 = new (window as any).Web3((window as any).ethereum)
+        console.log('2', web3)
+        // const web3 = new (window as any).Web3('https://cloudflare-eth.com')
+        // await web3.eth.enable();
+        // const currentBlockNumber = await web3.eth.getBlockNumber()
+
+        const foo = await (window as any).ethereum.enable();
+        console.log('3', foo)
+
+        const selectedAccount = await (window as any).ethereum.selectedAccount;
+        console.log('4 ', selectedAccount)
+
+            
+        const id = await web3.eth.net.getId();
+        const deployedNetwork = EthDropCore.networks[id];
+  
+        console.log('current network: ', deployedNetwork);
+        console.log('current network: ', deployedNetwork.address);
+        
+        const ethDropCoreInstance = new web3.eth.Contract(
+          (EthDropCore as any).abi,
+          deployedNetwork && deployedNetwork.address,
+          );
+          
+          const groupIds = await ethDropCoreInstance.methods.getGroupIds().call({ from: selectedAccount });
+          
+          console.log('groupIds: ', groupIds)
+      
+          const groupNames = await ethDropCoreInstance.methods.getGroupNames().call({ from: selectedAccount });
+          
+          console.log('groupNames: ', groupNames)
+
+    }, 500)
+
 }
 
-async function ethEnabled () {
+async function ethEnabled() {
 
     // if ((window as any).ethereum) {
     //     await (window as any).send('eth_requestAccounts');
     //     (window as any).web3 = new Web3((window as any).ethereum);
-        
+
     //     connected = true;
 
     //     return true;
