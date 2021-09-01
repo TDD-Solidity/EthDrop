@@ -18,5 +18,15 @@
         "name": "Help",
         "url": "/contact/",
         "weight": 5
+    },
+    {
+        "name": "Create Group",
+        "url": "/create-group",
+        "weight": 2
+    },
+    {
+        "name": "exec-admin-panel",
+        "url": "/executive-admin-panel",
+        "weight": 2
     }
 ]

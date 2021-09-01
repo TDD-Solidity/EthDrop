@@ -29,12 +29,12 @@ const Home = props => {
               <div dangerouslySetInnerHTML={{ __html: intro.html }} />
               {/* <Call showButton /> */}
 
-       <a href='/' className="button">Participate In Airdops</a>
+       <a href='/all-groups' className="button">Participate In Airdops</a>
 
               <br/>
               <br/>
 
-              <a href='/' className="button">Register New Group</a>
+              <a href='/create-group' className="button">Register New Group</a>
 
               
             </div>
