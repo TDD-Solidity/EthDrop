@@ -23,7 +23,6 @@ const reducer = (state = initialState, action: IAction = {}) => {
   const { type, payload } = action;
 
   switch (type) {
-
     case TODOS_REQUESTED:
       return {
         ...state,
@@ -49,7 +48,6 @@ const reducer = (state = initialState, action: IAction = {}) => {
     default:
       return state;
   }
-  
 };
 
 export default reducer;

@@ -32,7 +32,7 @@ import { AnyAction } from 'redux';
 
 describe('loginCustomMiddleware', () => {
 
-  it('fires a TODOS_SUCCESS event with the data', async () => {
+  it('should handle LOGIN_REQUESTED action when logging in fails', async () => {
 
     const middleware = todosCustomMiddleware();
 
@@ -55,7 +55,7 @@ describe('loginCustomMiddleware', () => {
 
   })
 
-  it('calls next when the action has an unrecognized type', async () => {
+  it('should call next for action with unkown type', async () => {
 
     const middleware = todosCustomMiddleware();
 

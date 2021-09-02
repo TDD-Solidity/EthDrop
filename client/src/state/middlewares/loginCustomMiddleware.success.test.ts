@@ -46,7 +46,7 @@ describe('loginCustomMiddleware', () => {
 
   })
 
-  it('calls next when the action has an unrecognized type', async () => {
+  it('should call next for action with unkown type', async () => {
 
     const middleware = loginCustomMiddleware();
 

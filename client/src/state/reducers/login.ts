@@ -1,4 +1,4 @@
-import { LoginFailureError, LoginSuccessPayload, LOGIN_FAILED, LOGIN_REQUESTED, LOGIN_SUCCESS, LOGOUT } from '../types/login';
+import { LOGIN_FAILED, LOGIN_REQUESTED, LOGIN_SUCCESS, LOGOUT } from '../types/login';
 
 export interface ILoginState {
   fetching: boolean,
@@ -33,7 +33,7 @@ const reducer = (state: ILoginState = initialState, action: IAction = {}): ILogi
     case LOGIN_SUCCESS:
       return {
         ...state,
-        userId: (payload as LoginSuccessPayload).userId.data.id,
+        userId: payload.userId.data.id,
         fetching: false,
         error: undefined,
       };
@@ -42,7 +42,7 @@ const reducer = (state: ILoginState = initialState, action: IAction = {}): ILogi
       return {
         ...state,
         fetching: false,
-        error: (payload as LoginFailureError),
+        error: payload,
       };
 
     case LOGOUT:

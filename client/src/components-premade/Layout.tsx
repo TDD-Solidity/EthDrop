@@ -6,7 +6,6 @@ import Footer from './Footer';
 import SubFooter from './SubFooter';
 import '../scss/style.scss';
 import { todosRequested } from '../state/actions/todos';
-import { groupsDataRequested } from '../state/actions/groups-data/groups-data';
 
 const Layout = props => {
 
@@ -22,9 +21,8 @@ const Layout = props => {
 
     dispatch(todosRequested());
 
-    dispatch(groupsDataRequested());
-
   }, []);
+  
   
   return (<>
     <SEO />

@@ -8,7 +8,7 @@ export interface ITodosError {
     error: any;
 }
 
-const todosService = (): Promise<ITodosSuccess> => {
+const todosService = (): Promise<ITodosSuccess | ITodosError> => {
 
     return new Promise((resolve, reject) => {
 

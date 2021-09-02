@@ -6,7 +6,6 @@ import todosCustomMiddleware from './middlewares/todosCustomMiddleware';
 import loginCustomMiddleware from './middlewares/loginCustomMiddleware';
 import { ILoginState } from './reducers/login';
 import { ITodosState } from './reducers/todos';
-import groupsDataMiddleware from './middlewares/groups-data/todosCustomMiddleware';
 
 export interface IState {
   loginReducer: ILoginState,
@@ -21,8 +20,7 @@ export default (preloadedState: IState) => {
       applyMiddleware(
         save({ states: ['loginReducer'] }),
         todosCustomMiddleware(),
-        loginCustomMiddleware(),
-        groupsDataMiddleware()
+        loginCustomMiddleware()
       )
     ),
 

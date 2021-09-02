@@ -20,7 +20,6 @@ const Home = props => {
           name="description"
           content="Small Business Theme. Multiple content types using Markdown and JSON sources. Responsive design and SCSS. This is a beautiful and artfully designed starting theme."
         />
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js" />
       </Helmet>
 
       <div className="intro">
@@ -30,13 +29,14 @@ const Home = props => {
               <div dangerouslySetInnerHTML={{ __html: intro.html }} />
               {/* <Call showButton /> */}
 
-              <a href='/' className="button">Participate In Airdops</a>
+       <a href='/all-groups' className="button">Participate In Airdops</a>
 
               <br/>
               <br/>
 
-              <a href='/' className="button">Register New Group</a>
+              <a href='/create-group' className="button">Register New Group</a>
 
+              
             </div>
             {intro.frontmatter.intro_image && (
               <div className="col-12 col-md-5 col-lg-6 order-1 order-md-2 position-relative">
