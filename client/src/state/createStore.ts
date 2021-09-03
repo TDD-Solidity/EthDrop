@@ -13,6 +13,8 @@ export interface IState {
 }
 
 export default (preloadedState: IState) => {
+  
+  
   return createStore(
     combinedReducers,
     getLoadedState(preloadedState),
