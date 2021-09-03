@@ -90,6 +90,8 @@ function GroupEventPage(props) {
 
       const accounts = await util.promisify(web3.eth.getAccounts)()
 
+      console.log('GOT ACCOUNTS ', accounts)
+
       const networkId = await web3.eth.net.getId()
       const deployedNetwork = EthDropCore.networks[networkId]
 
@@ -102,6 +104,8 @@ function GroupEventPage(props) {
 
       setAccounts(accounts)
 
+      console.log('accounts: ', accounts)
+
       await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
 
       const isCOO = await ethDropCoreInstance.methods
@@ -110,7 +114,7 @@ function GroupEventPage(props) {
       console.log('isCOO ', isCOO)
       setIsCOO(isCOO)
 
-      await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
+      await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
 
       const isContributor = await ethDropCoreInstance.methods
         .amIContributor(groupId)
@@ -131,7 +135,7 @@ function GroupEventPage(props) {
       setGroupEventData(groupEventData)
       setContributionAmount(groupEventData[2])
 
-      await checkEligibleRecipients(groupId, ethDropCoreInstance)
+      await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance)
 
       const sponsorInfo = await ethDropCoreInstance.methods
         .getContributorInfo(groupId)
@@ -206,17 +210,17 @@ function GroupEventPage(props) {
             case 'EligibleRecipientAdded':
             case 'EligibleRecipientRemoved':
              
-              await checkEligibleRecipients(groupId, ethDropCoreInstance)
+              await checkEligibleRecipients(groupId, accounts,ethDropCoreInstance)
 
               break
 
             case 'RecipientRegistered':
-              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
+              await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
 
               break
 
             case 'WinningsClaimed':
-              await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
+              await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
               break
 
             default:
@@ -233,7 +237,9 @@ function GroupEventPage(props) {
     }
   }
 
-  async function checkEligibleRecipients(groupId, ethDropCoreInstance) {
+  async function checkEligibleRecipients(groupId, accounts, ethDropCoreInstance) {
+
+    console.log('checking is eligible fo account: ', accounts[0])
     const isEligibleRecipient = await ethDropCoreInstance.methods
       .amIEligibleRecipient(groupId)
       .call({ from: accounts[0] })
@@ -264,7 +270,7 @@ function GroupEventPage(props) {
     )
   }
 
-  async function checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance) {
+  async function checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance) {
     const isRegisteredRecipient = await ethDropCoreInstance.methods
       .amIRegisteredRecipient(groupId)
       .call({ from: accounts[0] })
