@@ -56,4 +56,41 @@ contract('AdminsManager', (accounts) => {
     expect(isAdmin_admin1_after_removal).to.equal(false);
   })
 
+  it('admin can be removed and re-enabled', () => {
+
+    // TODO
+
+    // - removeAdmin
+    // - reEnableAdmin
+
+  })
+  
+  it('other users can\'t call coo-only functions', () => {
+
+    // TODO
+
+    // - addAdmin 
+    // - reEnableAdmin
+    // - removeAdmin
+    // - createNewGroup
+    // - endEvent
+    // - changeContributor
+
+  })
+
+  it('admin only functions revert when called by user who is NOT an admin', () => {
+
+    // TODO
+
+    // - renounceAdmin
+    // - readEventInfo
+    // - startEvent
+    // - closeEventRegistration
+    // - endEvent
+    // - addEligibleRecipient
+    // - removeEligibleRecipient
+    // - changeContributor
+
+  })
+
 })
