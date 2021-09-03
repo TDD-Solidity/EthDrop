@@ -118,8 +118,6 @@ contract AdminsManager is ContributorManager {
 
     }
 
-    
-
     function _removeAdmin(uint256 groupId, address account) internal {
         
         uint256 index = adminAddressToIndex[groupId][account];

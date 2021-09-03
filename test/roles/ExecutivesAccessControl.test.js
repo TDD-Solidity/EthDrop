@@ -55,4 +55,20 @@ contract('ExecutivesAccessControl', (accounts) => {
 
     })
 
+    it('CEO only functions can only called by CEO', () => {
+        
+    })
+
+    it('COO only functions can only called by COO', () => {
+
+    })
+
+    it('CFO only functions can only called by CFO', () => {
+
+    })
+
+    it('Only C-suite functions can be called by COO, CEO, or CFO (but no one else)', () => {
+
+    })
+
 })
