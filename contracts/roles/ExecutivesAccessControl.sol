@@ -29,9 +29,6 @@ contract ExecutivesAccessControl {
     event CooUpdated();
     event CfoUpdated();
 
-    // The addresses of the accounts (or contracts) that can execute actions within each roles.
-    string public stringgg;
-
     address public ceoAddress = msg.sender;
     address public cfoAddress;
     address public cooAddress;
@@ -66,7 +63,7 @@ contract ExecutivesAccessControl {
         _;
     }
 
-    function isCEO() external view returns (bool) {
+    function isCEO() public view returns (bool) {
         return msg.sender == ceoAddress;
     }
 
@@ -76,19 +73,10 @@ contract ExecutivesAccessControl {
         require(_newCEO != address(0));
 
         ceoAddress = address(_newCEO);
-
     }
 
-    function isCFO() external view returns (bool) {
+    function isCFO() public view returns (bool) {
         return msg.sender == cfoAddress;
-    }
-
-    function getString() external view returns (string memory) {
-        return stringgg;
-    }
-
-    function setString(string memory _s) external {
-        stringgg = _s;
     }
 
     function getCFO() external view returns (address) {
@@ -104,9 +92,9 @@ contract ExecutivesAccessControl {
         emit CfoUpdated();
     }
 
-    function isCOO() external view returns (bool) {
+    function isCOO() public view returns (bool) {
         return msg.sender == cooAddress;
-    }    
+    }
 
     function getCOO() external view returns (address) {
         return cooAddress;
@@ -134,7 +122,7 @@ contract ExecutivesAccessControl {
     }
 
     /// @dev Modifier to allow actions only when the contract IS paused
-    modifier whenPaused {
+    modifier whenPaused() {
         require(paused);
         _;
     }
@@ -143,6 +131,7 @@ contract ExecutivesAccessControl {
     ///  a bug or exploit is detected and we need to limit damage.
     function pause() external onlyCLevel whenNotPaused {
         paused = true;
+        emit AppPaused(true);
     }
 
     /// @dev Unpauses the smart contract. Can only be called by the CEO, since
@@ -154,10 +143,12 @@ contract ExecutivesAccessControl {
         // can't unpause if contract was upgraded
         paused = false;
 
+        emit AppPaused(false);
         return paused;
     }
 
     function isPaused() external view returns (bool) {
         return paused;
     }
+
 }

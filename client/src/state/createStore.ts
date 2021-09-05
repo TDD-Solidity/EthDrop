@@ -6,15 +6,17 @@ import todosCustomMiddleware from './middlewares/todosCustomMiddleware';
 import loginCustomMiddleware from './middlewares/loginCustomMiddleware';
 import { ILoginState } from './reducers/login';
 import { ITodosState } from './reducers/todos';
+import { IWeb3State } from './reducers/web3';
+import initWeb3Middleware from './middlewares/initWeb3Middleware';
 
 export interface IState {
   loginReducer: ILoginState,
-  todosReducer: ITodosState
+  todosReducer: ITodosState,
+  web3Reducer: IWeb3State,
 }
 
 export default (preloadedState: IState) => {
-  
-  
+
   return createStore(
     combinedReducers,
     getLoadedState(preloadedState),
@@ -22,7 +24,8 @@ export default (preloadedState: IState) => {
       applyMiddleware(
         save({ states: ['loginReducer'] }),
         todosCustomMiddleware(),
-        loginCustomMiddleware()
+        loginCustomMiddleware(),
+        initWeb3Middleware()
       )
     ),
 

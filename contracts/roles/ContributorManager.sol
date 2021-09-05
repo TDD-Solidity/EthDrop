@@ -34,7 +34,7 @@ contract ContributorManager is RecipientsManager {
         whenNotPaused
         returns (bool)
     {
-        return account == currentEvents[groupId].currentContributor;
+        return account == currentEvents[groupId].currentContributorAddress;
     }
 
     function amIContributor(uint256 groupId)
@@ -51,13 +51,13 @@ contract ContributorManager is RecipientsManager {
         view
         returns (address)
     {
-        return currentEvents[groupId].currentContributor;
+        return currentEvents[groupId].currentContributorAddress;
     }
 
     function _changeContributor(address account, uint256 groupId) internal {
         contributors[groupId][account] = true;
 
-        currentEvents[groupId].currentContributor = account;
+        currentEvents[groupId].currentContributorAddress = account;
         emit ContributorAdded(account, groupId);
     }
 

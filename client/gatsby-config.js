@@ -5,6 +5,9 @@ module.exports = {
     title: 'EthDrop',
     description: 'my theme'
   },
+  flags: {
+    DEV_SSR: false
+  },
   plugins: [
     'gatsby-plugin-sass',
     'gatsby-transformer-json',
@@ -60,8 +63,8 @@ module.exports = {
           unsafe: false,
           ignoreFunction: true,
         },
-       cleanupOnClient: true,
-       windowKey: '__PRELOADED_STATE__',
+        cleanupOnClient: true,
+        windowKey: '__PRELOADED_STATE__',
       },
     }
   ]

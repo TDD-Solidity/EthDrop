@@ -6,6 +6,8 @@ import Footer from './Footer';
 import SubFooter from './SubFooter';
 import '../scss/style.scss';
 import { todosRequested } from '../state/actions/todos';
+import { initWeb3Requested } from '../state/actions/initialize';
+
 
 const Layout = props => {
 
@@ -20,6 +22,8 @@ const Layout = props => {
      */
 
     dispatch(todosRequested());
+
+    dispatch(initWeb3Requested());
 
   }, []);
   

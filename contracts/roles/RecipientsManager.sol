@@ -75,7 +75,7 @@ contract RecipientsManager is EthDropBase {
 
         registeredRecipientNamesArray[groupId].push(name);
 
-        currentEvents[groupId].registeredRecipientsCount++;
+        currentEvents[groupId].numberOfUsersCurrentlyRegistered++;
 
         emit RecipientRegistered(msg.sender, groupId);
     }
@@ -145,4 +145,36 @@ contract RecipientsManager is EthDropBase {
     {
         return registeredRecipientAddressesArray[groupId];
     }
+
+    function suggestNewGroup(
+        string memory groupName,
+        string memory location,
+        string memory contactInfo
+    ) external {
+        suggestedGroupNames.push(groupName);
+        suggestedGroupLocations.push(location);
+        suggestedGroupContacts.push(contactInfo);
+        suggestedGroupAlreadyCreated.push(false);
+    }
+
+    function getNewGroupSuggestions()
+        external
+        view
+        returns (
+            string[] memory,
+            string[] memory,
+            string[] memory,
+            bool[] memory
+        )
+    {
+        return (
+            suggestedGroupNames,
+            suggestedGroupLocations,
+            suggestedGroupContacts,
+            suggestedGroupAlreadyCreated
+        );
+    }    
+
+
+
 }

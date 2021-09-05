@@ -14,7 +14,7 @@ export const initialState = {
 
 interface IAction {
   type?: string;
-  payload?: unknown;
+  payload?: any;
 }
 
 const reducer = (state: ILoginState = initialState, action: IAction = {}): ILoginState => {

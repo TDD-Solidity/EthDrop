@@ -12,8 +12,8 @@ module.exports = {
       host: "localhost",
       port: 8545, // Using ganache as development network
       network_id: "*",
-      gas: 4698712000,
-      gasPrice: 25000000000
+      gas: 10000000000,	// <-- Use this high gas value
+      gasPrice: 0x01,	// <-- Use this low gas price
     },
 
     rinkeby: {
@@ -54,11 +54,16 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: "^0.8.0", // A version or constraint - Ex. "^0.5.0"
-      optimizer: {
-        enabled: true,
-        runs: 200
+      version: '^0.8.0',
+      settings: {          // See the solidity docs for advice about optimization and evmVersion
+       optimizer: {
+         enabled: true,
+         runs: 100
+       },
+      //  evmVersion: "byzantium"
       }
+    },
+ 
       // Can also be set to "native" to use a native solc
       //   docker: <boolean>, // Use a version obtained through docker
       //   parser: "solcjs",  // Leverages solc-js purely for speedy parsing
@@ -72,6 +77,7 @@ module.exports = {
       //   modelCheckerSettings: {
       //     // contains options for SMTChecker
       //   }
-    }
-  }
+   
+  },
+  plugins: ["truffle-contract-size"]
 };

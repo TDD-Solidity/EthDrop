@@ -8,7 +8,7 @@ contract AdminsManager is ContributorManager {
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
-    event AdminAdded(uint256 groupId, address account, uint index);
+    event AdminAdded(uint256 groupId, address account, uint256 index);
     event AdminRemoved(uint256 groupId, string name);
     event AdminReEnabled(uint256 groupId, string name);
 
@@ -44,36 +44,47 @@ contract AdminsManager is ContributorManager {
         return adminEnabled[groupId][adminIndex] == true;
     }
 
-    function getMyAdminIndex(uint256 groupId) external view returns (uint256) {
-        return adminAddressToIndex[groupId][msg.sender];
-    }
+    // function getMyAdminIndex(uint256 groupId) external view returns (uint256) {
+    //     return adminAddressToIndex[groupId][msg.sender];
+    // }
 
     // TODO - allow COO to give "admin-granting power" to other admins
-    function addAdmin(uint256 groupId, address account, string memory name) external 
-        wasntAlreadyAnAdmin(groupId, account) onlyCOO {
+    function addAdmin(
+        uint256 groupId,
+        address account,
+        string memory name
+    ) external wasntAlreadyAnAdmin(groupId, account) onlyCOO {
         _addAdmin(groupId, account, name);
     }
 
     // debug
-    function getAddressNextAdminIndex(uint256 groupId)
-        external
-        view
-        returns (uint256)
-    {
-        return nextAdminIndexForGroup[groupId];
-    }
+    // function getAddressNextAdminIndex(uint256 groupId)
+    //     external
+    //     view
+    //     returns (uint256)
+    // {
+    //     return nextAdminIndexForGroup[groupId];
+    // }
 
     function amIAdmin(uint256 groupId) external view returns (bool) {
         return isAdmin(msg.sender, groupId);
     }
 
-    function getAdminsForGroup(uint256 groupId)
-        external
-        view
-        returns (address[] memory, bool[] memory, string[] memory)
-    {
-        return (adminAddresses[groupId], adminEnabled[groupId], adminNames[groupId]);
-    }
+    // function getAdminsForGroup(uint256 groupId)
+    //     external
+    //     view
+    //     returns (
+    //         address[] memory,
+    //         bool[] memory,
+    //         string[] memory
+    //     )
+    // {
+    //     return (
+    //         adminAddresses[groupId],
+    //         adminEnabled[groupId],
+    //         adminNames[groupId]
+    //     );
+    // }
 
     modifier onlyAdminsOrCOO(uint256 groupId) {
         require(isAdmin(msg.sender, groupId) || msg.sender == cooAddress);
@@ -90,12 +101,15 @@ contract AdminsManager is ContributorManager {
         _removeAdmin(groupId, account);
     }
 
-    function renounceAdmin(uint256 groupId) public onlyAdmins(groupId) {
-        _removeAdmin(groupId, msg.sender);
-    }
+    // function renounceAdmin(uint256 groupId) public onlyAdmins(groupId) {
+    //     _removeAdmin(groupId, msg.sender);
+    // }
 
-    function _addAdmin(uint256 groupId, address account, string memory name) internal {
-        
+    function _addAdmin(
+        uint256 groupId,
+        address account,
+        string memory name
+    ) internal {
         // if first user, use index 1 and push some garbage things at the 0 index
         if (nextAdminIndexForGroup[groupId] == 0) {
             nextAdminIndexForGroup[groupId]++;
@@ -105,39 +119,37 @@ contract AdminsManager is ContributorManager {
             adminNames[groupId].push("zero address");
         }
 
-        uint index = nextAdminIndexForGroup[groupId];
+        uint256 index = nextAdminIndexForGroup[groupId];
         adminAddressToIndex[groupId][account] = index;
-        
+
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
         adminNames[groupId].push(name);
-        
+
         emit AdminAdded(groupId, account, index);
 
         nextAdminIndexForGroup[groupId]++;
-
     }
 
     function _removeAdmin(uint256 groupId, address account) internal {
-        
         uint256 index = adminAddressToIndex[groupId][account];
-        
+
         adminEnabled[groupId][index] = false;
 
         emit AdminRemoved(groupId, adminNames[groupId][index]);
     }
 
-    function readEventInfo(uint256 groupId)
-        external
-        view
-        onlyAdmins(groupId)
-        returns (EthDropEvent memory)
-    {
-        return currentEvents[groupId];
-    }
+    // function readEventInfo(uint256 groupId)
+    //     external
+    //     view
+    //     onlyAdmins(groupId)
+    //     returns (EthDropEvent memory)
+    // {
+    //     return currentEvents[groupId];
+    // }
 
     function createNewGroup(string memory groupName)
-        external
+        public
         onlyCOO
         whenNotPaused
     {
@@ -146,19 +158,20 @@ contract AdminsManager is ContributorManager {
 
         EthDropEvent memory newGroup = EthDropEvent(
             newGroupId,
+            0,
+            0,
+            0,
+            0,
+            0,
+            address(0),
+            // block.timestamp,
+            // block.timestamp,
+            // block.timestamp,
             groupName,
             EventState.CREATED,
-            block.timestamp,
-            block.timestamp,
-            block.timestamp,
-            0,
             "",
             "",
-            "",
-            address(0),
-            0,
-            0,
-            0
+            ""
         );
 
         currentEvents[newGroupId] = newGroup;
@@ -175,7 +188,7 @@ contract AdminsManager is ContributorManager {
         whenNotPaused
     {
         currentEvents[groupId].currentState = EventState.REGISTRATION;
-        currentEvents[groupId].startTime = block.timestamp;
+        // currentEvents[groupId].startTime = block.timestamp;
 
         emit EventStarted(msg.sender, groupId);
     }
@@ -186,11 +199,11 @@ contract AdminsManager is ContributorManager {
         whenNotPaused
     {
         require(
-            currentEvents[groupId].registeredRecipientsCount >= 1,
+            currentEvents[groupId].numberOfUsersCurrentlyRegistered >= 1,
             "Can't end registration with zero registrants!"
         );
 
-        currentEvents[groupId].registrationEndTime = block.timestamp;
+        // currentEvents[groupId].registrationEndTime = block.timestamp;
 
         uint256 devCutWei = (currentEvents[groupId].totalAmountContributed *
             devCutPercentage) / 100;
@@ -204,7 +217,7 @@ contract AdminsManager is ContributorManager {
         // each recipient's winnings is the "weiWinnings"
         currentEvents[groupId].weiWinnings =
             pot /
-            currentEvents[groupId].registeredRecipientsCount;
+            currentEvents[groupId].numberOfUsersCurrentlyRegistered;
 
         currentEvents[groupId].currentState = EventState.CLAIM_WINNINGS;
 
@@ -216,14 +229,14 @@ contract AdminsManager is ContributorManager {
         onlyAdminsOrCOO(groupId)
         whenNotPaused
     {
-        currentEvents[groupId].endTime = block.timestamp;
+        // currentEvents[groupId].endTime = block.timestamp;
 
         currentEvents[groupId].currentState = EventState.ENDED;
 
         // First delete mappings, then arrays
         for (
             uint256 i = 0;
-            i < currentEvents[groupId].registeredRecipientsCount;
+            i < currentEvents[groupId].numberOfUsersCurrentlyRegistered;
             i++
         ) {
             address currentAddress = registeredRecipientAddressesArray[groupId][
@@ -240,7 +253,7 @@ contract AdminsManager is ContributorManager {
 
         pastEvents[groupId].push(currentEvents[groupId]);
 
-        currentEvents[groupId].registeredRecipientsCount = 0;
+        currentEvents[groupId].numberOfUsersCurrentlyRegistered = 0;
         currentEvents[groupId].totalAmountContributed = 0;
         currentEvents[groupId].weiWinnings = 0;
         currentEvents[groupId].numberOfUsersWhoClaimedWinnings = 0;
@@ -281,5 +294,11 @@ contract AdminsManager is ContributorManager {
         whenNotPaused
     {
         _changeContributor(account, groupId);
+    }
+
+    function approveNewGroupSuggestion(uint256 index) external {
+        createNewGroup(suggestedGroupNames[index]);
+
+        suggestedGroupAlreadyCreated[index] = true;
     }
 }

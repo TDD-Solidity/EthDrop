@@ -8,15 +8,14 @@ contract EthDropCore is AdminsManager {
     address public newContractAddress;
 
     /// @notice Creates the main EthDrop smart contract instance.
-    constructor () {
+    constructor() {
         // Starts paused.
 
-        // TODO 
+        // TODO
         paused = false;
 
         // the creator of the contract is the initial CEO
         ceoAddress = msg.sender;
-
     }
 
     /// @dev Used to mark the smart contract as upgraded, in case there is a serious
@@ -30,8 +29,5 @@ contract EthDropCore is AdminsManager {
         newContractAddress = _v2Address;
         emit ContractUpgrade(_v2Address);
     }
-
-    function foobar() external pure returns (string memory) {
-        return "foobarrrrrrr!";
-    }
+    
 }

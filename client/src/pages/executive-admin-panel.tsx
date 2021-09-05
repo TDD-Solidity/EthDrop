@@ -32,7 +32,7 @@
 //     web3: null,
 //     accounts: null,
 //     contract: null,
-//     ethDropCoreInstance: null,
+//     ethDropCoreReadInstance: null,
 //     isCEO: null,
 //     isCFO: null,
 //     newCFOInputValue: '',
@@ -65,40 +65,40 @@
 
 //   async checkIfImCFO() {
 
-//     const isCFO = await this.state.ethDropCoreInstance.methods.isCFO().call({ from: this.state.accounts[0] });
+//     const isCFO = await this.state.ethDropCoreReadInstance.methods.isCFO().call({ from: this.state.accounts[0] });
 //     console.log('isCFO ', isCFO)
 //     this.setState({ isCFO });
 //   }
 
 //   async checkIfImCOO() {
 
-//     const isCOO = await this.state.ethDropCoreInstance.methods.isCOO().call({ from: this.state.accounts[0] });
+//     const isCOO = await this.state.ethDropCoreReadInstance.methods.isCOO().call({ from: this.state.accounts[0] });
 //     console.log('isCOO ', isCOO)
 //     this.setState({ isCOO });
 //   }
 
 //   async checkIsPaused() {
-//     const isPaused = await this.state.ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
+//     const isPaused = await this.state.ethDropCoreReadInstance.methods.isPaused().call({ from: this.state.accounts[0] });
 //     console.log('isPaused ', isPaused)
 //     this.setState({ isPaused });
 //   }
 
 //   async getGroups() {
 
-//     const groupIds = await this.state.ethDropCoreInstance.methods.getGroupIds().call({ from: this.state.accounts[0] });
+//     const groupIds = await this.state.ethDropCoreReadInstance.methods.getGroupIds().call({ from: this.state.accounts[0] });
 //     console.log('groupIds: ', groupIds)
 //     this.setState({ groupIds });
 
-//     const groupNames = await this.state.ethDropCoreInstance.methods.getGroupNames().call({ from: this.state.accounts[0] });
+//     const groupNames = await this.state.ethDropCoreReadInstance.methods.getGroupNames().call({ from: this.state.accounts[0] });
 //     console.log('groupNames: ', groupNames)
 //     this.setState({ groupNames });
 
 //   }
 
 //   runExample = async () => {
-//     const { accounts, ethDropCoreInstance } = this.state;
+//     const { accounts, ethDropCoreReadInstance } = this.state;
 
-//     const whoami = await ethDropCoreInstance.methods.whoami().call({ from: this.state.accounts[0] });
+//     const whoami = await ethDropCoreReadInstance.methods.whoami().call({ from: this.state.accounts[0] });
 //     console.log('whoami ', whoami)
 //     this.setState({ whoami });
 
@@ -106,18 +106,18 @@
 
 //     await this.checkIsPaused();
 
-//     const isCEO = await ethDropCoreInstance.methods.isCEO().call({ from: this.state.accounts[0] });
+//     const isCEO = await ethDropCoreReadInstance.methods.isCEO().call({ from: this.state.accounts[0] });
 //     console.log('isCEO ', isCEO)
 //     this.setState({ isCEO });
 
-//     const currentCOO = await ethDropCoreInstance.methods.getCOO().call({ from: this.state.accounts[0] });
+//     const currentCOO = await ethDropCoreReadInstance.methods.getCOO().call({ from: this.state.accounts[0] });
 //     console.log('currentCOO ', currentCOO)
 //     this.setState({ currentCOO });
 
 //     await this.checkIfImCFO();
 //     await this.checkIfImCOO();
 
-//     const currentCFO = await ethDropCoreInstance.methods.getCFO().call({ from: this.state.accounts[0] });
+//     const currentCFO = await ethDropCoreReadInstance.methods.getCFO().call({ from: this.state.accounts[0] });
 //     console.log('currentCFO ', currentCFO)
 //     this.setState({ currentCFO });
 
@@ -125,7 +125,7 @@
 
 //     await this.getGroups();
 
-//     ethDropCoreInstance.events.GroupCreated().on('data', async (event) => {
+//     ethDropCoreReadInstance.events.GroupCreated().on('data', async (event) => {
 //       console.log('woah! ', event.returnValues.groupId, event.returnValues.creator);
 
 //       console.log('group created! ')
@@ -136,17 +136,17 @@
 //       })
 //     })
 
-//     ethDropCoreInstance.events.AdminAdded().on('data', async (event) => {
+//     ethDropCoreReadInstance.events.AdminAdded().on('data', async (event) => {
 //       console.log('admin added! ', event.returnValues);
 
 //     })
 
-//     ethDropCoreInstance.events.GroupCreated().on('data', async (event) => {
+//     ethDropCoreReadInstance.events.GroupCreated().on('data', async (event) => {
 //       console.log('groupCreated! ', event.returnValues);
 
 //     })
 
-//     ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
+//     ethDropCoreReadInstance.events.allEvents(async (err, eventObj) => {
 //       console.log('EVENT!! ', eventObj.event);
 //       console.log('yerp! ', eventObj.returnValues.groupId, eventObj.returnValues.groupName);
 //       console.log('yerp! ', eventObj.returnValues);
@@ -190,10 +190,10 @@
 //     console.log('hex: ', this.state.newCOOInputValue);
 
 //     try {
-//       await this.state.ethDropCoreInstance.methods.setCOO(this.state.newCOOInputValue).send({ from: this.state.accounts[0] });
+//       await this.state.ethDropCoreReadInstance.methods.setCOO(this.state.newCOOInputValue).send({ from: this.state.accounts[0] });
 //       console.log('update COO success!')
 
-//       const currentCOO = await this.state.ethDropCoreInstance.methods.getCOO().call({ from: this.state.accounts[0] });
+//       const currentCOO = await this.state.ethDropCoreReadInstance.methods.getCOO().call({ from: this.state.accounts[0] });
 //       console.log('currentCOO ', currentCOO)
 //       this.setState({ currentCOO, newCOOInputValue: '', errorToDisplay: '' });
 //     }
@@ -210,10 +210,10 @@
 
 //     try {
 
-//       await this.state.ethDropCoreInstance.methods.setCFO(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
+//       await this.state.ethDropCoreReadInstance.methods.setCFO(this.state.newCFOInputValue).send({ from: this.state.accounts[0] });
 //       console.log('update CFO success!')
 
-//       const currentCFO = await this.state.ethDropCoreInstance.methods.getCFO().call({ from: this.state.accounts[0] });
+//       const currentCFO = await this.state.ethDropCoreReadInstance.methods.getCFO().call({ from: this.state.accounts[0] });
 //       console.log('currentCFO ', currentCFO)
 //       this.setState({ currentCFO, newCFOInputValue: '', errorToDisplay: '' });
 //     }
@@ -227,7 +227,7 @@
 //     event.preventDefault();
 
 //     try {
-//       const createdGroup = await this.state.ethDropCoreInstance.methods.createNewGroup(this.state.newGroupInputValue2).send({ from: this.state.accounts[0] });
+//       const createdGroup = await this.state.ethDropCoreReadInstance.methods.createNewGroup(this.state.newGroupInputValue2).send({ from: this.state.accounts[0] });
 //       console.log('created Group! ', createdGroup)
 //       this.setState({ createdGroup, newGroupInputValue2: '', createGroupErrorToDisplay: '' });
 
@@ -252,10 +252,10 @@
 
 //   async pauseEntireApp(event) {
 //     try {
-//       const createdGroup = await this.state.ethDropCoreInstance.methods.pause().send({ from: this.state.accounts[0] });
+//       const createdGroup = await this.state.ethDropCoreReadInstance.methods.pause().send({ from: this.state.accounts[0] });
 //       console.log('paused app! ', createdGroup)
 
-//       const isPaused = await this.state.ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
+//       const isPaused = await this.state.ethDropCoreReadInstance.methods.isPaused().call({ from: this.state.accounts[0] });
 //       console.log('isPaused ', isPaused)
 //       this.setState({ isPaused });
 //     }
@@ -270,10 +270,10 @@
 //   async unpauseEntireApp(event) {
 //     try {
 //       console.log('calling unpause:')
-//       const unpauseResponse = await this.state.ethDropCoreInstance.methods.unpause().send({ from: this.state.accounts[0] });
+//       const unpauseResponse = await this.state.ethDropCoreReadInstance.methods.unpause().send({ from: this.state.accounts[0] });
 //       console.log('unpaused app! ', unpauseResponse);
 
-//       const isPaused = await this.state.ethDropCoreInstance.methods.isPaused().call({ from: this.state.accounts[0] });
+//       const isPaused = await this.state.ethDropCoreReadInstance.methods.isPaused().call({ from: this.state.accounts[0] });
 //       console.log('isPaused ', isPaused)
 //       this.setState({ isPaused });
 //     }
@@ -565,22 +565,15 @@ import React from 'react';
 import Layout from '../components-premade/Layout';
 import SEO from '../components-premade/SEO';
 
+import AdminPanelPageComponent from '../page-components/exec-admin-panel/exec-admin-panel';
+
 class ExecutiveAdminPanelPage extends React.Component {
   render() {
     return (
         <Layout bodyClass="executive-admin-panel">
         <SEO title="Executive Admin Panel" />
   
-        <div className="intro">
-          <div className="container">
-            <div className="row justify-content-start">
-              <div className="col-12 col-md-7 col-lg-6 order-2 order-md-1">
-                <h1>ExecutiveAdminPanelPage</h1>
-                <p>ok</p>
-            </div>
-            </div>
-            </div>
-            </div>
+        <AdminPanelPageComponent/>
 
       </Layout>
     );
