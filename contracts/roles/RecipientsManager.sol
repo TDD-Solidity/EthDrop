@@ -173,8 +173,28 @@ contract RecipientsManager is EthDropBase {
             suggestedGroupContacts,
             suggestedGroupAlreadyCreated
         );
-    }    
+    }
 
+    modifier notAlreadyAppliedForEligibility(address account, uint256 groupId) {
+        _;
+    }
 
+    modifier notAlreadyEligibleUserName(address account, uint256 groupId) {
+        _;
+    }
+
+    modifier notAlreadyEligibleUserAddress(address account, uint256 groupId) {
+        _;
+    }
+
+    function askToBeEligibleRecipient(uint256 groupId)
+        external
+        notAlreadyAppliedForEligibility(msg.sender, groupId)
+        notAlreadyEligibleUserName(msg.sender, groupId)
+        notAlreadyEligibleUserAddress(msg.sender, groupId)
+        returns (bool)
+    {
+        
+    }
 
 }

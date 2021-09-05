@@ -106,6 +106,13 @@ contract EthDropBase is ExecutivesAccessControl {
     // groupId => whether of not user is an admin
     mapping(uint256 => bool[]) adminEnabled;
 
+     // groupId => nextAvailableIndex
+    mapping(uint256 => mapping(address => uint256)) nextEligibleRecipientApplicantIndex;
+    mapping(uint256 => uint256) nextEligibleRecipientApplicantNames;
+    mapping(uint256 => address) nextEligibleRecipientApplicantAddresses;
+    mapping(uint256 => bool) nextEligibleRecipientApplicantApprovals;
+    mapping(uint256 => uint256) nextEligibleRecipientApplicantApprovedBy;
+
     // Holds ALL contributors for all groups
     // groupId => Role
     mapping(uint256 => mapping(address => bool)) contributors;
