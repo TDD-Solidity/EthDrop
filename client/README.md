@@ -1,79 +1,42 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Gatsby Serif Theme
 
-## Available Scripts
+Serif is a beautiful small business theme for Gatsby. It contains content types for the archetypical small business website. The theme is fully responsive, blazing fast and artfully illustrated.
 
-In the project directory, you can run:
+[Live Demo](https://gatsby-serif.netlify.com/) | 
+[Zerostatic Themes](https://www.zerostatic.io/)
 
-### `yarn start`
+![Gatsby Serif Theme screenshot](https://www.zerostatic.io/theme/gatsby-serif/gatsby-serif-screenshot.png)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000/EthDrop/](http://localhost:3000/EthDrop/) to view it in the browser.
+## Theme features
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- Gatsby v3
+- Multi-page theme (not just a blog) that uses Markdown for multiple content-types/templates. It uses `gatsby-transformer-remark` and has several examples of querying and filtering `allMarkdownRemark`
+- Includes a graphql query in `gatsby-node.js` that creates pages and templates by content type based on the folder `src/pages/services`, `src/pages/team`,
+- Services (Markdown)
+- Team (Markdown)
+- Testimonials (Markdown)
+- Features (Data)
+- SCSS using `gatsby-plugin-sass`
+- Responsive design
+- Bootstrap 4 grid and media queries only
+- Responsive menu
+- Robust example content included
+- Royalty free illustrations included
+- SEO Titles & Meta using `gatsby-plugin-react-helmet`
+- ESLint
 
-### `yarn test`
+## Install
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+gatsby 3 and node-sass 5 requires node v14 or higher
 
-### `yarn build`
+```
+npm install
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+npm run develop
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-
-<br/>
-
-# Troubleshooting
-
-<br/>
-
-If you get the error `Error: [ethjs-query] while formatting outputs from RPC`...
-
-- try going in MetaMask to Account -> Settings -> Advanced, and click "Reset Account"
+```
+npm run build
+```

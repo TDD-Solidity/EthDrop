@@ -1,5 +1,5 @@
-const RecipientsManager_002 = artifacts.require("RecipientsManager_002");
+const RecipientsManager = artifacts.require("RecipientsManager");
 
 module.exports = function (deployer) {
-  deployer.deploy(RecipientsManager_002);
+  deployer.deploy(RecipientsManager);
 };

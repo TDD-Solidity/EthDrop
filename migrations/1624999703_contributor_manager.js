@@ -1,6 +1,6 @@
-const ContributorManager_002 = artifacts.require("ContributorManager_002");
+const ContributorManager = artifacts.require("ContributorManager");
 
 module.exports = function (deployer) {
-  deployer.deploy(ContributorManager_002);
+  deployer.deploy(ContributorManager);
 };
 

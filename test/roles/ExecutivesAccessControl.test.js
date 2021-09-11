@@ -1,7 +1,7 @@
-const ExecutivesAccessControl_002 = artifacts.require('./ExecutivesAccessControl_002.sol')
+const ExecutivesAccessControl = artifacts.require('./ExecutivesAccessControl.sol')
 const truffleAssert = require('truffle-assertions');
 
-contract('ExecutivesAccessControl_002', (accounts) => {
+contract('ExecutivesAccessControl', (accounts) => {
 
     let contract;
 
@@ -9,7 +9,7 @@ contract('ExecutivesAccessControl_002', (accounts) => {
 
     beforeEach(async () => {
 
-        contract = await ExecutivesAccessControl_002.new();
+        contract = await ExecutivesAccessControl.new();
 
     })
 
@@ -49,6 +49,22 @@ contract('ExecutivesAccessControl_002', (accounts) => {
     it('can\'t set CFO with COO', async () => {    
         const result = contract.setCFO("0x0000000000000000000000000000000000000002", { from: coo });
         await truffleAssert.reverts(result);
+    })
+
+    it('CEO only functions can only called by CEO', () => {
+        
+    })
+
+    it('COO only functions can only called by COO', () => {
+
+    })
+
+    it('CFO only functions can only called by CFO', () => {
+
+    })
+
+    it('Only C-suite functions can be called by COO, CEO, or CFO (but no one else)', () => {
+
     })
 
 })

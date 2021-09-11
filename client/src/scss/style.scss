@@ -1,0 +1,143 @@
+// Colors
+$primary: #8036ca;
+$secondary: #ffe55f;
+$black: #2f2f41;
+$white: #ffffff;
+$white-offset: #f6f7ff;
+$steel: #5c5a5a;
+
+// Links
+$link-color: $primary;
+$link-decoration: none;
+$link-hover-color: lighten($primary, 20%);
+$link-hover-decoration: underline;
+
+// Fonts
+$font-family-base: Helvetica, Arial, sans-serif, -apple-system;
+$font-family-heading: 'Raleway', serif, -apple-system;
+
+// Footer
+$footer-background-color: $primary;
+$footer-text-color: $white;
+$sub-footer-background-color: darken($primary, 10%);
+$sub-footer-text-color: $white;
+
+// Bootstrap
+@import 'bootstrap-variables';
+@import 'bootstrap/bootstrap-reboot';
+@import 'bootstrap/bootstrap-grid';
+// @import 'bootstrap/bootstrap'; // Uncomment this line to import the entire Bootstrap library
+
+// Libraries
+@import 'libraries/hamburgers/hamburgers';
+
+// Components
+@import 'components-premade/type';
+@import 'components-premade/page';
+@import 'components-premade/header';
+@import 'components-premade/footer';
+@import 'components-premade/sub-footer';
+@import 'components-premade/logo';
+@import 'components-premade/main-menu';
+@import 'components-premade/main-menu-mobile';
+@import 'components-premade/hamburger';
+@import 'components-premade/buttons';
+@import 'components-premade/call';
+@import 'components-premade/title';
+@import 'components-premade/content';
+@import 'components-premade/intro';
+@import 'components-premade/intro-image';
+@import 'components-premade/strip';
+@import 'components-premade/feature';
+@import 'components-premade/social';
+
+// Pages
+@import 'pages/home';
+@import 'pages/team/team-summary';
+@import 'pages/services/page-services-single';
+
+body {
+  font-size: 16px;
+  line-height: 1.2;
+  font-family: $font-family-base;
+  @include media-breakpoint-up(md) {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+}
+
+// Tables
+
+// table {
+
+$header_background_color: #333;
+$header_text_color: #fdfdfd;
+$alternate_row_background_color: #ddd;
+
+$table_width: 750px;
+$table_body_height: 100px;
+$column_one_width: 150px;
+$column_two_width: 150px;
+$column_three_width: 350px;
+
+// .fixed_headers {
+  // width: $table_width;
+  // table-layout: fixed;
+  // border-collapse: collapse;
+
+  th {
+    text-decoration: underline;
+  }
+  th,
+  td {
+    padding: 5px;
+    text-align: left;
+  }
+
+  td:nth-child(1),
+  th:nth-child(1) {
+    min-width: $column_one_width;
+  }
+  td:nth-child(2),
+  th:nth-child(2) {
+    min-width: $column_two_width;
+  }
+  td:nth-child(3),
+  th:nth-child(3) {
+    width: $column_three_width;
+  }
+
+  thead {
+    background-color: $header_background_color;
+    color: $header_text_color;
+    tr {
+      display: block;
+      position: relative;
+    }
+  }
+  tbody {
+    display: block;
+    overflow: auto;
+    width: 100%;
+    height: $table_body_height;
+    tr:nth-child(even) {
+      background-color: $alternate_row_background_color;
+    }
+  }
+// }
+
+.old_ie_wrapper {
+  height: $table_body_height;
+  width: $table_width;
+  overflow-x: hidden;
+  overflow-y: auto;
+  tbody {
+    height: auto;
+  }
+}
+
+th {
+  min-width: 70px;
+}
+
+// }

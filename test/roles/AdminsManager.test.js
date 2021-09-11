@@ -1,6 +1,6 @@
-const AdminsManager_002 = artifacts.require('./AdminsManager_002.sol')
+const AdminsManager = artifacts.require('./AdminsManager.sol')
 
-contract('AdminsManager_002', (accounts) => {
+contract('AdminsManager', (accounts) => {
 
   let adminsManager;
 
@@ -11,7 +11,7 @@ contract('AdminsManager_002', (accounts) => {
 
   beforeEach( async () => {
 
-    adminsManager = await AdminsManager_002.new();
+    adminsManager = await AdminsManager.new();
 
     await adminsManager.setCOO(coo);
 
@@ -60,6 +60,43 @@ contract('AdminsManager_002', (accounts) => {
     
     const isAdmin_admin1_after_removal = (await adminsManager.amIAdmin(mockGroupId, { from: admin1 }));
     expect(isAdmin_admin1_after_removal).to.equal(false);
+  })
+
+  it('admin can be removed and re-enabled', () => {
+
+    // TODO
+
+    // - removeAdmin
+    // - reEnableAdmin
+
+  })
+  
+  it('other users can\'t call coo-only functions', () => {
+
+    // TODO
+
+    // - addAdmin 
+    // - reEnableAdmin
+    // - removeAdmin
+    // - createNewGroup
+    // - endEvent
+    // - changeContributor
+
+  })
+
+  it('admin only functions revert when called by user who is NOT an admin', () => {
+
+    // TODO
+
+    // - renounceAdmin
+    // - readEventInfo
+    // - startEvent
+    // - closeEventRegistration
+    // - endEvent
+    // - addEligibleRecipient
+    // - removeEligibleRecipient
+    // - changeContributor
+
   })
 
 })
