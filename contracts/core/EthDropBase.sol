@@ -85,20 +85,12 @@ contract EthDropBase is ExecutivesAccessControl {
     // Key is the groupId
     mapping(uint256 => EthDropEvent[]) pastEvents;
 
-    // Deprecated: Holds ALL admins for all groups
-    // groupId => Role
-
-
-    // mapping(uint256 => mapping(address => bool)) admins;
-
     // groupId => index in arrays for this specific address
     mapping(uint256 => mapping(address => uint256)) adminAddressToIndex;
     
     // groupId => nextAvailableIndex
     mapping(uint256 => uint256) nextAdminIndexForGroup;
     
-    mapping(uint256 => mapping(address => bool)) winningsCollected;
-
     // groupId => list of admin addresses
     mapping(uint256 => address[]) adminAddresses;
 
@@ -108,17 +100,38 @@ contract EthDropBase is ExecutivesAccessControl {
     // groupId => whether of not user is an admin
     mapping(uint256 => bool[]) adminEnabled;
 
-    // Holds ALL contributors for all groups
-    // groupId => Role
-    mapping(uint256 => mapping(address => bool)) contributors;
-
-    // Holds ALL eligibleRecipients for all groups
-    // groupId => Role
     mapping(uint256 => mapping(address => bool)) eligibleRecipients;
+    
+    mapping(uint256 => mapping(address => uint256)) eligibleRecipientsAddresstoIndex;
+    mapping(uint256 => uint256) nextEligibleRecipientIndexForGroup;
+
     mapping(uint256 => address[]) eligibleRecipientAddressesArray;
     mapping(uint256 => string[]) eligibleRecipientNamesArray;
     mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
     mapping(uint256 => mapping(address => string)) recipientAddressToName;
+
+
+    // groupId => Role
+    mapping(uint256 => mapping(address => bool)) winningsCollected;
+
+    // Holds ALL contributors for all groups
+    // groupId => Role
+    mapping(uint256 => mapping(address => bool)) contributors;
+
+    mapping(uint256 => mapping(address => bool)) requestsToJoinGroupAddressToIndex;
+
+    mapping(uint256 => uint256) requestsToJoinGroupNextIndex;
+
+    mapping(uint256 => mapping(address => string)) requestsToJoinGroupNames;
+    mapping(uint256 => mapping(address => bool)) requestsToJoinGroupApprovals;
+
+    // Holds ALL eligibleRecipients for all groups
+    // groupId => Role
+    // mapping(uint256 => mapping(address => bool)) eligibleRecipients;
+    // mapping(uint256 => address[]) eligibleRecipientAddressesArray;
+    // mapping(uint256 => string[]) eligibleRecipientNamesArray;
+    // mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
+    // mapping(uint256 => mapping(address => string)) recipientAddressToName;
 
     mapping(uint256 => string[]) registeredRecipientNamesArray;
 

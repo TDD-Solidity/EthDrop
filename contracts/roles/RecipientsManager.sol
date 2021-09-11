@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../core/EthDropBase.sol";
+import '../core/EthDropBase.sol';
 
 contract RecipientsManager is EthDropBase {
     event EligibleRecipientAdded(address indexed account, uint256 groupId);
@@ -146,31 +146,49 @@ contract RecipientsManager is EthDropBase {
         return registeredRecipientAddressesArray[groupId];
     }
 
-    modifier requestForAddressNotAlreadyPending(address account) {
-
+    modifier requestsToJoinGroupNotAlreadyPending(
+        uint256 groupId,
+        address account
+    ) {
+        require(
+            requestsToJoinGroupApprovals[groupId][account] != true,
+            'Error: this address has already requested to join this group.'
+        );
         _;
     }
 
-    modifier notAlreadyInGroup(address account) {
+    modifier requestsToJoinGroupIsPending(
+        uint256 groupId,
+        address account
+    ) {
+        require(
+            requestsToJoinGroupApprovals[groupId][account] == true,
+            'Error: this address does not have a pending request to join this group.'
+        );
+        _;
+    }
 
+    modifier notAlreadyInGroup(uint256 groupId, address account) {
+        require(
+            eligibleRecipients[groupId][account] != true,
+            'Error: recipient is already in group.'
+        );
         _;
     }
 
     // functions for recipients not yet eligible
-    function requestToJoinGroup() external 
-        requestForAddressNotAlreadyPending(msg.sender) 
-        notAlreadyInGroup(msg.sender) {
+    function requestToJoinGroup(uint256 groupId)
+        external
+        requestsToJoinGroupNotAlreadyPending(groupId, msg.sender)
+        notAlreadyInGroup(groupId, msg.sender)
+    {
 
+        // requestsToJoinGroupApprovals
+
+        // push into arrays...
     }
-
 
     // functions for eligible recipients
 
-
-
-    // functions for 
-
-
-
-
+    // functions for
 }

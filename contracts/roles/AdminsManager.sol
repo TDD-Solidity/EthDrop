@@ -296,4 +296,18 @@ contract AdminsManager is ContributorManager {
     {
         _changeContributor(account, groupId);
     }
+
+    function approveRequestToJoinGroup(uint256 groupId, address accountToApprove) 
+        external
+        onlyAdmins(groupId)
+        whenNotPaused
+        notAlreadyInGroup(groupId, accountToApprove)
+        requestsToJoinGroupIsPending(groupId, accountToApprove)
+    {
+
+        // set eligible recipients stuff
+
+        // set requestapprovals for the address
+
+    }
 }
