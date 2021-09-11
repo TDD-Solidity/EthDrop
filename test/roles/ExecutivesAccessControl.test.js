@@ -42,17 +42,13 @@ contract('ExecutivesAccessControl_002', (accounts) => {
     })
     
     it('can\'t assign CFO to zero address', async () => {
-        
         const result = contract.setCFO("0x0000000000000000000000000000000000000000", { from: ceo });
         await truffleAssert.reverts(result);
-
     })
 
-    it('can\'t set CFO with COO', async () => {
-                
+    it('can\'t set CFO with COO', async () => {    
         const result = contract.setCFO("0x0000000000000000000000000000000000000002", { from: coo });
         await truffleAssert.reverts(result);
-
     })
 
 })

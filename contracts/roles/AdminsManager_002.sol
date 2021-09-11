@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ContributorManager_002.sol";
+import './ContributorManager_002.sol';
 
 contract AdminsManager_002 is ContributorManager_002 {
     event GroupCreated(string groupName, uint256 groupId);
     event EventStarted(address indexed startedBy, uint256 groupId);
     event RegistrationEnded(address indexed endedBy, uint256 groupId);
     event EventEnded(address indexed endedBy, uint256 groupId);
-    event AdminAdded(uint256 groupId, address account, uint index);
+    event AdminAdded(uint256 groupId, address account, uint256 index);
     event AdminRemoved(uint256 groupId, string name);
     event AdminReEnabled(uint256 groupId, string name);
+    event GettingMyAdminIndex(uint256 groupId, address account, uint256 index);
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
@@ -49,8 +50,11 @@ contract AdminsManager_002 is ContributorManager_002 {
     }
 
     // TODO - allow COO to give "admin-granting power" to other admins
-    function addAdmin(uint256 groupId, address account, string memory name) external 
-        wasntAlreadyAnAdmin(groupId, account) onlyCOO {
+    function addAdmin(
+        uint256 groupId,
+        address account,
+        string memory name
+    ) external wasntAlreadyAnAdmin(groupId, account) onlyCOO {
         _addAdmin(groupId, account, name);
     }
 
@@ -70,9 +74,17 @@ contract AdminsManager_002 is ContributorManager_002 {
     function getAdminsForGroup(uint256 groupId)
         external
         view
-        returns (address[] memory, bool[] memory, string[] memory)
+        returns (
+            address[] memory,
+            bool[] memory,
+            string[] memory
+        )
     {
-        return (adminAddresses[groupId], adminEnabled[groupId], adminNames[groupId]);
+        return (
+            adminAddresses[groupId],
+            adminEnabled[groupId],
+            adminNames[groupId]
+        );
     }
 
     modifier onlyAdminsOrCOO(uint256 groupId) {
@@ -94,36 +106,36 @@ contract AdminsManager_002 is ContributorManager_002 {
         _removeAdmin(groupId, msg.sender);
     }
 
-    function _addAdmin(uint256 groupId, address account, string memory name) internal {
-        
+    function _addAdmin(
+        uint256 groupId,
+        address account,
+        string memory name
+    ) internal {
+
         // if first user, use index 1 and push some garbage things at the 0 index
         if (nextAdminIndexForGroup[groupId] == 0) {
-            nextAdminIndexForGroup[groupId]++;
+
+            nextAdminIndexForGroup[groupId] = 1;
 
             adminAddresses[groupId].push(address(0));
             adminEnabled[groupId].push(false);
-            adminNames[groupId].push("zero address");
+            adminNames[groupId].push('zero address');
         }
 
-        uint index = nextAdminIndexForGroup[groupId];
-        adminAddressToIndex[groupId][account] = index;
-        
+        adminAddressToIndex[groupId][account] = nextAdminIndexForGroup[groupId];
+
         adminAddresses[groupId].push(account);
         adminEnabled[groupId].push(true);
         adminNames[groupId].push(name);
-        
-        emit AdminAdded(groupId, account, index);
 
-        nextAdminIndexForGroup[groupId]++;
+        // emit AdminAdded(groupId, account, newNextIndex);
 
+        nextAdminIndexForGroup[groupId] = nextAdminIndexForGroup[groupId] + 1;
     }
 
-    
-
     function _removeAdmin(uint256 groupId, address account) internal {
-        
         uint256 index = adminAddressToIndex[groupId][account];
-        
+
         adminEnabled[groupId][index] = false;
 
         emit AdminRemoved(groupId, adminNames[groupId][index]);
@@ -154,9 +166,9 @@ contract AdminsManager_002 is ContributorManager_002 {
             block.timestamp,
             block.timestamp,
             0,
-            "",
-            "",
-            "",
+            '',
+            '',
+            '',
             address(0),
             0,
             0,

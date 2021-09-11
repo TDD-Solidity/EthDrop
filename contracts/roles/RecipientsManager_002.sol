@@ -145,4 +145,32 @@ contract RecipientsManager_002 is EthDropBase_002 {
     {
         return registeredRecipientAddressesArray[groupId];
     }
+
+    modifier requestForAddressNotAlreadyPending(address account) {
+
+        _;
+    }
+
+    modifier notAlreadyInGroup(address account) {
+
+        _;
+    }
+
+    // functions for recipients not yet eligible
+    function requestToJoinGroup() external 
+        requestForAddressNotAlreadyPending(msg.sender) 
+        notAlreadyInGroup(msg.sender) {
+
+    }
+
+
+    // functions for eligible recipients
+
+
+
+    // functions for 
+
+
+
+
 }

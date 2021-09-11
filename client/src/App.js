@@ -71,7 +71,6 @@ class App extends Component {
 
       console.log('currentNetwork: ', currentNetwork)
 
-
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
 
@@ -90,7 +89,6 @@ class App extends Component {
         EthDropCore.abi,
         deployedNetwork && deployedNetwork.address,
       );
-
 
       // // Set web3, accounts, and contract to the state, and then proceed with an
       // // example of interacting with the contract's methods.

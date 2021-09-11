@@ -1,0 +1,22 @@
+{
+    "plugins": [
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+        [
+            "styled-components",
+            {
+                "ssr": false,
+                "displayName": true
+            }
+        ]
+    ],
+    "presets": [
+      [
+        "babel-preset-gatsby",
+        {
+          "targets": {
+            "browsers": [">0.25%", "not dead"]
+          }
+        }
+      ]
+    ]
+  }

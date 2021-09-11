@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import EthDropCore from "./contracts/EthDropCore.json";
+import EthDropCore_002 from "./contracts/EthDropCore_002.json";
 import getWeb3 from "./getWeb3";
 import {
   HashRouter as Router,
@@ -74,7 +74,7 @@ class Home extends Component {
       await foo;
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = EthDropCore.networks[networkId];
+      const deployedNetwork = EthDropCore_002.networks[networkId];
 
       if (currentNetwork === 'main') {
         this.setState({ showMainnetErrorMessage: true });
@@ -83,7 +83,7 @@ class Home extends Component {
       else {
 
         const ethDropCoreInstance = new web3.eth.Contract(
-          EthDropCore.abi,
+          EthDropCore_002.abi,
           deployedNetwork && deployedNetwork.address,
         );
 

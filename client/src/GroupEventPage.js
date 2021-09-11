@@ -4,7 +4,7 @@ import getWeb3 from './getWeb3'
 import potOfGoldEmptyImg from './assets/pot-of-gold-empty.png'
 import potOfGoldFullImg from './assets/pot-of-gold-full.png'
 
-import EthDropCore from './contracts/EthDropCore.json'
+import EthDropCore_002 from './contracts/EthDropCore_002.json'
 import { useParams, withRouter } from 'react-router-dom'
 
 import { FillButton } from 'tailwind-react-ui'
@@ -77,7 +77,7 @@ function GroupEventPage(props) {
    */
 
   React.useEffect(() => {
-    fetchData()
+    fetchData();
   }, [])
 
   /**
@@ -106,65 +106,71 @@ function GroupEventPage(props) {
       console.log('web3 ', web3)
       setWeb3(web3)
 
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await web3.eth.getAccounts(async (error, accounts) => {
 
-      const networkId = await web3.eth.net.getId()
-      const deployedNetwork = EthDropCore.networks[networkId]
+        if (!accounts || accounts.length < 1) {
+          throw 'error accounts is: ' + accounts
+        }
 
-      const ethDropCoreInstance = new web3.eth.Contract(
-        EthDropCore.abi,
-        deployedNetwork && deployedNetwork.address,
-      )
+        console.log('got web3 accounts: ', accounts)
+        const networkId = await web3.eth.net.getId()
+        const deployedNetwork = EthDropCore_002.networks[networkId]
+        
+        const ethDropCoreInstance = new web3.eth.Contract(
+          EthDropCore_002.abi,
+          deployedNetwork && deployedNetwork.address,
+          )
+          
+          setEthDropCoreInstance(ethDropCoreInstance)
+          
+          setAccounts(accounts)
+          console.log('checking admin with accounts ', accounts)
+          
+        await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
 
-      setEthDropCoreInstance(ethDropCoreInstance)
+        const isCOO = await ethDropCoreInstance.methods
+          .isCOO()
+          .call({ from: accounts[0] })
+        console.log('isCOO ', isCOO)
+        setIsCOO(isCOO)
 
-      setAccounts(accounts)
+        await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
 
-      await checkAdminStuff(groupId, ethDropCoreInstance)
+        const isContributor = await ethDropCoreInstance.methods
+          .amIContributor(groupId)
+          .call({ from: accounts[0] })
+        console.log('isContributor ', isContributor)
+        setIsContributor(isContributor)
 
-      const isCOO = await ethDropCoreInstance.methods
-        .isCOO()
-        .call({ from: accounts[0] })
-      console.log('isCOO ', isCOO)
-      setIsCOO(isCOO)
+        const currentSponsorAddress = await ethDropCoreInstance.methods
+          .getCurrentSponsorAddress(groupId)
+          .call({ from: accounts[0] })
+        console.log('currentSponsorAddress ', currentSponsorAddress)
+        setCurrentSponsorAddress(currentSponsorAddress)
 
-      await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
+        const groupEventData = await ethDropCoreInstance.methods
+          .getGroupEventData(groupId)
+          .call({ from: accounts[0] })
+        console.log('groupEventData ', groupEventData)
+        setGroupEventData(groupEventData)
+        setContributionAmount(groupEventData[2])
 
-      const isContributor = await ethDropCoreInstance.methods
-        .amIContributor(groupId)
-        .call({ from: accounts[0] })
-      console.log('isContributor ', isContributor)
-      setIsContributor(isContributor)
+        await checkEligibleRecipients(groupId, ethDropCoreInstance)
 
-      const currentSponsorAddress = await ethDropCoreInstance.methods
-        .getCurrentSponsorAddress(groupId)
-        .call({ from: accounts[0] })
-      console.log('currentSponsorAddress ', currentSponsorAddress)
-      setCurrentSponsorAddress(currentSponsorAddress)
+        const sponsorInfo = await ethDropCoreInstance.methods
+          .getContributorInfo(groupId)
+          .call({ from: accounts[0] })
+        console.log('sponsorInfo ', sponsorInfo)
 
-      const groupEventData = await ethDropCoreInstance.methods
-        .getGroupEventData(groupId)
-        .call({ from: accounts[0] })
-      console.log('groupEventData ', groupEventData)
-      setGroupEventData(groupEventData)
-      setContributionAmount(groupEventData[2])
+        setCurrentSponsorName(sponsorInfo[0])
+        setCurrentSponsorImg(sponsorInfo[1])
+        setCurrentSponsorImgLinkTo(sponsorInfo[2])
 
-      await checkEligibleRecipients(groupId, ethDropCoreInstance)
+        ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
+          console.log('group page heard event! ', eventObj.event)
+          console.log('event return values! ', eventObj.returnValues)
 
-      const sponsorInfo = await ethDropCoreInstance.methods
-        .getContributorInfo(groupId)
-        .call({ from: accounts[0] })
-      console.log('sponsorInfo ', sponsorInfo)
-
-      setCurrentSponsorName(sponsorInfo[0])
-      setCurrentSponsorImg(sponsorInfo[1])
-      setCurrentSponsorImgLinkTo(sponsorInfo[2])
-
-      ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
-        console.log('group page heard event! ', eventObj.event)
-        console.log('yerp! ', eventObj.returnValues)
-
-        if (eventObj.returnValues.groupId) {
+          // if (eventObj.returnValues.groupId) {
           switch (eventObj.event) {
             case 'CooUpdated':
               // await this.checkIfImCOO()
@@ -186,8 +192,15 @@ function GroupEventPage(props) {
               break
 
             case 'AdminAdded':
+
+              console.log('an admin has been added! ', eventObj.returnValues)
+              await checkAdminStuff(groupId, ethDropCoreInstance)
+              break;
+
             case 'AdminReEnabled':
             case 'AdminRemoved':
+
+
               await checkAdminStuff(groupId, ethDropCoreInstance)
               break
 
@@ -203,7 +216,7 @@ function GroupEventPage(props) {
                 .call({ from: accounts[0] })
               console.log('currentSponsorAddress ', currentSponsorAddress)
               setCurrentSponsorAddress(currentSponsorAddress)
-              break
+              break;
 
             case 'ContributorInfoUpdated':
               console.log('heard ContributorInfoUpdated event')
@@ -211,7 +224,7 @@ function GroupEventPage(props) {
               setCurrentSponsorImg(eventObj.returnValues.imgUrl)
               setCurrentSponsorImgLinkTo(eventObj.returnValues.imgLinkToUrl)
 
-              break
+              break;
 
             case 'ContributionMade':
               console.log(
@@ -219,7 +232,7 @@ function GroupEventPage(props) {
                 eventObj.returnValues.amount,
               )
               setContributionAmount(eventObj.returnValues.amount)
-              break
+              break;
 
             case 'EligibleRecipientAdded':
             case 'EligibleRecipientRemoved':
@@ -230,24 +243,31 @@ function GroupEventPage(props) {
               // setIsEligibleRecipient(isEligibleRecipient)
               await checkEligibleRecipients(groupId, ethDropCoreInstance)
 
-              break
+              break;
 
             case 'RecipientRegistered':
               await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
 
-              break
+              break;
 
             case 'WinningsClaimed':
               await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
-              break
+              break;
+
+            case 'GettingMyAdminIndex':
+
+              console.log('getting admin index: ', eventObj.returnValues);
+
+              break;
 
             default:
               console.log(`UNHANDLED EVENT!! : ${eventObj.event}`)
           }
-        }
-      })
+          // }
+        })
 
-      console.log('done fetching')
+        console.log('done fetching')
+      })
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(`Failed to load web3, accounts, or contract.` + error)
@@ -306,33 +326,37 @@ function GroupEventPage(props) {
     setRegisteredRecipients(registeredRecipients)
   }
 
-  const checkAdminStuff = async (groupId, ethDropCoreInstance) => {
+  async function checkAdminStuff (groupId, account, ethDropCoreInstance) {
     try {
 
       console.log('checking if admin...')
 
-      console.log('am I an admin of group: ', groupId)
+      console.log('am I an admin of group: ', groupId, ' with addres: ', account)
 
       const nextAdminIndex = await ethDropCoreInstance.methods
         .getAddressNextAdminIndex(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account })
       console.log('nextAdminIndex ', nextAdminIndex)
 
       const myAdminIndex = await ethDropCoreInstance.methods
         .getMyAdminIndex(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account });
+
       console.log('myAdminIndex ', myAdminIndex)
-      // setIsAdmin(myAdminIndex)
+      setIsAdmin(myAdminIndex)
 
       const isAdmin = await ethDropCoreInstance.methods
         .amIAdmin(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account })
+
+      console.log('isAdmin accounts: ', accounts)
+      console.log('isAdmin user account: ', account)
       console.log('isAdmin ', isAdmin)
       setIsAdmin(isAdmin)
 
       const adminInfoForGroup = await ethDropCoreInstance.methods
         .getAdminsForGroup(groupId)
-        .call({ from: accounts[0] })
+        .call({ from: account })
       console.log('adminsForGroup ', adminAddressesForGroup)
 
       setAdminAddressesForGroup(adminInfoForGroup[0])
@@ -1279,6 +1303,7 @@ function GroupEventPage(props) {
         }
       </div >
     )
+
 }
 
 export default withRouter(GroupEventPage)
