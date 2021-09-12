@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../roles/ExecutivesAccessControl.sol";
+import '../roles/ExecutivesAccessControl.sol';
 
 contract EthDropBase is ExecutivesAccessControl {
     /*** EVENTS ***/
 
-    uint foo;
+    uint256 foo;
 
     /// @dev The RegistrationOpen event is fired whenever a new event starts and users can begin restering.
     event RegistrationOpen();
@@ -66,10 +66,9 @@ contract EthDropBase is ExecutivesAccessControl {
         string sponsorImageUrl;
         string sponsorLinkToUrl;
         address currentContributor;
-
-        uint totalAmountContributed;
-        uint weiWinnings;
-        uint numberOfUsersWhoClaimedWinnings;
+        uint256 totalAmountContributed;
+        uint256 weiWinnings;
+        uint256 numberOfUsersWhoClaimedWinnings;
     }
 
     // ALL events happening now or in the future.
@@ -87,10 +86,10 @@ contract EthDropBase is ExecutivesAccessControl {
 
     // groupId => index in arrays for this specific address
     mapping(uint256 => mapping(address => uint256)) adminAddressToIndex;
-    
+
     // groupId => nextAvailableIndex
     mapping(uint256 => uint256) nextAdminIndexForGroup;
-    
+
     // groupId => list of admin addresses
     mapping(uint256 => address[]) adminAddresses;
 
@@ -101,17 +100,14 @@ contract EthDropBase is ExecutivesAccessControl {
     mapping(uint256 => bool[]) adminEnabled;
 
     mapping(uint256 => mapping(address => bool)) eligibleRecipients;
-    
+
     mapping(uint256 => mapping(address => uint256)) eligibleRecipientsAddresstoIndex;
     mapping(uint256 => uint256) nextEligibleRecipientIndexForGroup;
 
     mapping(uint256 => address[]) eligibleRecipientAddressesArray;
     mapping(uint256 => string[]) eligibleRecipientNamesArray;
     mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
-    // mapping(uint256 => mapping(address => string)) recipientAddressToName;
 
-
-    // groupId => Role
     mapping(uint256 => mapping(address => bool)) winningsCollected;
 
     // Holds ALL contributors for all groups
@@ -127,26 +123,12 @@ contract EthDropBase is ExecutivesAccessControl {
     mapping(uint256 => bool[]) requestedToJoinGroup;
     mapping(uint256 => bool[]) requestsToJoinGroupApprovals;
 
-    // Holds ALL eligibleRecipients for all groups
-    // groupId => Role
-    // mapping(uint256 => mapping(address => bool)) eligibleRecipients;
-    // mapping(uint256 => address[]) eligibleRecipientAddressesArray;
-    // mapping(uint256 => string[]) eligibleRecipientNamesArray;
-    // mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
-    // mapping(uint256 => mapping(address => string)) recipientAddressToName;
+    mapping(uint256 => mapping(address => uint256)) registeredRecipientsAddressToIndex;
 
+    mapping(uint256 => uint256) registeredRecipientsNextIndex;
     mapping(uint256 => string[]) registeredRecipientNamesArray;
-
-    // Holds ALL registeredRecipients for all groups
-    // groupId => Role
-    mapping(uint256 => mapping(address => bool)) registeredRecipients;
-
-    // Holds ALL registeredRecipients in an array (for PaymentSplitter)
-    // groupId => address[]
     mapping(uint256 => address[]) registeredRecipientAddressesArray;
-
-    // Keeping track of winnings for all groups
-    // mapping(uint256 => PaymentSplitter) pot;
+    mapping(uint256 => bool[]) registeredRecipientsWinningsCollected;
 
     function getGroupIds() external view returns (uint256[] memory) {
         return listOfGroupIds;
@@ -220,14 +202,14 @@ contract EthDropBase is ExecutivesAccessControl {
             // uint256, // registeredRecipientsCount,
             // Data about the sponsor info (address is stored in Roles)
 
-            uint,
-            uint 
-            // address // currentContributor,
+            uint256,
+            uint256
         )
+    // address // currentContributor,
     {
         EthDropEvent memory groupData = currentEvents[groupId];
 
-        return ( 
+        return (
             // groupData.groupId,
             // groupData.groupName,
             groupData.currentState,
@@ -236,7 +218,6 @@ contract EthDropBase is ExecutivesAccessControl {
             // groupData.endTime,
             groupData.registeredRecipientsCount,
             groupData.totalAmountContributed,
-
             groupData.weiWinnings,
             groupData.numberOfUsersWhoClaimedWinnings
             // groupData.currentContributor
@@ -248,40 +229,22 @@ contract EthDropBase is ExecutivesAccessControl {
         view
         returns (
             uint256, // groupId
-            // Event goes through a linear flow of states, finite state machine.
             string memory, // groupName
-            // Event goes through a linear flow of states, finite state machine.
             EventState, // currentState,
-            // The timestamp from the block when this event started.
-            // uint256, // startTime,
-            // // The timestamp from the block when registration for this event ended.
-            // uint256, // registrationEndTime,
-            // // The timestamp from the bock when this event ended.
-            // uint256, // endTime,
-            // The number of eligibleRecipients who have registered.
             uint256, // registeredRecipientsCount,
             uint256, // total amount contributed,
-            // uint256, // registeredRecipientsCount,
-            // Data about the sponsor info (address is stored in Roles)
-
-            uint,
-            uint 
-            // address // currentContributor,
-
+            uint256, // wei winnings (for each recipient)
+            uint256 // number of users whoh have claimed winnings
         )
     {
         EthDropEvent memory groupData = currentEvents[groupId];
 
-        return ( 
+        return (
             groupData.groupId,
             groupData.groupName,
             groupData.currentState,
-            // groupData.startTime,
-            // groupData.registrationEndTime,
-            // groupData.endTime,
             groupData.registeredRecipientsCount,
             groupData.totalAmountContributed,
-
             groupData.weiWinnings,
             groupData.numberOfUsersWhoClaimedWinnings
         );

@@ -56,7 +56,7 @@ contract RecipientsManager is EthDropBase {
         whenNotPaused
         returns (bool)
     {
-        return registeredRecipients[groupId][account] == true;
+        return registeredRecipientsAddressToIndex[groupId][account] > 0;
     }
 
     function amIRegisteredRecipient(uint256 groupId)
@@ -68,19 +68,50 @@ contract RecipientsManager is EthDropBase {
         return isRegisteredRecipient(msg.sender, groupId);
     }
 
+    modifier recipientEligibilityIsEnabled(uint256 groupId, address account) {
+        uint256 indexOfEligibleRecipient = eligibleRecipientsAddresstoIndex[
+            groupId
+        ][msg.sender];
+
+        require(
+            eligibleRecipientsEligibilityIsEnabled[groupId][
+                indexOfEligibleRecipient
+            ] != false,
+            "Error: recipient's eligiblility has been disabled for this group..."
+        );
+        _;
+    }
+
     function registerForEvent(uint256 groupId)
         external
         onlyEligibleRecipients(groupId)
+        recipientEligibilityIsEnabled(groupId, msg.sender)
         whenNotPaused
     {
-        registeredRecipients[groupId][msg.sender] = true;
+        if (registeredRecipientsNextIndex[groupId] == 0) {
+            registeredRecipientsNextIndex[groupId] = 1;
+
+            registeredRecipientAddressesArray[groupId].push(address(0));
+            registeredRecipientNamesArray[groupId].push('');
+            registeredRecipientsWinningsCollected[groupId].push(false);
+        }
+
+        uint256 indexOfEligibleRecipient = eligibleRecipientsAddresstoIndex[
+            groupId
+        ][msg.sender];
+        string memory nameOfEligibleRecipient = eligibleRecipientNamesArray[
+            groupId
+        ][indexOfEligibleRecipient];
+
         registeredRecipientAddressesArray[groupId].push(msg.sender);
+        registeredRecipientNamesArray[groupId].push(nameOfEligibleRecipient);
+        registeredRecipientsWinningsCollected[groupId].push(false);
 
-        string memory name = recipientAddressToName[groupId][msg.sender];
+        currentEvents[groupId].registeredRecipientsCount = currentEvents[groupId].registeredRecipientsCount + 1;
 
-        registeredRecipientNamesArray[groupId].push(name);
-
-        currentEvents[groupId].registeredRecipientsCount++;
+        registeredRecipientsNextIndex[groupId] =
+            registeredRecipientsNextIndex[groupId] +
+            1;
 
         emit RecipientRegistered(msg.sender, groupId);
     }
@@ -146,9 +177,17 @@ contract RecipientsManager is EthDropBase {
     function getRegisteredRecipients(uint256 groupId)
         external
         view
-        returns (address[] memory)
+        returns (
+            address[] memory,
+            string[] memory,
+            bool[] memory
+        )
     {
-        return registeredRecipientAddressesArray[groupId];
+        return (
+            registeredRecipientAddressesArray[groupId],
+            registeredRecipientNamesArray[groupId],
+            registeredRecipientsWinningsCollected[groupId]
+        );
     }
 
     modifier requestsToJoinGroupNotAlreadyPending(
@@ -196,7 +235,9 @@ contract RecipientsManager is EthDropBase {
             requestsToJoinGroupApprovals[groupId].push(false);
         }
 
-        requestsToJoinGroupAddressToIndex[groupId][msg.sender] = requestsToJoinGroupNextIndex[groupId];
+        requestsToJoinGroupAddressToIndex[groupId][
+            msg.sender
+        ] = requestsToJoinGroupNextIndex[groupId];
 
         requestsToJoinGroupAddresses[groupId].push(msg.sender);
         requestsToJoinGroupNames[groupId].push(username);
@@ -213,6 +254,4 @@ contract RecipientsManager is EthDropBase {
             nextAdminIndexForGroup[groupId]
         );
     }
-
-  
 }

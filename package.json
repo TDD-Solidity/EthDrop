@@ -9,11 +9,13 @@
   "scripts": {
     "start": "truffle develop",
     "test": "truffle test",
+    "build": "truffle build",
     "test:watch": "nodemon --ext 'js,sol' --exec 'truffle test --compile-all'",
     "deploy-rinkeby": "truffle migrate --reset --network rinkeby",
     "deploy-goerli": "truffle migrate --reset --network goerli",
     "deploy-ropsten": "truffle migrate --network ropsten",
-    "deploy-matic": "truffle migrate --network matic"
+    "deploy-matic": "truffle migrate --network matic",
+    "size": "truffle run contract-size"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,7 @@
     "dotenv": "^10.0.0",
     "truffle": "^5.4.3",
     "truffle-assertions": "^0.9.2",
+    "truffle-contract-size": "^2.0.1",
     "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {

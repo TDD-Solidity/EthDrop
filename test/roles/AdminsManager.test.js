@@ -5,9 +5,12 @@ contract('AdminsManager', (accounts) => {
   let adminsManager;
 
   let [ceo, coo, nonAdmin, admin1, admin2, recipient1_group1] = accounts;
+
   const mockGroupId = 124;
 
   const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+  const mockRequestedUserName = "bob";
 
   beforeEach(async () => {
 
@@ -99,30 +102,131 @@ contract('AdminsManager', (accounts) => {
 
   })
 
-  describe('Approving new joiner requests', () => {
 
-    const mockRequestedUserName = "bob";
 
-    beforeEach(() => {
+  describe('requesting to join a group', async () => {
+
+    beforeEach(async () => {
 
       await adminsManager.addAdmin(mockGroupId, admin1, 'admin1', { from: coo });
 
-      await adminsManager.requestToJoinGroup(mockGroupId, mockRequestedUserName);
-      
+      await adminsManager.requestToJoinGroup(mockGroupId, mockRequestedUserName, { from: recipient1_group1 });
+
     })
-    
-    it('can approve a new joiner request', () => {
-      
+
+    it('a new user can request to join a group', async () => {
+
       await adminsManager.approveRequestToJoinGroup(mockGroupId, mockRequestedUserName);
 
-      await adminsManager
+      const joinerRequests = await adminsManager.getNewJoinerRequests(mockGroupId, { from: admin1 });
 
-      expect()
+      const expectedJoinerRequests = [
+        [ZERO_ADDRESS, recipient1_group1],
+        ['', mockRequestedUserName],
+        [false, false]
+      ];
+
+      expect(joinerRequests).to.deep.equal(expectedJoinerRequests);
 
     })
 
+    describe('Approving new joiner requests', () => {
 
+      it('admin can approve a new joiner request', async () => {
+
+        await adminsManager.approveRequestToJoinGroup(mockGroupId, mockRequestedUserName, { from: admin1 });
+
+        // verify that it modified "joiner requests" data
+        const joinerRequests = await adminsManager.getNewJoinerRequests(mockGroupId, { from: admin1 });
+
+        const expectedJoinerRequests = [
+          [ZERO_ADDRESS, recipient1_group1],
+          ['', mockRequestedUserName],
+          [false, true]
+        ];
+
+        expect(joinerRequests).to.deep.equal(expectedJoinerRequests);
+
+        // verify that it modified "elibible recipients" data
+        const eligibleRecipients = await adminsManager.getEligibleRecipients(mockGroupId, { from: admin1 });
+
+        const expectedEligibleRecipients = [
+          [ZERO_ADDRESS, recipient1_group1],
+          ['', mockRequestedUserName],
+          [false, true]
+        ];
+
+        expect(eligibleRecipients).to.deep.equal(expectedEligibleRecipients);
+
+      })
+
+      it('non-admins cannot approve new joiner requests', () => {
+        // TODO
+      })
+
+    })
+
+    describe('Eligible recipients can register for an open event', () => {
+
+      beforeEach(async () => {
+        await adminsManager.approveRequestToJoinGroup(mockGroupId, mockRequestedUserName, { from: admin1 });
+      })
+
+      it('registers an eligible user for the current event', async () => {
+
+        await adminsManager.registerForEvent(mockGroupId, { from: recipient1_group1 });
+
+        const registeredRecipients = await adminsManager.getRegisteredRecipients(mockGroupId, { from: recipient1_group1 });
+
+        const expectedRegisteredRecipients = [
+          [ZERO_ADDRESS, recipient1_group1],
+          ['', mockRequestedUserName],
+          [false, false]
+        ];
+
+        expect(registeredRecipients).to.deep.equal(expectedRegisteredRecipients);
+
+      })
+
+    })
+
+    xdescribe('Setting The Sponsor', () => {
+
+      describe('Setting the sponsor Info', () => {
+
+      })
+      
+      describe('Contributing To The Pot', () => {
+        
+        describe('Claming winnings', () => {
+    
+          beforeEach(async () => {
+            await adminsManager.registerForEvent(mockGroupId, { from: recipient1_group1 });
+          })
+    
+          it('allows each user to claim winnings one time', () => {
+    
+          })
+    
+        })
+
+      })
+
+    })
 
   })
+
+  describe('Eligible recipients can register for an open event', () => {
+
+    beforeEach(() => {
+
+    })
+
+    it('', () => {
+
+    })
+
+  })
+
 
 })

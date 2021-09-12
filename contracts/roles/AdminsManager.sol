@@ -13,8 +13,11 @@ contract AdminsManager is ContributorManager {
     event AdminReEnabled(uint256 groupId, string name);
     event GettingMyAdminIndex(uint256 groupId, address account, uint256 index);
 
-    event NewJoinerRequestApproved(uint256 groupId, address addressOfUserGettingApproved,
-            string nameOfUserGettingApproved, uint256 index);
+    event NewJoinerRequestApproved(
+        uint256 groupId,
+        address addressOfUserGettingApproved,
+        string nameOfUserGettingApproved
+    );
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
@@ -231,8 +234,6 @@ contract AdminsManager is ContributorManager {
         onlyAdminsOrCOO(groupId)
         whenNotPaused
     {
-        currentEvents[groupId].endTime = block.timestamp;
-
         currentEvents[groupId].currentState = EventState.ENDED;
 
         // First delete mappings, then arrays
@@ -245,13 +246,14 @@ contract AdminsManager is ContributorManager {
                 i
             ];
 
-            delete registeredRecipients[groupId][currentAddress];
-            delete recipientAddressToName[groupId][currentAddress];
-            delete winningsCollected[groupId][currentAddress];
+            delete registeredRecipientsAddressToIndex[groupId][currentAddress];
         }
 
+        delete registeredRecipientsWinningsCollected[groupId];
         delete registeredRecipientNamesArray[groupId];
         delete registeredRecipientAddressesArray[groupId];
+
+        registeredRecipientsNextIndex[groupId] = 0;
 
         pastEvents[groupId].push(currentEvents[groupId]);
 
@@ -260,25 +262,36 @@ contract AdminsManager is ContributorManager {
         currentEvents[groupId].weiWinnings = 0;
         currentEvents[groupId].numberOfUsersWhoClaimedWinnings = 0;
 
-        emit ContributionMade(msg.sender, groupId, 0);
-        emit RecipientRegistered(msg.sender, groupId);
         emit EventEnded(msg.sender, groupId);
     }
 
     function addEligibleRecipient(
-        address account,
-        string memory name,
+        address addressOfUserGettingApproved,
+        string memory nameOfUserGettingApproved,
         uint256 groupId
-    ) external whenNotPaused onlyAdmins(groupId) {
-        eligibleRecipients[groupId][account] = true;
+    ) internal whenNotPaused onlyAdmins(groupId) {
+        
+        if (nextEligibleRecipientIndexForGroup[groupId] == 0) {
+            nextEligibleRecipientIndexForGroup[groupId] = 1;
 
-        eligibleRecipientAddressesArray[groupId].push(account);
-        eligibleRecipientNamesArray[groupId].push(name);
+            eligibleRecipientAddressesArray[groupId].push(address(0));
+            eligibleRecipientNamesArray[groupId].push('');
+            eligibleRecipientsEligibilityIsEnabled[groupId].push(false);
+        }
 
-        recipientAddressToName[groupId][account] = name;
+        eligibleRecipientsAddresstoIndex[groupId][
+            addressOfUserGettingApproved
+        ] = nextEligibleRecipientIndexForGroup[groupId];
+
+        eligibleRecipientAddressesArray[groupId].push(
+            addressOfUserGettingApproved
+        );
+        eligibleRecipientNamesArray[groupId].push(nameOfUserGettingApproved);
         eligibleRecipientsEligibilityIsEnabled[groupId].push(true);
 
-        emit EligibleRecipientAdded(account, groupId);
+        nextEligibleRecipientIndexForGroup[groupId] =
+            nextEligibleRecipientIndexForGroup[groupId] +
+            1;
     }
 
     function removeEligibleRecipient(address account, uint256 groupId)
@@ -308,52 +321,30 @@ contract AdminsManager is ContributorManager {
         notAlreadyInGroup(groupId, accountToApprove)
         requestsToJoinGroupIsPending(groupId, accountToApprove)
     {
-        // set eligible recipients stuff
-        // set requestapprovals for the address
-
         uint256 requestsIndexOfUserGettingApproved = requestsToJoinGroupAddressToIndex[
                 groupId
             ][accountToApprove];
 
-        address addressOfUserGettingApproved = requestsToJoinGroupAddresses[groupId][
-            requestsIndexOfUserGettingApproved
-        ];
-        string memory nameOfUserGettingApproved = requestsToJoinGroupNames[groupId][
-            requestsIndexOfUserGettingApproved
-        ];
+        address addressOfUserGettingApproved = requestsToJoinGroupAddresses[
+            groupId
+        ][requestsIndexOfUserGettingApproved];
 
+        string memory nameOfUserGettingApproved = requestsToJoinGroupNames[
+            groupId
+        ][requestsIndexOfUserGettingApproved];
+
+        // updates requests approvals array
         requestsToJoinGroupApprovals[groupId][
             requestsIndexOfUserGettingApproved
         ] = true;
 
         // if first user, use index 1 and push some garbage things at the 0 index
-        if (nextEligibleRecipientIndexForGroup[groupId] == 0) {
-            nextEligibleRecipientIndexForGroup[groupId] = 1;
-
-            eligibleRecipientAddressesArray[groupId].push(address(0));
-            eligibleRecipientNamesArray[groupId].push('');
-            eligibleRecipientsEligibilityIsEnabled[groupId].push(false);
-        }
-
-        eligibleRecipientsAddresstoIndex[groupId][
-            addressOfUserGettingApproved
-        ] = nextEligibleRecipientIndexForGroup[groupId];
-
-        eligibleRecipientAddressesArray[groupId].push(
-            addressOfUserGettingApproved
-        );
-        eligibleRecipientNamesArray[groupId].push(nameOfUserGettingApproved);
-        eligibleRecipientsEligibilityIsEnabled[groupId].push(true);
-
-        nextEligibleRecipientIndexForGroup[groupId] =
-            nextEligibleRecipientIndexForGroup[groupId] +
-            1;
+        addEligibleRecipient(addressOfUserGettingApproved, nameOfUserGettingApproved, groupId);
 
         emit NewJoinerRequestApproved(
             groupId,
             addressOfUserGettingApproved,
-            nameOfUserGettingApproved,
-            nextEligibleRecipientIndexForGroup[groupId]
+            nameOfUserGettingApproved
         );
     }
 
@@ -371,6 +362,22 @@ contract AdminsManager is ContributorManager {
             requestsToJoinGroupAddresses[groupId],
             requestsToJoinGroupNames[groupId],
             requestsToJoinGroupApprovals[groupId]
+        );
+    }
+
+    function getEligibleRecipients(uint256 groupId)
+        external
+        view
+        returns (
+            address[] memory,
+            string[] memory,
+            bool[] memory
+        )
+    {
+        return (
+            eligibleRecipientAddressesArray[groupId],
+            eligibleRecipientNamesArray[groupId],
+            eligibleRecipientsEligibilityIsEnabled[groupId]
         );
     }
 }
