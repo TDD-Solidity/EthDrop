@@ -108,7 +108,7 @@ contract EthDropBase is ExecutivesAccessControl {
     mapping(uint256 => address[]) eligibleRecipientAddressesArray;
     mapping(uint256 => string[]) eligibleRecipientNamesArray;
     mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
-    mapping(uint256 => mapping(address => string)) recipientAddressToName;
+    // mapping(uint256 => mapping(address => string)) recipientAddressToName;
 
 
     // groupId => Role
@@ -118,12 +118,14 @@ contract EthDropBase is ExecutivesAccessControl {
     // groupId => Role
     mapping(uint256 => mapping(address => bool)) contributors;
 
-    mapping(uint256 => mapping(address => bool)) requestsToJoinGroupAddressToIndex;
+    mapping(uint256 => mapping(address => uint256)) requestsToJoinGroupAddressToIndex;
 
     mapping(uint256 => uint256) requestsToJoinGroupNextIndex;
 
-    mapping(uint256 => mapping(address => string)) requestsToJoinGroupNames;
-    mapping(uint256 => mapping(address => bool)) requestsToJoinGroupApprovals;
+    mapping(uint256 => address[]) requestsToJoinGroupAddresses;
+    mapping(uint256 => string[]) requestsToJoinGroupNames;
+    mapping(uint256 => bool[]) requestedToJoinGroup;
+    mapping(uint256 => bool[]) requestsToJoinGroupApprovals;
 
     // Holds ALL eligibleRecipients for all groups
     // groupId => Role
@@ -196,6 +198,7 @@ contract EthDropBase is ExecutivesAccessControl {
     //     );
     // }
 
+    // DEPRECATED
     function getGroupEventData(uint256 groupId)
         external
         view
@@ -237,6 +240,50 @@ contract EthDropBase is ExecutivesAccessControl {
             groupData.weiWinnings,
             groupData.numberOfUsersWhoClaimedWinnings
             // groupData.currentContributor
+        );
+    }
+
+    function getGroupPublicData(uint256 groupId)
+        external
+        view
+        returns (
+            uint256, // groupId
+            // Event goes through a linear flow of states, finite state machine.
+            string memory, // groupName
+            // Event goes through a linear flow of states, finite state machine.
+            EventState, // currentState,
+            // The timestamp from the block when this event started.
+            // uint256, // startTime,
+            // // The timestamp from the block when registration for this event ended.
+            // uint256, // registrationEndTime,
+            // // The timestamp from the bock when this event ended.
+            // uint256, // endTime,
+            // The number of eligibleRecipients who have registered.
+            uint256, // registeredRecipientsCount,
+            uint256, // total amount contributed,
+            // uint256, // registeredRecipientsCount,
+            // Data about the sponsor info (address is stored in Roles)
+
+            uint,
+            uint 
+            // address // currentContributor,
+
+        )
+    {
+        EthDropEvent memory groupData = currentEvents[groupId];
+
+        return ( 
+            groupData.groupId,
+            groupData.groupName,
+            groupData.currentState,
+            // groupData.startTime,
+            // groupData.registrationEndTime,
+            // groupData.endTime,
+            groupData.registeredRecipientsCount,
+            groupData.totalAmountContributed,
+
+            groupData.weiWinnings,
+            groupData.numberOfUsersWhoClaimedWinnings
         );
     }
 }

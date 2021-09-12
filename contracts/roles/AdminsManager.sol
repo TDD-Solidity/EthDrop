@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ContributorManager.sol";
+import './ContributorManager.sol';
 
 contract AdminsManager is ContributorManager {
     event GroupCreated(string groupName, uint256 groupId);
@@ -12,6 +12,9 @@ contract AdminsManager is ContributorManager {
     event AdminRemoved(uint256 groupId, string name);
     event AdminReEnabled(uint256 groupId, string name);
     event GettingMyAdminIndex(uint256 groupId, address account, uint256 index);
+
+    event NewJoinerRequestApproved(uint256 groupId, address addressOfUserGettingApproved,
+            string nameOfUserGettingApproved, uint256 index);
 
     event CalculatedPot(
         uint256 registeredRecipientCount,
@@ -111,10 +114,8 @@ contract AdminsManager is ContributorManager {
         address account,
         string memory name
     ) internal {
-
         // if first user, use index 1 and push some garbage things at the 0 index
         if (nextAdminIndexForGroup[groupId] == 0) {
-
             nextAdminIndexForGroup[groupId] = 1;
 
             adminAddresses[groupId].push(address(0));
@@ -128,9 +129,9 @@ contract AdminsManager is ContributorManager {
         adminEnabled[groupId].push(true);
         adminNames[groupId].push(name);
 
-        // emit AdminAdded(groupId, account, newNextIndex);
-
         nextAdminIndexForGroup[groupId] = nextAdminIndexForGroup[groupId] + 1;
+
+        emit AdminAdded(groupId, account, nextAdminIndexForGroup[groupId]);
     }
 
     function _removeAdmin(uint256 groupId, address account) internal {
@@ -297,17 +298,79 @@ contract AdminsManager is ContributorManager {
         _changeContributor(account, groupId);
     }
 
-    function approveRequestToJoinGroup(uint256 groupId, address accountToApprove) 
+    function approveRequestToJoinGroup(
+        uint256 groupId,
+        address accountToApprove
+    )
         external
         onlyAdmins(groupId)
         whenNotPaused
         notAlreadyInGroup(groupId, accountToApprove)
         requestsToJoinGroupIsPending(groupId, accountToApprove)
     {
-
         // set eligible recipients stuff
-
         // set requestapprovals for the address
 
+        uint256 requestsIndexOfUserGettingApproved = requestsToJoinGroupAddressToIndex[
+                groupId
+            ][accountToApprove];
+
+        address addressOfUserGettingApproved = requestsToJoinGroupAddresses[groupId][
+            requestsIndexOfUserGettingApproved
+        ];
+        string memory nameOfUserGettingApproved = requestsToJoinGroupNames[groupId][
+            requestsIndexOfUserGettingApproved
+        ];
+
+        requestsToJoinGroupApprovals[groupId][
+            requestsIndexOfUserGettingApproved
+        ] = true;
+
+        // if first user, use index 1 and push some garbage things at the 0 index
+        if (nextEligibleRecipientIndexForGroup[groupId] == 0) {
+            nextEligibleRecipientIndexForGroup[groupId] = 1;
+
+            eligibleRecipientAddressesArray[groupId].push(address(0));
+            eligibleRecipientNamesArray[groupId].push('');
+            eligibleRecipientsEligibilityIsEnabled[groupId].push(false);
+        }
+
+        eligibleRecipientsAddresstoIndex[groupId][
+            addressOfUserGettingApproved
+        ] = nextEligibleRecipientIndexForGroup[groupId];
+
+        eligibleRecipientAddressesArray[groupId].push(
+            addressOfUserGettingApproved
+        );
+        eligibleRecipientNamesArray[groupId].push(nameOfUserGettingApproved);
+        eligibleRecipientsEligibilityIsEnabled[groupId].push(true);
+
+        nextEligibleRecipientIndexForGroup[groupId] =
+            nextEligibleRecipientIndexForGroup[groupId] +
+            1;
+
+        emit NewJoinerRequestApproved(
+            groupId,
+            addressOfUserGettingApproved,
+            nameOfUserGettingApproved,
+            nextEligibleRecipientIndexForGroup[groupId]
+        );
+    }
+
+    function getNewJoinerRequests(uint256 groupId)
+        external
+        view
+        onlyAdmins(groupId)
+        returns (
+            address[] memory,
+            string[] memory,
+            bool[] memory
+        )
+    {
+        return (
+            requestsToJoinGroupAddresses[groupId],
+            requestsToJoinGroupNames[groupId],
+            requestsToJoinGroupApprovals[groupId]
+        );
     }
 }

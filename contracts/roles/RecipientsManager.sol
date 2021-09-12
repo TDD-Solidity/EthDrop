@@ -9,6 +9,11 @@ contract RecipientsManager is EthDropBase {
 
     event RecipientRegistered(address indexed account, uint256 groupId);
     event WinningsClaimed(address indexed account, uint256 groupId);
+    event NewUserRequestedToJoinGroup(
+        uint256 groupId,
+        address account,
+        uint256 index
+    );
 
     constructor() {}
 
@@ -150,45 +155,64 @@ contract RecipientsManager is EthDropBase {
         uint256 groupId,
         address account
     ) {
+        uint256 userIndex = requestsToJoinGroupAddressToIndex[groupId][account];
         require(
-            requestsToJoinGroupApprovals[groupId][account] != true,
+            userIndex == 0,
             'Error: this address has already requested to join this group.'
         );
         _;
     }
 
-    modifier requestsToJoinGroupIsPending(
-        uint256 groupId,
-        address account
-    ) {
+    modifier requestsToJoinGroupIsPending(uint256 groupId, address account) {
+        uint256 userIndex = requestsToJoinGroupAddressToIndex[groupId][account];
         require(
-            requestsToJoinGroupApprovals[groupId][account] == true,
+            userIndex > 0 && requestedToJoinGroup[groupId][userIndex],
             'Error: this address does not have a pending request to join this group.'
         );
         _;
     }
 
     modifier notAlreadyInGroup(uint256 groupId, address account) {
+        uint256 userIndex = eligibleRecipientsAddresstoIndex[groupId][account];
         require(
-            eligibleRecipients[groupId][account] != true,
-            'Error: recipient is already in group.'
+            userIndex == 0,
+            'Error: recipient is already an eligible recipient in the group.'
         );
         _;
     }
 
     // functions for recipients not yet eligible
-    function requestToJoinGroup(uint256 groupId)
+    function requestToJoinGroup(uint256 groupId, string calldata username)
         external
         requestsToJoinGroupNotAlreadyPending(groupId, msg.sender)
         notAlreadyInGroup(groupId, msg.sender)
     {
+        if (requestsToJoinGroupNextIndex[groupId] == 0) {
+            requestsToJoinGroupNextIndex[groupId] = 1;
 
-        // requestsToJoinGroupApprovals
+            requestsToJoinGroupAddresses[groupId].push(address(0));
+            requestsToJoinGroupNames[groupId].push('');
+            requestedToJoinGroup[groupId].push(false);
+            requestsToJoinGroupApprovals[groupId].push(false);
+        }
 
-        // push into arrays...
+        requestsToJoinGroupAddressToIndex[groupId][msg.sender] = requestsToJoinGroupNextIndex[groupId];
+
+        requestsToJoinGroupAddresses[groupId].push(msg.sender);
+        requestsToJoinGroupNames[groupId].push(username);
+        requestedToJoinGroup[groupId].push(true);
+        requestsToJoinGroupApprovals[groupId].push(false);
+
+        requestsToJoinGroupNextIndex[groupId] =
+            requestsToJoinGroupNextIndex[groupId] +
+            1;
+
+        emit NewUserRequestedToJoinGroup(
+            groupId,
+            msg.sender,
+            nextAdminIndexForGroup[groupId]
+        );
     }
 
-    // functions for eligible recipients
-
-    // functions for
+  
 }

@@ -4,12 +4,12 @@ contract('AdminsManager', (accounts) => {
 
   let adminsManager;
 
-  let [ ceo, coo, nonAdmin, admin1, admin2, recipient1_group1 ] = accounts;
+  let [ceo, coo, nonAdmin, admin1, admin2, recipient1_group1] = accounts;
   const mockGroupId = 124;
 
   const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-  beforeEach( async () => {
+  beforeEach(async () => {
 
     adminsManager = await AdminsManager.new();
 
@@ -19,13 +19,13 @@ contract('AdminsManager', (accounts) => {
 
   it('adds two admins to a group', async () => {
 
-    await adminsManager.addAdmin(mockGroupId, admin1, 'admin1',  { from: coo });
-    
+    await adminsManager.addAdmin(mockGroupId, admin1, 'admin1', { from: coo });
+
     const admin1IndexFirst = (await adminsManager.getMyAdminIndex(mockGroupId, { from: admin1 })).toNumber();
     expect(admin1IndexFirst).to.equal(1);
 
-    await adminsManager.addAdmin(mockGroupId, admin2, 'admin2',  { from: coo });
-    
+    await adminsManager.addAdmin(mockGroupId, admin2, 'admin2', { from: coo });
+
     const admin2Index = (await adminsManager.getMyAdminIndex(mockGroupId, { from: admin2 })).toNumber();
     const admin1IndexSecond = (await adminsManager.getMyAdminIndex(mockGroupId, { from: admin1 })).toNumber();
     const nonAdminIndex = (await adminsManager.getMyAdminIndex(mockGroupId, { from: nonAdmin })).toNumber();
@@ -52,12 +52,12 @@ contract('AdminsManager', (accounts) => {
 
   it('removes an admin', async () => {
 
-    await adminsManager.addAdmin(mockGroupId, admin1, 'admin1',  { from: coo });
+    await adminsManager.addAdmin(mockGroupId, admin1, 'admin1', { from: coo });
     const isAdmin_admin1_before_removal = (await adminsManager.amIAdmin(mockGroupId, { from: admin1 }));
     expect(isAdmin_admin1_before_removal).to.equal(true);
 
     await adminsManager.removeAdmin(mockGroupId, admin1, { from: coo });
-    
+
     const isAdmin_admin1_after_removal = (await adminsManager.amIAdmin(mockGroupId, { from: admin1 }));
     expect(isAdmin_admin1_after_removal).to.equal(false);
   })
@@ -70,7 +70,7 @@ contract('AdminsManager', (accounts) => {
     // - reEnableAdmin
 
   })
-  
+
   it('other users can\'t call coo-only functions', () => {
 
     // TODO
@@ -96,6 +96,32 @@ contract('AdminsManager', (accounts) => {
     // - addEligibleRecipient
     // - removeEligibleRecipient
     // - changeContributor
+
+  })
+
+  describe('Approving new joiner requests', () => {
+
+    const mockRequestedUserName = "bob";
+
+    beforeEach(() => {
+
+      await adminsManager.addAdmin(mockGroupId, admin1, 'admin1', { from: coo });
+
+      await adminsManager.requestToJoinGroup(mockGroupId, mockRequestedUserName);
+      
+    })
+    
+    it('can approve a new joiner request', () => {
+      
+      await adminsManager.approveRequestToJoinGroup(mockGroupId, mockRequestedUserName);
+
+      await adminsManager
+
+      expect()
+
+    })
+
+
 
   })
 
