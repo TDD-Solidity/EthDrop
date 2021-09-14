@@ -9,8 +9,9 @@
   "scripts": {
     "start": "truffle develop",
     "test": "truffle test",
-    "build": "truffle build",
     "test:watch": "nodemon --ext 'js,sol' --exec 'truffle test --compile-all'",
+    "test:cc": "truffle run coverage",
+    "build": "truffle build",
     "deploy-rinkeby": "truffle migrate --reset --network rinkeby",
     "deploy-goerli": "truffle migrate --reset --network goerli",
     "deploy-ropsten": "truffle migrate --network ropsten",
@@ -35,6 +36,7 @@
     "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "solidity-coverage": "^0.7.17"
   }
 }

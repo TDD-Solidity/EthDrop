@@ -18,7 +18,8 @@ contract RecipientsManager is EthDropBase {
     constructor() {}
 
     modifier onlyEligibleRecipients(uint256 groupId) {
-        require(isEligibleRecipient(msg.sender, groupId));
+        require(isEligibleRecipient(msg.sender, groupId),
+            "sorry, you are not an eligible recipient.");
         _;
     }
 
@@ -28,7 +29,8 @@ contract RecipientsManager is EthDropBase {
         whenNotPaused
         returns (bool)
     {
-        return eligibleRecipients[groupId][account] == true;
+        uint256 index = eligibleRecipientsAddresstoIndex[groupId][account];
+        return eligibleRecipientsEligibilityIsEnabled[groupId][index] == true;
     }
 
     function amIEligibleRecipient(uint256 groupId)
@@ -41,12 +43,14 @@ contract RecipientsManager is EthDropBase {
     }
 
     modifier onlyRegisteredRecipients(uint256 groupId) {
-        require(isRegisteredRecipient(msg.sender, groupId));
+        require(isRegisteredRecipient(msg.sender, groupId),
+            "sorry, you are not a registered recipient.");
         _;
     }
 
     modifier hasntAlreadyClaimedWinnings(uint256 groupId, address account) {
-        require(winningsCollected[groupId][msg.sender] != true);
+        require(winningsCollected[groupId][msg.sender] != true,
+            "whoops, looks like you've already claimed winnings!");
         _;
     }
 

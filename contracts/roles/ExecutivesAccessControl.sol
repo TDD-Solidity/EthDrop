@@ -41,19 +41,22 @@ contract ExecutivesAccessControl {
 
     /// @dev Access modifier for CEO-only functionality
     modifier onlyCEO() {
-        require(msg.sender == ceoAddress);
+        require(msg.sender == ceoAddress,
+            "only the ceo can call this function.");
         _;
     }
 
     /// @dev Access modifier for CFO-only functionality
     modifier onlyCFO() {
-        require(msg.sender == cfoAddress);
+        require(msg.sender == cfoAddress,
+        "only the cfo can call this function.");
         _;
     }
 
     /// @dev Access modifier for COO-only functionality
     modifier onlyCOO() {
-        require(msg.sender == cooAddress);
+        require(msg.sender == cooAddress,
+        "only the coo can call this function.");
         _;
     }
 
@@ -61,7 +64,8 @@ contract ExecutivesAccessControl {
         require(
             msg.sender == cooAddress ||
                 msg.sender == ceoAddress ||
-                msg.sender == cfoAddress
+                msg.sender == cfoAddress,
+                "only someone from c-suite can call this function."
         );
         _;
     }
@@ -73,7 +77,8 @@ contract ExecutivesAccessControl {
     /// @dev Assigns a new address to act as the CEO. Only available to the current CEO.
     /// @param _newCEO The address of the new CEO
     function setCEO(address _newCEO) external onlyCEO {
-        require(_newCEO != address(0));
+        require(_newCEO != address(0),
+            "cannot set CEO to zero address!");
 
         ceoAddress = address(_newCEO);
 
@@ -98,7 +103,8 @@ contract ExecutivesAccessControl {
     /// @dev Assigns a new address to act as the CFO. Only available to the current CEO.
     /// @param _newCFO The address of the new CFO
     function setCFO(address _newCFO) external onlyCEO {
-        require(_newCFO != address(0));
+        require(_newCFO != address(0),
+        "cannot set CEO to zero address!");
 
         cfoAddress = _newCFO;
         emit CfoUpdated();
@@ -129,13 +135,13 @@ contract ExecutivesAccessControl {
 
     /// @dev Modifier to allow actions only when the contract IS NOT paused
     modifier whenNotPaused() {
-        require(!paused);
+        require(!paused, 'the app is paused...');
         _;
     }
 
     /// @dev Modifier to allow actions only when the contract IS paused
     modifier whenPaused {
-        require(paused);
+        require(paused, 'function can only be called when app is paused.');
         _;
     }
 

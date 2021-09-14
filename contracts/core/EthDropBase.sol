@@ -54,11 +54,11 @@ contract EthDropBase is ExecutivesAccessControl {
         // Event goes through a linear flow of states, finite state machine.
         EventState currentState;
         // The timestamp from the block when this event started.
-        uint256 startTime;
-        // The timestamp from the block when registration for this event ended.
-        uint256 registrationEndTime;
-        // The timestamp from the block when this event ended.
-        uint256 endTime;
+        // uint256 startTime;
+        // // The timestamp from the block when registration for this event ended.
+        // uint256 registrationEndTime;
+        // // The timestamp from the block when this event ended.
+        // uint256 endTime;
         // The number of eligibleRecipients who have registered.
         uint256 registeredRecipientsCount;
         // Data about the sponsor info (address is stored in Roles)
@@ -76,6 +76,7 @@ contract EthDropBase is ExecutivesAccessControl {
     uint256[] listOfGroupIds;
     string[] listOfGroupNames;
 
+    uint256 nextGroupId = 1;
     // ALL events happening now or in the future.
     // Key is the groupId
     mapping(uint256 => EthDropEvent) currentEvents;
@@ -99,7 +100,7 @@ contract EthDropBase is ExecutivesAccessControl {
     // groupId => whether of not user is an admin
     mapping(uint256 => bool[]) adminEnabled;
 
-    mapping(uint256 => mapping(address => bool)) eligibleRecipients;
+    // mapping(uint256 => mapping(address => bool)) eligibleRecipients;
 
     mapping(uint256 => mapping(address => uint256)) eligibleRecipientsAddresstoIndex;
     mapping(uint256 => uint256) nextEligibleRecipientIndexForGroup;

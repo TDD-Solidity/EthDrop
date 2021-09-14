@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 import './ContributorManager.sol';
 
 contract AdminsManager is ContributorManager {
-    event GroupCreated(string groupName, uint256 groupId);
-    event EventStarted(address indexed startedBy, uint256 groupId);
-    event RegistrationEnded(address indexed endedBy, uint256 groupId);
-    event EventEnded(address indexed endedBy, uint256 groupId);
+    event GroupCreated(uint256 groupId, string groupName);
+    event EventStarted(uint256 groupId, address indexed startedBy);
+    event RegistrationEnded(uint256 groupId, address indexed endedBy);
+    event EventEnded(uint256 groupId, address indexed endedBy);
     event AdminAdded(uint256 groupId, address account, uint256 index);
     event AdminRemoved(uint256 groupId, string name);
     event AdminReEnabled(uint256 groupId, string name);
@@ -27,7 +27,8 @@ contract AdminsManager is ContributorManager {
     constructor() {}
 
     modifier onlyAdmins(uint256 groupId) {
-        require(isAdmin(msg.sender, groupId));
+        require(isAdmin(msg.sender, groupId),
+            "only group admins can call this function!");
         _;
     }
 
@@ -160,15 +161,15 @@ contract AdminsManager is ContributorManager {
         whenNotPaused
     {
         // TODO - is this the best way to set the groupId? 🤔
-        uint256 newGroupId = block.timestamp;
+        uint256 newGroupId = nextGroupId;
 
         EthDropEvent memory newGroup = EthDropEvent(
             newGroupId,
             groupName,
             EventState.CREATED,
-            block.timestamp,
-            block.timestamp,
-            block.timestamp,
+            // block.timestamp,
+            // block.timestamp,
+            // block.timestamp,
             0,
             '',
             '',
@@ -184,7 +185,9 @@ contract AdminsManager is ContributorManager {
         listOfGroupIds.push(newGroupId);
         listOfGroupNames.push(groupName);
 
-        emit GroupCreated(groupName, newGroupId);
+        emit GroupCreated(newGroupId, groupName);
+
+        nextGroupId++;
     }
 
     function startEvent(uint256 groupId)
@@ -193,9 +196,8 @@ contract AdminsManager is ContributorManager {
         whenNotPaused
     {
         currentEvents[groupId].currentState = EventState.REGISTRATION;
-        currentEvents[groupId].startTime = block.timestamp;
 
-        emit EventStarted(msg.sender, groupId);
+        emit EventStarted(groupId, msg.sender);
     }
 
     function closeEventRegistration(uint256 groupId)
@@ -204,11 +206,9 @@ contract AdminsManager is ContributorManager {
         whenNotPaused
     {
         require(
-            currentEvents[groupId].registeredRecipientsCount >= 1,
+            currentEvents[groupId].registeredRecipientsCount > 0,
             "Can't end registration with zero registrants!"
         );
-
-        currentEvents[groupId].registrationEndTime = block.timestamp;
 
         uint256 devCutWei = (currentEvents[groupId].totalAmountContributed *
             devCutPercentage) / 100;
@@ -226,7 +226,7 @@ contract AdminsManager is ContributorManager {
 
         currentEvents[groupId].currentState = EventState.CLAIM_WINNINGS;
 
-        emit RegistrationEnded(msg.sender, groupId);
+        emit RegistrationEnded(groupId, msg.sender);
     }
 
     function endEvent(uint256 groupId)
@@ -262,7 +262,7 @@ contract AdminsManager is ContributorManager {
         currentEvents[groupId].weiWinnings = 0;
         currentEvents[groupId].numberOfUsersWhoClaimedWinnings = 0;
 
-        emit EventEnded(msg.sender, groupId);
+        emit EventEnded(groupId, msg.sender);
     }
 
     function addEligibleRecipient(
@@ -271,6 +271,7 @@ contract AdminsManager is ContributorManager {
         uint256 groupId
     ) internal whenNotPaused onlyAdmins(groupId) {
         
+        // if first user, use index 1 and push some garbage things at the 0 index
         if (nextEligibleRecipientIndexForGroup[groupId] == 0) {
             nextEligibleRecipientIndexForGroup[groupId] = 1;
 
@@ -299,7 +300,8 @@ contract AdminsManager is ContributorManager {
         onlyAdmins(groupId)
         whenNotPaused
     {
-        eligibleRecipients[groupId][account] = false;
+        uint256 index = eligibleRecipientsAddresstoIndex[groupId][account];
+        eligibleRecipientsEligibilityIsEnabled[groupId][index] = false;
         emit EligibleRecipientRemoved(account, groupId);
     }
 
@@ -338,8 +340,11 @@ contract AdminsManager is ContributorManager {
             requestsIndexOfUserGettingApproved
         ] = true;
 
-        // if first user, use index 1 and push some garbage things at the 0 index
-        addEligibleRecipient(addressOfUserGettingApproved, nameOfUserGettingApproved, groupId);
+        addEligibleRecipient(
+            addressOfUserGettingApproved,
+            nameOfUserGettingApproved,
+            groupId
+        );
 
         emit NewJoinerRequestApproved(
             groupId,
