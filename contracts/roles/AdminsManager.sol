@@ -185,6 +185,11 @@ contract AdminsManager is ContributorManager {
         listOfGroupIds.push(newGroupId);
         listOfGroupNames.push(groupName);
 
+        eligibleRecipientsAddresstoIndex[newGroupId][address(0)] = 0;
+        eligibleRecipientsAddresstoIndex[newGroupId][address(0)] = 0;
+
+        requestsToJoinGroupNextIndex[newGroupId] = 0;
+
         emit GroupCreated(newGroupId, groupName);
 
         nextGroupId++;

@@ -4,7 +4,7 @@ import getWeb3 from './getWeb3'
 import potOfGoldEmptyImg from './assets/pot-of-gold-empty.png'
 import potOfGoldFullImg from './assets/pot-of-gold-full.png'
 
-import EthDropCore_002 from './contracts/EthDropCore_002.json'
+import EthDropCore from './contracts/EthDropCore.json'
 import { useParams, withRouter } from 'react-router-dom'
 
 import { FillButton } from 'tailwind-react-ui'
@@ -13,7 +13,7 @@ import { shortenedAddress } from './shortened-address'
 const util = require('util');
 
 function GroupEventPage(props) {
-  
+
   /**
    *  State Variables
    */
@@ -24,6 +24,7 @@ function GroupEventPage(props) {
   const [isCOO, setIsCOO] = useState(null)
   const [isAdmin, setIsAdmin] = useState(null)
   const [isContributor, setIsContributor] = useState(null)
+  const [isPendingNewJoiner, setIsPendingNewJoiner] = useState(null)
   const [adminAddressesForGroup, setAdminAddressesForGroup] = useState([])
   const [adminsEnabledForGroup, setAdminsEnabledForGroup] = useState([])
   const [adminNamesForGroup, setAdminNamesForGroup] = useState([])
@@ -32,6 +33,8 @@ function GroupEventPage(props) {
 
   const [newAdminAddressInputValue, setNewAdminAddressInputValue] = useState('')
   const [newAdminNameInputValue, setNewAdminNameInputValue] = useState('')
+
+  const [newJoinerInputValue, setNewJoinerInputValue] = useState('')
 
   const [eligibleRecipients, setEligibleRecipients] = useState('')
   const [eligibleRecipientNames, setEligibleRecipientNames] = useState('')
@@ -116,6 +119,12 @@ function GroupEventPage(props) {
 
       await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
 
+      const amIPendingNewJoiner = await ethDropCoreInstance.methods
+        .amIPendingNewJoiner(groupId)
+        .call({ from: accounts[0] })
+      console.log('amIPendingNewJoiner ', amIPendingNewJoiner)
+      setIsPendingNewJoiner(amIPendingNewJoiner)
+
       const isContributor = await ethDropCoreInstance.methods
         .amIContributor(groupId)
         .call({ from: accounts[0] })
@@ -148,22 +157,21 @@ function GroupEventPage(props) {
 
       ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
         console.log('group page heard event! ', eventObj.event)
-        console.log('yerp! ', eventObj.returnValues)
 
         console.log('got web3 accounts: ', accounts)
         const networkId = await web3.eth.net.getId()
-        const deployedNetwork = EthDropCore_002.networks[networkId]
-        
+        const deployedNetwork = EthDropCore.networks[networkId]
+
         const ethDropCoreInstance = new web3.eth.Contract(
-          EthDropCore_002.abi,
+          EthDropCore.abi,
           deployedNetwork && deployedNetwork.address,
-          )
-          
-          setEthDropCoreInstance(ethDropCoreInstance)
-          
-          setAccounts(accounts)
-          console.log('checking admin with accounts ', accounts)
-          
+        )
+
+        setEthDropCoreInstance(ethDropCoreInstance)
+
+        setAccounts(accounts)
+        console.log('checking admin with accounts ', accounts)
+
         await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
 
         const isCOO = await ethDropCoreInstance.methods
@@ -172,7 +180,7 @@ function GroupEventPage(props) {
         console.log('isCOO ', isCOO)
         setIsCOO(isCOO)
 
-        await checkRegisteredRecipientsStuff(groupId, ethDropCoreInstance)
+        await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
 
         const isContributor = await ethDropCoreInstance.methods
           .amIContributor(groupId)
@@ -272,8 +280,8 @@ function GroupEventPage(props) {
 
             case 'EligibleRecipientAdded':
             case 'EligibleRecipientRemoved':
-             
-              await checkEligibleRecipients(groupId, accounts,ethDropCoreInstance)
+
+              await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance)
 
               break;
 
@@ -521,6 +529,26 @@ function GroupEventPage(props) {
     }
   }
 
+  async function submitRequestToJoinGroup(event) {
+    event.preventDefault()
+
+    const newJoinerName = newJoinerInputValue.trim()
+
+    console.log('new joiner: ', groupId, newJoinerName, 'from ', accounts[0])
+
+    try {
+      const join = await ethDropCoreInstance.methods
+        .requestToJoinGroup(groupId, newJoinerName)
+        .send({ from: accounts[0] })
+
+      console.log(`new joiner request ${newJoinerName} succeeded!`)
+
+      setNewAdminAddressInputValue('')
+    } catch (err) {
+      console.log('new joiner request failed...', err)
+    }
+  }
+
   async function newSponsorSubmit(event) {
     event.preventDefault()
 
@@ -575,6 +603,10 @@ function GroupEventPage(props) {
     } catch (err) {
       console.log('submitting contribution failed...', err)
     }
+  }
+
+  function requestToJoinNameHandleChange(event) {
+    setNewJoinerInputValue(event.target.value)
   }
 
   function newAdminAddressHandleChange(event) {
@@ -729,6 +761,63 @@ function GroupEventPage(props) {
                   <p>You are an eligible recipient for airdrops by this group!</p>
                 </div>
               )}
+
+              {!isEligibleRecipient && isPendingNewJoiner &&
+                <div>
+                  <p>You have asked to join this group, but an admin has not yet approved it!</p>
+                </div>}
+
+              {!isEligibleRecipient && !isPendingNewJoiner &&
+                <div>
+                  <div className="w-full max-w-m">
+                    <form
+                      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                      onSubmit={submitRequestToJoinGroup}
+                    >
+                      <div className="mb-6">
+                        <label
+                          className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                          htmlFor="request-to-join-input"
+                        >
+                          <div className="my-4">Your Name</div>
+                        </label>
+
+                        <input
+                          className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                          id="request-to-join-input"
+                          type="text"
+                          placeholder="Joe Shmoe"
+                          value={newJoinerInputValue}
+                          onChange={requestToJoinNameHandleChange}
+                        />
+                      </div>
+
+                      <br />
+                      <div className="flex items-center justify-center flex-col">
+                        <button
+                          onClick={submitRequestToJoinGroup}
+                          type="submit"
+                          value="Submit"
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                          type="button"
+                        >
+                          Request To Join Group
+                        </button>
+
+                        <br />
+                        <br />
+
+                        <div>
+
+                          <p>
+                            You can click the button above to request to join this group. An admin of this group will need to approve you before you can participate in this group's airdrops.
+                          </p>
+                        </div>
+                        <br />
+                      </div>
+                    </form>
+                  </div>
+                </div>}
 
               {isAdmin && (
                 <div className="m-3 mb-10">

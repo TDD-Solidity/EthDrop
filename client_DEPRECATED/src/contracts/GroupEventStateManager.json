@@ -1,0 +1,203 @@
+{
+  "contractName": "GroupEventStateManager",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/GroupEventStateManager.sol\":\"GroupEventStateManager\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":100},\"remappings\":[]},\"sources\":{\"project:/contracts/GroupEventStateManager.sol\":{\"keccak256\":\"0xd6c50be33b164f4254fd79bdab31fedff6f540e836ef22439c0977291f265402\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3df637e9a7b06d8ba0b862ebc3e2be8417c62de465cf2b49b119252030d53da7\",\"dweb:/ipfs/QmeGfWn7xQu5PFScnx4kdCEp1XgCocSb5wtJJK6DZAvsp9\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea264697066735822122014a1e1935a61a3db78e34010d9c81ee958c346fa09800707dca5996cc7f11dd664736f6c63430008070033",
+  "deployedBytecode": "0x6080604052600080fdfea264697066735822122014a1e1935a61a3db78e34010d9c81ee958c346fa09800707dca5996cc7f11dd664736f6c63430008070033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "66:64:0:-:0;;;102:26;;;;;;;;;;66:64;;;;;;",
+  "deployedSourceMap": "66:64:0:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ncontract GroupEventStateManager {\n  constructor() public {\n  }\n}\n",
+  "sourcePath": "/Users/jim/trash/EthDrop/contracts/GroupEventStateManager.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/GroupEventStateManager.sol",
+    "exportedSymbols": {
+      "GroupEventStateManager": [
+        6
+      ]
+    },
+    "id": 7,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:0"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 6,
+        "linearizedBaseContracts": [
+          6
+        ],
+        "name": "GroupEventStateManager",
+        "nameLocation": "75:22:0",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 4,
+              "nodeType": "Block",
+              "src": "123:5:0",
+              "statements": []
+            },
+            "id": 5,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "113:2:0"
+            },
+            "returnParameters": {
+              "id": 3,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "123:0:0"
+            },
+            "scope": 6,
+            "src": "102:26:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 7,
+        "src": "66:64:0",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:99:0"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/GroupEventStateManager.sol",
+    "exportedSymbols": {
+      "GroupEventStateManager": [
+        6
+      ]
+    },
+    "id": 7,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:0"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 6,
+        "linearizedBaseContracts": [
+          6
+        ],
+        "name": "GroupEventStateManager",
+        "nameLocation": "75:22:0",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 4,
+              "nodeType": "Block",
+              "src": "123:5:0",
+              "statements": []
+            },
+            "id": 5,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "113:2:0"
+            },
+            "returnParameters": {
+              "id": 3,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "123:0:0"
+            },
+            "scope": 6,
+            "src": "102:26:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 7,
+        "src": "66:64:0",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:99:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.7+commit.e28d00a7.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x3267eDAdAf8e55B3a665a4740E7840576db19d26",
+      "transactionHash": "0x0274d714134bf7684eaaa7787f9ea7ab750447da6219d921ab5c1e520f5a9c78"
+    }
+  },
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-09-15T04:13:48.653Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

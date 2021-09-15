@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import EthDropCore_002 from "./contracts/EthDropCore_002.json";
+import EthDropCore from "./contracts/EthDropCore.json";
 import getWeb3 from "./getWeb3";
 import {
   HashRouter as Router,
@@ -74,7 +74,7 @@ class Home extends Component {
       await foo;
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = EthDropCore_002.networks[networkId];
+      const deployedNetwork = EthDropCore.networks[networkId];
 
       if (currentNetwork === 'main') {
         this.setState({ showMainnetErrorMessage: true });
@@ -83,7 +83,7 @@ class Home extends Component {
       else {
 
         const ethDropCoreInstance = new web3.eth.Contract(
-          EthDropCore_002.abi,
+          EthDropCore.abi,
           deployedNetwork && deployedNetwork.address,
         );
 
@@ -194,10 +194,8 @@ class Home extends Component {
     })
 
     ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
-      console.log('EVENT!! ', eventObj.event);
-      console.log('yerp! ', eventObj.returnValues.groupId, eventObj.returnValues.groupName);
-      console.log('yerp! ', eventObj.returnValues);
-
+      console.log('ehard an event! ', eventObj.event);
+ 
       switch (eventObj.event) {
 
         case 'CooUpdated':

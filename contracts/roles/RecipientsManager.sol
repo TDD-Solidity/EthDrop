@@ -29,8 +29,7 @@ contract RecipientsManager is EthDropBase {
         whenNotPaused
         returns (bool)
     {
-        uint256 index = eligibleRecipientsAddresstoIndex[groupId][account];
-        return eligibleRecipientsEligibilityIsEnabled[groupId][index] == true;
+        return eligibleRecipientsAddresstoIndex[groupId][account] > 0;
     }
 
     function amIEligibleRecipient(uint256 groupId)
@@ -39,7 +38,7 @@ contract RecipientsManager is EthDropBase {
         whenNotPaused
         returns (bool)
     {
-        return isEligibleRecipient(msg.sender, groupId);
+        return eligibleRecipientsAddresstoIndex[groupId][msg.sender] > 0;
     }
 
     modifier onlyRegisteredRecipients(uint256 groupId) {
@@ -70,6 +69,15 @@ contract RecipientsManager is EthDropBase {
         returns (bool)
     {
         return isRegisteredRecipient(msg.sender, groupId);
+    }
+
+    function amIPendingNewJoiner(uint256 groupId)
+        external
+        view
+        whenNotPaused
+        returns (bool)
+    {
+        return requestsToJoinGroupAddressToIndex[groupId][msg.sender] > 0;
     }
 
     modifier recipientEligibilityIsEnabled(uint256 groupId, address account) {
