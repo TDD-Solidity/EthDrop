@@ -31,6 +31,10 @@ function GroupEventPage(props) {
   const [isEligibleRecipient, setIsEligibleRecipient] = useState('')
   const [groupEventData, setGroupEventData] = useState('')
 
+  const [newJoinerAddresses, setNewJoinerAddresses] = useState([])
+  const [newJoinerNames, setNewJoinerNames] = useState([])
+  const [newJoinerApprovals, setNewJoinerApprovals] = useState([])
+
   const [newAdminAddressInputValue, setNewAdminAddressInputValue] = useState('')
   const [newAdminNameInputValue, setNewAdminNameInputValue] = useState('')
 
@@ -201,7 +205,7 @@ function GroupEventPage(props) {
         setGroupEventData(groupEventData)
         setContributionAmount(groupEventData[2])
 
-        await checkEligibleRecipients(groupId, ethDropCoreInstance)
+        await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance)
 
         const sponsorInfo = await ethDropCoreInstance.methods
           .getContributorInfo(groupId)
@@ -311,6 +315,8 @@ function GroupEventPage(props) {
 
   async function checkEligibleRecipients(groupId, accounts, ethDropCoreInstance) {
 
+    console.log('checking elig: ', groupId, accounts, ethDropCoreInstance)
+
     console.log('checking is eligible fo account: ', accounts[0])
     const isEligibleRecipient = await ethDropCoreInstance.methods
       .amIEligibleRecipient(groupId)
@@ -394,6 +400,18 @@ function GroupEventPage(props) {
       setAdminAddressesForGroup(adminInfoForGroup[0])
       setAdminsEnabledForGroup(adminInfoForGroup[1])
       setAdminNamesForGroup(adminInfoForGroup[2])
+
+      if (isAdmin) {
+        const newJoinerRequests = await ethDropCoreInstance.methods
+          .getNewJoinerRequests(groupId)
+          .call({ from: account })
+        console.log('newJoinerRequests ', newJoinerRequests);
+
+        setNewJoinerAddresses(newJoinerRequests[0])
+        setNewJoinerNames(newJoinerRequests[0])
+        setNewJoinerApprovals(newJoinerRequests[0])
+
+      }
 
     } catch (err) {
       console.log('checking admins failed...', err)
@@ -1358,6 +1376,16 @@ function GroupEventPage(props) {
                     )}
                   </div>
                 )}
+
+
+              <br />
+              <h1>New Joiner Requests</h1>
+              <br />
+              <br />
+
+              // TODO add thing like above but for new joiner requests
+
+
               <br />
               <br />
 
