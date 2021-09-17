@@ -27,8 +27,10 @@ contract AdminsManager is ContributorManager {
     constructor() {}
 
     modifier onlyAdmins(uint256 groupId) {
-        require(isAdmin(msg.sender, groupId),
-            "only group admins can call this function!");
+        require(
+            isAdmin(msg.sender, groupId),
+            'only group admins can call this function!'
+        );
         _;
     }
 
@@ -270,12 +272,21 @@ contract AdminsManager is ContributorManager {
         emit EventEnded(groupId, msg.sender);
     }
 
+    modifier notAlreadyEligibleRecipient(uint256 groupId, address account) {
+        require(eligibleRecipientsAddresstoIndex[groupId][account] == 0);
+        _;
+    }
+
     function addEligibleRecipient(
         address addressOfUserGettingApproved,
         string memory nameOfUserGettingApproved,
         uint256 groupId
-    ) internal whenNotPaused onlyAdmins(groupId) {
-        
+    )
+        public
+        whenNotPaused
+        onlyAdmins(groupId)
+        notAlreadyEligibleRecipient(groupId, addressOfUserGettingApproved)
+    {
         // if first user, use index 1 and push some garbage things at the 0 index
         if (nextEligibleRecipientIndexForGroup[groupId] == 0) {
             nextEligibleRecipientIndexForGroup[groupId] = 1;
@@ -298,6 +309,8 @@ contract AdminsManager is ContributorManager {
         nextEligibleRecipientIndexForGroup[groupId] =
             nextEligibleRecipientIndexForGroup[groupId] +
             1;
+
+        emit EligibleRecipientAdded(addressOfUserGettingApproved, groupId);
     }
 
     function removeEligibleRecipient(address account, uint256 groupId)
@@ -326,7 +339,7 @@ contract AdminsManager is ContributorManager {
         onlyAdmins(groupId)
         whenNotPaused
         notAlreadyInGroup(groupId, accountToApprove)
-        requestsToJoinGroupIsPending(groupId, accountToApprove)
+        requestToJoinGroupIsPending(groupId, accountToApprove)
     {
         uint256 requestsIndexOfUserGettingApproved = requestsToJoinGroupAddressToIndex[
                 groupId

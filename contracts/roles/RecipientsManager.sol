@@ -18,8 +18,10 @@ contract RecipientsManager is EthDropBase {
     constructor() {}
 
     modifier onlyEligibleRecipients(uint256 groupId) {
-        require(isEligibleRecipient(msg.sender, groupId),
-            "sorry, you are not an eligible recipient.");
+        require(
+            isEligibleRecipient(msg.sender, groupId),
+            'sorry, you are not an eligible recipient.'
+        );
         _;
     }
 
@@ -42,14 +44,18 @@ contract RecipientsManager is EthDropBase {
     }
 
     modifier onlyRegisteredRecipients(uint256 groupId) {
-        require(isRegisteredRecipient(msg.sender, groupId),
-            "sorry, you are not a registered recipient.");
+        require(
+            isRegisteredRecipient(msg.sender, groupId),
+            'sorry, you are not a registered recipient.'
+        );
         _;
     }
 
     modifier hasntAlreadyClaimedWinnings(uint256 groupId, address account) {
-        require(winningsCollected[groupId][msg.sender] != true,
-            "whoops, looks like you've already claimed winnings!");
+        require(
+            winningsCollected[groupId][msg.sender] != true,
+            "whoops, looks like you've already claimed winnings!"
+        );
         _;
     }
 
@@ -60,6 +66,14 @@ contract RecipientsManager is EthDropBase {
         returns (bool)
     {
         return registeredRecipientsAddressToIndex[groupId][account] > 0;
+    }
+
+    modifier isNotRegisteredRecipient(address account, uint256 groupId) {
+        require(
+            registeredRecipientsAddressToIndex[groupId][account] == 0,
+            "whoops, looks like you've already registered for this event!"
+        );
+        _;
     }
 
     function amIRegisteredRecipient(uint256 groupId)
@@ -98,6 +112,7 @@ contract RecipientsManager is EthDropBase {
         external
         onlyEligibleRecipients(groupId)
         recipientEligibilityIsEnabled(groupId, msg.sender)
+        isNotRegisteredRecipient(msg.sender, groupId)
         whenNotPaused
     {
         if (registeredRecipientsNextIndex[groupId] == 0) {
@@ -107,6 +122,8 @@ contract RecipientsManager is EthDropBase {
             registeredRecipientNamesArray[groupId].push('');
             registeredRecipientsWinningsCollected[groupId].push(false);
         }
+
+        registeredRecipientsAddressToIndex[groupId][msg.sender] = registeredRecipientsNextIndex[groupId];
 
         uint256 indexOfEligibleRecipient = eligibleRecipientsAddresstoIndex[
             groupId
@@ -119,7 +136,9 @@ contract RecipientsManager is EthDropBase {
         registeredRecipientNamesArray[groupId].push(nameOfEligibleRecipient);
         registeredRecipientsWinningsCollected[groupId].push(false);
 
-        currentEvents[groupId].registeredRecipientsCount = currentEvents[groupId].registeredRecipientsCount + 1;
+        currentEvents[groupId].registeredRecipientsCount =
+            currentEvents[groupId].registeredRecipientsCount +
+            1;
 
         registeredRecipientsNextIndex[groupId] =
             registeredRecipientsNextIndex[groupId] +
@@ -214,10 +233,10 @@ contract RecipientsManager is EthDropBase {
         _;
     }
 
-    modifier requestsToJoinGroupIsPending(uint256 groupId, address account) {
+    modifier requestToJoinGroupIsPending(uint256 groupId, address account) {
         uint256 userIndex = requestsToJoinGroupAddressToIndex[groupId][account];
         require(
-            userIndex > 0 && requestedToJoinGroup[groupId][userIndex],
+            userIndex > 0,
             'Error: this address does not have a pending request to join this group.'
         );
         _;

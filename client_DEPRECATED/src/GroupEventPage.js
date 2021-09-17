@@ -96,6 +96,7 @@ function GroupEventPage(props) {
       setWeb3(web3)
 
       const accounts = await util.promisify(web3.eth.getAccounts)()
+      setAccounts(accounts);
 
       console.log('GOT ACCOUNTS ', accounts)
 
@@ -109,8 +110,6 @@ function GroupEventPage(props) {
 
       setEthDropCoreInstance(ethDropCoreInstance)
 
-      setAccounts(accounts)
-
       console.log('accounts: ', accounts)
 
       await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
@@ -123,11 +122,7 @@ function GroupEventPage(props) {
 
       await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
 
-      const amIPendingNewJoiner = await ethDropCoreInstance.methods
-        .amIPendingNewJoiner(groupId)
-        .call({ from: accounts[0] })
-      console.log('amIPendingNewJoiner ', amIPendingNewJoiner)
-      setIsPendingNewJoiner(amIPendingNewJoiner)
+      await checkAmIPendingNewJoiner(groupId, accounts, ethDropCoreInstance);
 
       const isContributor = await ethDropCoreInstance.methods
         .amIContributor(groupId)
@@ -159,153 +154,175 @@ function GroupEventPage(props) {
       setCurrentSponsorImg(sponsorInfo[1])
       setCurrentSponsorImgLinkTo(sponsorInfo[2])
 
+      // ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
+      // console.log('group page heard event! ', eventObj.event)
+
+      // console.log('got web3 accounts: ', accounts)
+      // const networkId = await web3.eth.net.getId()
+      // const deployedNetwork = EthDropCore.networks[networkId]
+
+      // const ethDropCoreInstance = new web3.eth.Contract(
+      //   EthDropCore.abi,
+      //   deployedNetwork && deployedNetwork.address,
+      // )
+
+      // setEthDropCoreInstance(ethDropCoreInstance)
+
+      // setAccounts(accounts)
+      // console.log('checking admin with accounts ', accounts)
+
+      // await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
+
+      // const isCOO = await ethDropCoreInstance.methods
+      //   .isCOO()
+      //   .call({ from: accounts[0] })
+      // console.log('isCOO ', isCOO)
+      // setIsCOO(isCOO)
+
+      // await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
+
+      // const isContributor = await ethDropCoreInstance.methods
+      //   .amIContributor(groupId)
+      //   .call({ from: accounts[0] })
+      // console.log('isContributor ', isContributor)
+      // setIsContributor(isContributor)
+
+      // const currentSponsorAddress = await ethDropCoreInstance.methods
+      //   .getCurrentSponsorAddress(groupId)
+      //   .call({ from: accounts[0] })
+      // console.log('currentSponsorAddress ', currentSponsorAddress)
+      // setCurrentSponsorAddress(currentSponsorAddress)
+
+      // const groupEventData = await ethDropCoreInstance.methods
+      //   .getGroupEventData(groupId)
+      //   .call({ from: accounts[0] })
+      // console.log('groupEventData ', groupEventData)
+      // setGroupEventData(groupEventData)
+      // setContributionAmount(groupEventData[2])
+
+      // await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance)
+
+      // await checkAmIPendingNewJoiner(groupId, accounts, ethDropCoreInstance);
+
+      // const sponsorInfo = await ethDropCoreInstance.methods
+      //   .getContributorInfo(groupId)
+      //   .call({ from: accounts[0] })
+      // console.log('sponsorInfo ', sponsorInfo)
+
+      // setCurrentSponsorName(sponsorInfo[0])
+      // setCurrentSponsorImg(sponsorInfo[1])
+      // setCurrentSponsorImgLinkTo(sponsorInfo[2])
+
       ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
         console.log('group page heard event! ', eventObj.event)
+        console.log('event return values! ', eventObj.returnValues)
 
-        console.log('got web3 accounts: ', accounts)
-        const networkId = await web3.eth.net.getId()
-        const deployedNetwork = EthDropCore.networks[networkId]
+        // if (eventObj.returnValues.groupId) {
+        switch (eventObj.event) {
+          case 'CooUpdated':
+            // await this.checkIfImCOO()
+            break
 
-        const ethDropCoreInstance = new web3.eth.Contract(
-          EthDropCore.abi,
-          deployedNetwork && deployedNetwork.address,
-        )
+          case 'AppPaused':
+            // await this.checkIsPaused()
+            break;
 
-        setEthDropCoreInstance(ethDropCoreInstance)
+          case 'NewUserRequestedToJoinGroup':
+            console.log('checking pending 1')
+            await checkAmIPendingNewJoiner(groupId, accounts, ethDropCoreInstance)
+            break;
 
-        setAccounts(accounts)
-        console.log('checking admin with accounts ', accounts)
+          case 'EventStarted':
+          case 'EventEnded':
+          case 'RegistrationEnded':
+            const groupEventData = await ethDropCoreInstance.methods
+              .getGroupEventData(groupId)
+              .call({ from: accounts[0] })
+            console.log('groupEventData ', groupEventData)
+            setGroupEventData(groupEventData)
 
-        await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
+            break
 
-        const isCOO = await ethDropCoreInstance.methods
-          .isCOO()
-          .call({ from: accounts[0] })
-        console.log('isCOO ', isCOO)
-        setIsCOO(isCOO)
+          case 'AdminAdded':
 
-        await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
+            console.log('an admin has been added! ', eventObj.returnValues)
+            await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
+            break;
 
-        const isContributor = await ethDropCoreInstance.methods
-          .amIContributor(groupId)
-          .call({ from: accounts[0] })
-        console.log('isContributor ', isContributor)
-        setIsContributor(isContributor)
+          case 'AdminReEnabled':
+          case 'AdminRemoved':
+            await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
+            break
 
-        const currentSponsorAddress = await ethDropCoreInstance.methods
-          .getCurrentSponsorAddress(groupId)
-          .call({ from: accounts[0] })
-        console.log('currentSponsorAddress ', currentSponsorAddress)
-        setCurrentSponsorAddress(currentSponsorAddress)
+          case 'ContributorAdded':
+            const isContributor = await ethDropCoreInstance.methods
+              .amIContributor(groupId)
+              .call({ from: accounts[0] })
+            console.log('isContributor ', isContributor)
+            setIsContributor(isContributor)
 
-        const groupEventData = await ethDropCoreInstance.methods
-          .getGroupEventData(groupId)
-          .call({ from: accounts[0] })
-        console.log('groupEventData ', groupEventData)
-        setGroupEventData(groupEventData)
-        setContributionAmount(groupEventData[2])
+            const currentSponsorAddress = await ethDropCoreInstance.methods
+              .getCurrentSponsorAddress(groupId)
+              .call({ from: accounts[0] })
+            console.log('currentSponsorAddress ', currentSponsorAddress)
+            setCurrentSponsorAddress(currentSponsorAddress)
+            break;
 
-        await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance)
+          case 'ContributorInfoUpdated':
+            console.log('heard ContributorInfoUpdated event')
+            setCurrentSponsorName(eventObj.returnValues.sponsorName)
+            setCurrentSponsorImg(eventObj.returnValues.imgUrl)
+            setCurrentSponsorImgLinkTo(eventObj.returnValues.imgLinkToUrl)
 
-        const sponsorInfo = await ethDropCoreInstance.methods
-          .getContributorInfo(groupId)
-          .call({ from: accounts[0] })
-        console.log('sponsorInfo ', sponsorInfo)
+            break;
 
-        setCurrentSponsorName(sponsorInfo[0])
-        setCurrentSponsorImg(sponsorInfo[1])
-        setCurrentSponsorImgLinkTo(sponsorInfo[2])
+          case 'ContributionMade':
+            console.log(
+              'setting contribution amount: ',
+              eventObj.returnValues.amount,
+            )
+            setContributionAmount(eventObj.returnValues.amount)
+            break;
 
-        ethDropCoreInstance.events.allEvents(async (err, eventObj) => {
-          console.log('group page heard event! ', eventObj.event)
-          console.log('event return values! ', eventObj.returnValues)
+          case 'EligibleRecipientAdded':
+          case 'EligibleRecipientRemoved':
 
-          // if (eventObj.returnValues.groupId) {
-          switch (eventObj.event) {
-            case 'CooUpdated':
-              // await this.checkIfImCOO()
-              break
+            await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance);
+            await refreshNewJoinerData(groupId, accounts[0], ethDropCoreInstance);
 
-            case 'AppPaused':
-              // await this.checkIsPaused()
-              break
+            break;
 
-            case 'EventStarted':
-            case 'EventEnded':
-            case 'RegistrationEnded':
-              const groupEventData = await ethDropCoreInstance.methods
-                .getGroupEventData(groupId)
-                .call({ from: accounts[0] })
-              console.log('groupEventData ', groupEventData)
-              setGroupEventData(groupEventData)
+          case 'NewJoinerRequestApproved':
 
-              break
+            await checkAmIPendingNewJoiner(groupId, accounts, ethDropCoreInstance);
+            await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance);
 
-            case 'AdminAdded':
+            break;
 
-              console.log('an admin has been added! ', eventObj.returnValues)
-              await checkAdminStuff(groupId, ethDropCoreInstance)
-              break;
+          case 'NewUserRequestedToJoinGroup':
 
-            case 'AdminReEnabled':
-            case 'AdminRemoved':
-              await checkAdminStuff(groupId, accounts[0], ethDropCoreInstance)
-              break
+            await refreshNewJoinerData(groupId, accounts[0], ethDropCoreInstance);
+            break;
 
-            case 'ContributorAdded':
-              const isContributor = await ethDropCoreInstance.methods
-                .amIContributor(groupId)
-                .call({ from: accounts[0] })
-              console.log('isContributor ', isContributor)
-              setIsContributor(isContributor)
+          case 'RecipientRegistered':
+            await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance);
+            await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance);
 
-              const currentSponsorAddress = await ethDropCoreInstance.methods
-                .getCurrentSponsorAddress(groupId)
-                .call({ from: accounts[0] })
-              console.log('currentSponsorAddress ', currentSponsorAddress)
-              setCurrentSponsorAddress(currentSponsorAddress)
-              break;
+            break;
 
-            case 'ContributorInfoUpdated':
-              console.log('heard ContributorInfoUpdated event')
-              setCurrentSponsorName(eventObj.returnValues.sponsorName)
-              setCurrentSponsorImg(eventObj.returnValues.imgUrl)
-              setCurrentSponsorImgLinkTo(eventObj.returnValues.imgLinkToUrl)
+          case 'WinningsClaimed':
+            await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
+            break;
 
-              break;
 
-            case 'ContributionMade':
-              console.log(
-                'setting contribution amount: ',
-                eventObj.returnValues.amount,
-              )
-              setContributionAmount(eventObj.returnValues.amount)
-              break;
-
-            case 'EligibleRecipientAdded':
-            case 'EligibleRecipientRemoved':
-
-              await checkEligibleRecipients(groupId, accounts, ethDropCoreInstance)
-
-              break;
-
-            case 'RecipientRegistered':
-              await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
-
-              break;
-
-            case 'WinningsClaimed':
-              await checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance)
-              break
-
-            default:
-              console.log(`UNHANDLED EVENT!! : ${eventObj.event}`)
-          }
-          // }
-        })
-
-        console.log('done fetching')
+          default:
+            console.log(`UNHANDLED EVENT!! : ${eventObj.event}`)
+        }
+        // }
       })
+
+      console.log('done fetching')
+      // })
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(`Failed to load web3, accounts, or contract.` + error)
@@ -317,25 +334,6 @@ function GroupEventPage(props) {
 
     console.log('checking elig: ', groupId, accounts, ethDropCoreInstance)
 
-    console.log('checking is eligible fo account: ', accounts[0])
-    const isEligibleRecipient = await ethDropCoreInstance.methods
-      .amIEligibleRecipient(groupId)
-      .call({ from: accounts[0] })
-    console.log('isEligibleRecipient ', isEligibleRecipient)
-    setIsEligibleRecipient(isEligibleRecipient)
-
-    const eligibleRecipients = await ethDropCoreInstance.methods
-      .getEligibleRecipientAddresses(groupId)
-      .call({ from: accounts[0] })
-    console.log('eligibleRecipients ', eligibleRecipients)
-    setEligibleRecipients(eligibleRecipients)
-
-    const eligibleRecipientNames = await ethDropCoreInstance.methods
-      .getEligibleRecipientNames(groupId)
-      .call({ from: accounts[0] })
-    console.log('eligibleRecipientNames ', eligibleRecipientNames)
-    setEligibleRecipientNames(eligibleRecipientNames)
-
     const eligibleRecipientsEligibilityEnabled = await ethDropCoreInstance.methods
       .getEligibleRecipientIsEligibilityEnabled(groupId)
       .call({ from: accounts[0] })
@@ -343,9 +341,47 @@ function GroupEventPage(props) {
       'eligibleRecipientsEligibilityEnabled ',
       eligibleRecipientsEligibilityEnabled,
     )
-    setEligibleRecipientsEligibilityEnabled(
-      eligibleRecipientsEligibilityEnabled,
-    )
+
+    console.log('checking is eligible for account: ', accounts[0])
+    const isEligibleRecipient = (await ethDropCoreInstance.methods
+      .amIEligibleRecipient(groupId)
+      .call({ from: accounts[0] }))
+
+    console.log('isEligibleRecipient ', isEligibleRecipient)
+
+    const eligibleRecipientAddresses = (await ethDropCoreInstance.methods
+      .getEligibleRecipientAddresses(groupId)
+      .call({ from: accounts[0] }))
+
+    console.log('eligibleRecipients ', eligibleRecipientAddresses)
+
+    const eligibleRecipientNames = (await ethDropCoreInstance.methods
+      .getEligibleRecipientNames(groupId)
+      .call({ from: accounts[0] }))
+
+    console.log('eligibleRecipientNames ', eligibleRecipientNames)
+
+    const filteredArrays = {
+      addresses: [],
+      names: [],
+      eligibilityEnabled: []
+    };
+
+    eligibleRecipientsEligibilityEnabled.forEach((isEnabled, index) => {
+
+      if (isEnabled) {
+        filteredArrays.addresses.push(eligibleRecipientAddresses[index]);
+        filteredArrays.names.push(eligibleRecipientNames[index]);
+        filteredArrays.eligibilityEnabled.push(isEnabled);
+      }
+
+    })
+
+    setIsEligibleRecipient(isEligibleRecipient)
+    setEligibleRecipients(filteredArrays.addresses)
+    setEligibleRecipientNames(filteredArrays.names)
+    setEligibleRecipientsEligibilityEnabled(filteredArrays.eligibilityEnabled)
+
   }
 
   async function checkRegisteredRecipientsStuff(groupId, accounts, ethDropCoreInstance) {
@@ -368,6 +404,17 @@ function GroupEventPage(props) {
     setRegisteredRecipients(registeredRecipients)
   }
 
+  async function checkAmIPendingNewJoiner(groupId, accounts, ethDropCoreInstance) {
+
+    console.log('checking pending 2')
+    const amIPendingNewJoiner = await ethDropCoreInstance.methods
+      .amIPendingNewJoiner(groupId)
+      .call({ from: accounts[0] })
+    console.log('amIPendingNewJoiner ', amIPendingNewJoiner)
+    console.log('checking pending 3', amIPendingNewJoiner)
+    setIsPendingNewJoiner(amIPendingNewJoiner)
+  }
+
   async function checkAdminStuff(groupId, account, ethDropCoreInstance) {
     try {
 
@@ -379,12 +426,6 @@ function GroupEventPage(props) {
         .getAddressNextAdminIndex(groupId)
         .call({ from: account })
       console.log('nextAdminIndex ', nextAdminIndex)
-
-      const myAdminIndex = await ethDropCoreInstance.methods
-        .getMyAdminIndex(groupId)
-        .call({ from: account })
-      console.log('myAdminIndex ', myAdminIndex)
-      setIsAdmin(myAdminIndex)
 
       const isAdmin = await ethDropCoreInstance.methods
         .amIAdmin(groupId)
@@ -401,17 +442,8 @@ function GroupEventPage(props) {
       setAdminsEnabledForGroup(adminInfoForGroup[1])
       setAdminNamesForGroup(adminInfoForGroup[2])
 
-      if (isAdmin) {
-        const newJoinerRequests = await ethDropCoreInstance.methods
-          .getNewJoinerRequests(groupId)
-          .call({ from: account })
-        console.log('newJoinerRequests ', newJoinerRequests);
 
-        setNewJoinerAddresses(newJoinerRequests[0])
-        setNewJoinerNames(newJoinerRequests[0])
-        setNewJoinerApprovals(newJoinerRequests[0])
-
-      }
+      await refreshNewJoinerData(groupId, accounts[0], ethDropCoreInstance);
 
     } catch (err) {
       console.log('checking admins failed...', err)
@@ -432,6 +464,35 @@ function GroupEventPage(props) {
     } catch (error) {
       alert(`Failed to remove admin...` + error)
     }
+  }
+
+  async function refreshNewJoinerData(groupId, account, ethDropCoreInstance) {
+
+    console.log('refreshing new joiners...', groupId, account, ethDropCoreInstance);
+
+    const newJoinerRequests = await ethDropCoreInstance.methods
+      .getNewJoinerRequests(groupId)
+      .call({ from: account })
+    console.log('newJoinerRequests ', newJoinerRequests);
+
+    const requestApprovals = newJoinerRequests[2];
+
+    const onlyUnapprovedRequestAddresses = [];
+    const onlyUnapprovedRequestNames = [];
+    const onlyUnapprovedApprovals = [];
+
+    requestApprovals.forEach((requestApproval, i) => {
+      if (!requestApproval) {
+        onlyUnapprovedRequestAddresses.push(newJoinerRequests[0][i]);
+        onlyUnapprovedRequestNames.push(newJoinerRequests[1][i]);
+        onlyUnapprovedApprovals.push(false);
+      }
+    })
+
+    setNewJoinerAddresses(onlyUnapprovedRequestAddresses.slice(1))
+    setNewJoinerNames(onlyUnapprovedRequestNames.slice(1))
+    setNewJoinerApprovals(onlyUnapprovedApprovals.slice(1))
+
   }
 
   async function reEnableAdmin(groupId, account) {
@@ -526,6 +587,24 @@ function GroupEventPage(props) {
     }
   }
 
+  async function approveRequestToJoinGroupClicked(groupId, account) {
+    try {
+      await ethDropCoreInstance.methods
+        .approveRequestToJoinGroup(
+          groupId,
+          account
+        )
+        .send({ from: accounts[0] })
+
+      console.log('approved account!')
+
+      setEligibleRecipientAddressInputValue('')
+      setEligibleRecipientNameInputValue('')
+    } catch (err) {
+      console.log('adding eligible recipient failed...', err)
+    }
+  }
+
   async function newAdminSubmit(event) {
     event.preventDefault()
 
@@ -542,6 +621,7 @@ function GroupEventPage(props) {
       console.log(`added admin ${newAdminName} succeeded!`)
 
       setNewAdminAddressInputValue('')
+      setNewAdminNameInputValue('')
     } catch (err) {
       console.log('adding admin failed...', err)
     }
@@ -561,7 +641,7 @@ function GroupEventPage(props) {
 
       console.log(`new joiner request ${newJoinerName} succeeded!`)
 
-      setNewAdminAddressInputValue('')
+      setNewJoinerInputValue('')
     } catch (err) {
       console.log('new joiner request failed...', err)
     }
@@ -1332,6 +1412,11 @@ function GroupEventPage(props) {
               <br />
 
               {eligibleRecipients &&
+                eligibleRecipients.length === 0 && <div>
+                  <p>There are eligible recipients yet in this group...</p>
+                </div>}
+
+              {eligibleRecipients &&
                 eligibleRecipients[0] &&
                 eligibleRecipients.length !== null && (
                   <div>
@@ -1377,15 +1462,74 @@ function GroupEventPage(props) {
                   </div>
                 )}
 
+              {
+                isAdmin && <div>
 
-              <br />
-              <h1>New Joiner Requests</h1>
-              <br />
-              <br />
+                  <br />
+                  <h1>New Joiner Requests</h1>
+                  <br />
+                  <br />
 
-              // TODO add thing like above but for new joiner requests
+                  {newJoinerAddresses &&
+                    newJoinerAddresses.length === 0 && <div>
 
+                      <p>There are no pending requests to join at this time...</p>
+                    </div>}
 
+                  {newJoinerAddresses &&
+                    newJoinerAddresses[0] &&
+                    newJoinerAddresses.length !== null && (
+                      <div>
+                        {+newJoinerAddresses.length > 0 && (
+                          <table className="table-fixed border border-blue-200 border-8 min-w-full my-10 rounded">
+                            <thead>
+                              <tr>
+                                <th className="w-1/2 p-2 border-4 border-blue-200">
+                                  Address
+                                </th>
+                                <th className="w-1/4 p-2 border-4 border-blue-200">
+                                  Name
+                                </th>
+                                <th className="w-1/4 p-2 border-4 border-blue-200">
+                                  Approve
+                                </th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              {newJoinerAddresses.map((newJoinerAddress, i) => {
+                                return (
+                                  <tr key={newJoinerAddress + i}>
+                                    <td className="border-4 border-blue-200 break-all p-5">
+                                      {`${shortenedAddress(newJoinerAddress)}`}
+                                    </td>
+
+                                    <td className="border-4 border-blue-200 p-5">
+                                      {newJoinerNames[i]}
+                                    </td>
+
+                                    <td className="border-4 border-blue-200 p-5">
+                                      {/* {JSON.stringify(
+                                    eligibleRecipientsEligibilityEnabled[i],
+                                  )} */}
+
+                                      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        onClick={() => approveRequestToJoinGroupClicked(groupId, newJoinerAddress)}
+                                      >
+                                        Approve
+                                      </button>
+                                    </td>
+                                  </tr>
+                                )
+                              })}
+                            </tbody>
+                          </table>
+                        )}
+                      </div>
+                    )}
+
+                </div>
+              }
               <br />
               <br />
 
