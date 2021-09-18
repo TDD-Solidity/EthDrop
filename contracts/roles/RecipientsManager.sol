@@ -52,8 +52,11 @@ contract RecipientsManager is EthDropBase {
     }
 
     modifier hasntAlreadyClaimedWinnings(uint256 groupId, address account) {
+            uint256 indexOfClaimer = eligibleRecipientsAddresstoIndex[groupId][
+            msg.sender
+        ];
         require(
-            winningsCollected[groupId][msg.sender] != true,
+            eligibleRecipientsHasCollectedWinnings[groupId][indexOfClaimer] != true,
             "whoops, looks like you've already claimed winnings!"
         );
         _;
@@ -123,7 +126,9 @@ contract RecipientsManager is EthDropBase {
             registeredRecipientsWinningsCollected[groupId].push(false);
         }
 
-        registeredRecipientsAddressToIndex[groupId][msg.sender] = registeredRecipientsNextIndex[groupId];
+        registeredRecipientsAddressToIndex[groupId][
+            msg.sender
+        ] = registeredRecipientsNextIndex[groupId];
 
         uint256 indexOfEligibleRecipient = eligibleRecipientsAddresstoIndex[
             groupId
@@ -150,13 +155,30 @@ contract RecipientsManager is EthDropBase {
     function doIHaveClaimableWinnings(uint256 groupId)
         external
         view
-        returns (bool)
+        returns (bool hasclaimableWinnings)
     {
         if (!isRegisteredRecipient(msg.sender, groupId)) {
             return false;
         }
 
-        return winningsCollected[groupId][msg.sender] != true;
+        uint256 indexOfClaimer = eligibleRecipientsAddresstoIndex[groupId][
+            msg.sender
+        ];
+
+        return eligibleRecipientsHasCollectedWinnings[groupId][indexOfClaimer] == false;
+    }
+
+    function getEligibleRecipientsHasCollectedWinnings(uint256 groupId)
+        external
+        view
+        returns (bool[] memory)
+    {
+        // return winningsCollected[groupId];
+        // uint256 indexOfClaimer = eligibleRecipientsAddresstoIndex[groupId][
+        //     msg.sender
+        // ];
+        return eligibleRecipientsHasCollectedWinnings[groupId];
+
     }
 
     function claimWinnings(uint256 groupId)
@@ -165,7 +187,11 @@ contract RecipientsManager is EthDropBase {
         hasntAlreadyClaimedWinnings(groupId, msg.sender)
         whenNotPaused
     {
-        winningsCollected[groupId][msg.sender] = true;
+        uint256 indexOfClaimer = eligibleRecipientsAddresstoIndex[groupId][
+            msg.sender
+        ];
+        eligibleRecipientsHasCollectedWinnings[groupId][indexOfClaimer] = true;
+
         currentEvents[groupId].numberOfUsersWhoClaimedWinnings++;
 
         payable(msg.sender).transfer(currentEvents[groupId].weiWinnings);

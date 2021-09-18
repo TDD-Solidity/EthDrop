@@ -259,6 +259,7 @@ contract AdminsManager is ContributorManager {
         delete registeredRecipientsWinningsCollected[groupId];
         delete registeredRecipientNamesArray[groupId];
         delete registeredRecipientAddressesArray[groupId];
+        delete registeredRecipientsWinningsCollected[groupId];
 
         registeredRecipientsNextIndex[groupId] = 0;
 
@@ -273,7 +274,8 @@ contract AdminsManager is ContributorManager {
     }
 
     modifier notAlreadyEligibleRecipient(uint256 groupId, address account) {
-        require(eligibleRecipientsAddresstoIndex[groupId][account] == 0);
+        require(eligibleRecipientsAddresstoIndex[groupId][account] == 0,
+            "Whoops, this address is already an eligible recipient!");
         _;
     }
 
@@ -294,6 +296,7 @@ contract AdminsManager is ContributorManager {
             eligibleRecipientAddressesArray[groupId].push(address(0));
             eligibleRecipientNamesArray[groupId].push('');
             eligibleRecipientsEligibilityIsEnabled[groupId].push(false);
+            eligibleRecipientsHasCollectedWinnings[groupId].push(true);
         }
 
         eligibleRecipientsAddresstoIndex[groupId][
@@ -305,6 +308,7 @@ contract AdminsManager is ContributorManager {
         );
         eligibleRecipientNamesArray[groupId].push(nameOfUserGettingApproved);
         eligibleRecipientsEligibilityIsEnabled[groupId].push(true);
+        eligibleRecipientsHasCollectedWinnings[groupId].push(false);
 
         nextEligibleRecipientIndexForGroup[groupId] =
             nextEligibleRecipientIndexForGroup[groupId] +

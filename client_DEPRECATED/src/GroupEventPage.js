@@ -43,6 +43,7 @@ function GroupEventPage(props) {
   const [eligibleRecipients, setEligibleRecipients] = useState('')
   const [eligibleRecipientNames, setEligibleRecipientNames] = useState('')
   const [registeredRecipients, setRegisteredRecipients] = useState('')
+  const [eligibleRecipientsHasCollectedWinnings, setEligibleRecipientsHasCollectedWinnings] = useState('')
   const [
     newEligibleRecipientAddressInputValue,
     setEligibleRecipientAddressInputValue,
@@ -401,7 +402,13 @@ function GroupEventPage(props) {
       .getRegisteredRecipientNames(groupId)
       .call({ from: accounts[0] })
     console.log('registeredRecipients ', registeredRecipients)
-    setRegisteredRecipients(registeredRecipients)
+    setRegisteredRecipients(registeredRecipients.slice(1))
+
+    const eligibleRecipientsHasCollectedWinnings = await ethDropCoreInstance.methods
+      .getEligibleRecipientsHasCollectedWinnings(groupId)
+      .call({ from: accounts[0] })
+    console.log('eligibleRecipientsHasCollectedWinnings ', eligibleRecipientsHasCollectedWinnings)
+    setEligibleRecipientsHasCollectedWinnings(eligibleRecipientsHasCollectedWinnings.slice(1))
   }
 
   async function checkAmIPendingNewJoiner(groupId, accounts, ethDropCoreInstance) {
@@ -825,7 +832,15 @@ function GroupEventPage(props) {
 
               {registeredRecipients.length > 0 && (
                 <div className="my-5">
-                  <h3 className="my-5">There is currently</h3>
+                  <br />
+                  <h3 className="my-5">There&nbsp;
+                    {registeredRecipients.length === 1 &&
+                      <span>is</span>
+                    }
+                    {registeredRecipients.length > 1 &&
+                      <span>are</span>
+                    }
+                    &nbsp;currently</h3>
                   <h1 className="my-5">{registeredRecipients.length}</h1>
                   <h3 className="my-5">
                     user{registeredRecipients.length !== 1 ? 's' : ''}{' '}
@@ -836,7 +851,11 @@ function GroupEventPage(props) {
                     {registeredRecipients.map((recipientName, i) => {
                       return (
                         <li key={'recipName ' + i} className="m-5 my-10">
-                          <h2>{'-  ' + recipientName}</h2>
+                          <h2>{'-  ' + recipientName}
+
+                            {eligibleRecipientsHasCollectedWinnings[i] &&
+                              <span>&nbsp;&nbsp;&nbsp;&nbsp;✅</span>}
+                          </h2>
                         </li>
                       )
                     })}
@@ -850,6 +869,111 @@ function GroupEventPage(props) {
         {/* // spacer */}
         <div className="my-10"></div>
 
+        {isEligibleRecipient && (
+          <div>
+            {isRegisteredRecipient && (
+              <div>
+                <p>You are registered for this event!</p>
+              </div>
+            )}
+
+            <div>
+              {!isRegisteredRecipient && (
+                <div>
+                  <p>You are an eligible recipient for this event!</p>
+                </div>
+              )}
+
+              {
+                // only show when registration is open!
+                groupEventData[0] === '1' && <div>
+                  <p>Click the button to register!</p>
+                  <button
+                    onClick={() => registerForEvent(groupId)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                    disabled={isRegisteredRecipient === true}
+                  >
+                    Register!
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        )}
+        {!isEligibleRecipient && (
+          <div>
+            <p className="m-5">
+
+              You are not an eligible recipient for this airdrop! Enter your name below and click the button to request to join this group!
+            </p>
+          </div>
+        )}
+
+        {
+          // users CANNOT request to join during claim winnings phase 
+          groupEventData[0] !== '3' &&
+          <div>
+            {!isEligibleRecipient && isPendingNewJoiner &&
+              <div>
+                <p>You have asked to join this group, but an admin has not yet approved it!</p>
+              </div>}
+
+            {!isEligibleRecipient && !isPendingNewJoiner &&
+              <div>
+                <div className="w-full max-w-m">
+                  <form
+                    className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                    onSubmit={submitRequestToJoinGroup}
+                  >
+                    <div className="mb-6">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2 my-4"
+                        htmlFor="request-to-join-input"
+                      >
+                        <div className="my-4">Your Name</div>
+                      </label>
+
+                      <input
+                        className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="request-to-join-input"
+                        type="text"
+                        placeholder="Joe Shmoe"
+                        value={newJoinerInputValue}
+                        onChange={requestToJoinNameHandleChange}
+                      />
+                    </div>
+
+                    <br />
+                    <div className="flex items-center justify-center flex-col">
+                      <button
+                        onClick={submitRequestToJoinGroup}
+                        type="submit"
+                        value="Submit"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                      >
+                        Request To Join Group
+                      </button>
+
+                      <br />
+                      <br />
+
+                      <div>
+
+                        <p>
+                          <i>
+                            Note: An admin of this group will need to approve you before you can participate in this group's airdrops.
+                          </i>
+                        </p>
+                      </div>
+                      <br />
+                    </div>
+                  </form>
+                </div>
+              </div>}
+          </div>
+        }
+
         {/* Phase 0 - Has Not yet started (or 3- ended) */}
         {((groupEventData && groupEventData[0] === '0') ||
           groupEventData[0] === '3') && (
@@ -859,63 +983,6 @@ function GroupEventPage(props) {
                   <p>You are an eligible recipient for airdrops by this group!</p>
                 </div>
               )}
-
-              {!isEligibleRecipient && isPendingNewJoiner &&
-                <div>
-                  <p>You have asked to join this group, but an admin has not yet approved it!</p>
-                </div>}
-
-              {!isEligibleRecipient && !isPendingNewJoiner &&
-                <div>
-                  <div className="w-full max-w-m">
-                    <form
-                      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                      onSubmit={submitRequestToJoinGroup}
-                    >
-                      <div className="mb-6">
-                        <label
-                          className="block text-gray-700 text-sm font-bold mb-2 my-4"
-                          htmlFor="request-to-join-input"
-                        >
-                          <div className="my-4">Your Name</div>
-                        </label>
-
-                        <input
-                          className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                          id="request-to-join-input"
-                          type="text"
-                          placeholder="Joe Shmoe"
-                          value={newJoinerInputValue}
-                          onChange={requestToJoinNameHandleChange}
-                        />
-                      </div>
-
-                      <br />
-                      <div className="flex items-center justify-center flex-col">
-                        <button
-                          onClick={submitRequestToJoinGroup}
-                          type="submit"
-                          value="Submit"
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                          type="button"
-                        >
-                          Request To Join Group
-                        </button>
-
-                        <br />
-                        <br />
-
-                        <div>
-
-                          <p>
-                            You can click the button above to request to join this group. An admin of this group will need to approve you before you can participate in this group's airdrops.
-                          </p>
-                        </div>
-                        <br />
-                      </div>
-                    </form>
-                  </div>
-                </div>}
 
               {isAdmin && (
                 <div className="m-3 mb-10">
@@ -964,47 +1031,6 @@ function GroupEventPage(props) {
                 </button>
               </div>
             )}
-          </div>
-        )}
-
-        {isEligibleRecipient && (
-          <div>
-            {isRegisteredRecipient && (
-              <div>
-                <p>You are registered for this event!</p>
-              </div>
-            )}
-
-            <div>
-              {!isRegisteredRecipient && (
-                <div>
-                  <p>You are an eligible recipient for this event!</p>
-                </div>
-              )}
-
-              {
-                // only show when registration is open!
-                groupEventData[0] === '1' && <div>
-                  <p>Click the button to register!</p>
-                  <button
-                    onClick={() => registerForEvent(groupId)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
-                    disabled={isRegisteredRecipient === true}
-                  >
-                    Register!
-                  </button>
-                </div>
-              }
-            </div>
-          </div>
-        )}
-        {!isEligibleRecipient && (
-          <div>
-            <p className="m-5">
-
-              You are not an eligible recipient for this airdrop! Get in touch
-              with the group admins to be added!
-            </p>
           </div>
         )}
 

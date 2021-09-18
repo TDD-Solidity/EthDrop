@@ -108,8 +108,9 @@ contract EthDropBase is ExecutivesAccessControl {
     mapping(uint256 => address[]) eligibleRecipientAddressesArray;
     mapping(uint256 => string[]) eligibleRecipientNamesArray;
     mapping(uint256 => bool[]) eligibleRecipientsEligibilityIsEnabled;
+    mapping(uint256 => bool[]) eligibleRecipientsHasCollectedWinnings;
 
-    mapping(uint256 => mapping(address => bool)) winningsCollected;
+    // mapping(uint256 => mapping(address => bool)) winningsCollected;
 
     // Holds ALL contributors for all groups
     // groupId => Role
